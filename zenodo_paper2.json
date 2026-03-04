@@ -1,0 +1,58 @@
+{
+  "title": "APF Paper 2 \u2014 The Structure of Admissible Physics: Non-Closure, Gauge Origin, Capacity Counting, and the 61-Type Partition",
+  "description": "<p>42-page derivation deploying the quantum skeleton of Paper 1 to force the structure of the Standard Model from a single axiom: finite enforcement capacity (A1). Zero free parameters, zero empirical inputs, all results machine-verifiable via named check functions.</p>\n\n<p>This repository is the Interactive Mathematical Appendix for Paper 2 of the Admissibility Physics Framework (APF). It contains the complete derivation chain from the Non-Closure Theorem through gauge template uniqueness, fermion content, capacity counting, and the cosmological density fractions.</p>\n\n<h3>Interactive resources (no install)</h3><ul><li><strong><a href=\"https://ethan-brooke.github.io/APF-Paper-2-The-Structure-of-Admissible-Physics/\">Derivation DAG</a></strong> \u2014 33-node interactive theorem graph hosted on GitHub Pages; click any node to inspect dependencies and trace the shortest chain back to A1</li><li><strong><a href=\"https://ethan-brooke.github.io/APF-Paper-2-The-Structure-of-Admissible-Physics/storyboard.html\">Visual Storyboard</a></strong> \u2014 12-panel illustrated walkthrough from the hydrogen atom to \u03a9<sub>\u039b</sub> = 42/61; arrow-key navigation</li></ul><h3>What is derived in Paper 2</h3>\n<ul>\n<li><strong>Non-Closure Theorem</strong> \u2014 two types proved: budget non-closure (L<sub>nc</sub><sup>budget</sup>, classical pigeonhole) and interference non-closure (L<sub>nc</sub><sup>interf</sup>, the quantum case with order-asymmetric surplus \u0394<sub>12</sub> \u2260 \u0394<sub>21</sub>)</li>\n<li><strong>Non-commutativity from A1</strong> \u2014 L<sub>irred</sub> (irreducibility from A1) + Schur's lemma \u2192 non-commuting enforcement algebra (L<sub>\u0394\u2192nc</sub>)</li>\n<li><strong>Cost function uniqueness</strong> \u2014 Cauchy's functional equation (1821) forces F(d) = d as the unique monotone additive cost function</li>\n<li><strong>Gauge template uniqueness</strong> \u2014 exhaustive classification of all 17 compact simple Lie algebras selects SU(3) \u00d7 SU(2) \u00d7 U(1) as the unique surviving product structure; capacity minimality selects N<sub>c</sub> = 3</li>\n<li><strong>Fermion content</strong> \u2014 exhaustive scan of 4,680 chiral templates under seven sequential filters; unique survivor: Standard Model at 45 Weyl fermions</li>\n<li><strong>C<sub>total</sub> = 61</strong> \u2014 structural enforcement channels (not kinematic DOF): 45 fermion + 12 gauge + 4 Higgs</li>\n<li><strong>MECE partition 42 + 3 + 16</strong> \u2014 two binary mechanism predicates (Q1, Q2) partition the 61 channels exhaustively: 42 vacuum, 3 baryonic, 16 dark</li>\n<li><strong>Cosmological density fractions</strong> \u2014 horizon equipartition (L<sub>equip</sub>) gives \u03a9<sub>\u039b</sub> = 42/61 = 0.6885, \u03a9<sub>m</sub> = 19/61 = 0.3115 with no empirical inputs</li>\n</ul>\n\n<h3>Three verification paths</h3>\n<ol>\n<li><strong>Zero-install Colab notebook</strong> \u2014 <a href=\"https://colab.research.google.com/github/Ethan-Brooke/APF-Paper-2-The-Structure-of-Admissible-Physics/blob/main/APF_Reviewer_Walkthrough_Paper2.ipynb\">Open in Google Colab</a> \u2014 annotated cells with inline LaTeX and executable code covering the full derivation chain from L<sub>nc</sub> to \u03a9<sub>\u039b</sub> = 42/61</li>\n<li><strong>Local execution</strong> \u2014 clone the <a href=\"https://github.com/Ethan-Brooke/APF-Paper-2-The-Structure-of-Admissible-Physics\">GitHub repository</a> and run <code>python run_checks.py</code> (Python 3.8+, no pip install)</li>\n<li><strong>Individual theorem inspection</strong> \u2014 every result traces to a named check function in <code>gauge.py</code> or <code>core.py</code></li>\n</ol>\n\n<h3>Repository contents</h3>\n<ul>\n<li><code>apf/core.py</code> \u2014 foundational lemmas (L<sub>nc</sub>, L<sub>irred</sub>, L<sub>\u0394\u2192nc</sub>, L<sub>equip</sub>)</li>\n<li><code>apf/gauge.py</code> \u2014 gauge template uniqueness, fermion scan, capacity counting, cosmological fractions</li>\n<li><code>apf/bank.py</code> \u2014 theorem registry with <code>run_all()</code></li>\n<li><code>apf/L_Cauchy_uniqueness.py</code> \u2014 cost function uniqueness proof</li>\n<li><code>REVIEWERS_GUIDE.md</code> \u2014 9-section peer-review walkthrough addressing the non-closure chain, the Schur's lemma argument, the gauge classification, and six falsification surfaces</li>\n<li><code>APF_Reviewer_Walkthrough_Paper2.ipynb</code> \u2014 Colab notebook for referees</li>\n</ul>\n\n<p>Accompanies the manuscript <em>The Structure of Admissible Physics</em> submitted to <em>Foundations of Physics</em>. Companion to Paper 1 (DOI: <a href=\"https://doi.org/10.5281/zenodo.18439200\">10.5281/zenodo.18439200</a>).</p>",
+  "creators": [
+    {
+      "name": "Brooke, Ethan",
+      "affiliation": "",
+      "orcid": "0009-0001-2261-4682"
+    }
+  ],
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": [
+    "quantum foundations",
+    "Standard Model derivation",
+    "gauge symmetry",
+    "non-closure",
+    "finite enforcement capacity",
+    "admissibility",
+    "single axiom",
+    "machine-verifiable",
+    "zero free parameters",
+    "cosmological constant",
+    "dark matter",
+    "SU(3) x SU(2) x U(1)",
+    "Schur's lemma",
+    "Cauchy functional equation",
+    "capacity counting"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Ethan-Brooke/APF-Paper-2-The-Structure-of-Admissible-Physics",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.18439200",
+      "relation": "isContinuedBy",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://ethan-brooke.github.io/APF-Paper-2-The-Structure-of-Admissible-Physics/",
+      "relation": "isSupplementTo",
+      "scheme": "url",
+      "resource_type": "other",
+      "description": "Interactive derivation DAG (GitHub Pages)"
+    },
+    {
+      "identifier": "https://ethan-brooke.github.io/APF-Paper-2-The-Structure-of-Admissible-Physics/storyboard.html",
+      "relation": "isSupplementTo",
+      "scheme": "url",
+      "resource_type": "other",
+      "description": "Visual storyboard (GitHub Pages)"
+    }
+  ],
+  "version": "1.0.0"
+}
