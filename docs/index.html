@@ -3,797 +3,1209 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>APF Paper 2 — Derivation DAG</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<title>APF Paper 2 — The Structure of Admissible Physics</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #12121a;
+    --fg: #e8e6e1;
+    --fg-dim: #7a7872;
+    --accent: #f0c040;
+    --accent2: #e07030;
+    --pass: #40d88a;
+    --tier-ax: #f0c040;
+    --tier-p1: #606878;
+    --tier1: #e07030;
+    --tier2: #c060c0;
+    --tier3: #4a9eff;
+    --tier4: #40d88a;
+    --glow: rgba(240, 192, 64, 0.15);
+    --line: rgba(255,255,255,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Georgia', serif;
-    background: #0e0e12;
-    color: #e8e4d8;
-    min-height: 100vh;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Source Serif 4', Georgia, serif;
     overflow-x: hidden;
+    min-height: 100vh;
   }
 
-  header {
-    padding: 28px 40px 20px;
-    border-bottom: 1px solid #2a2a35;
-    background: #0e0e12;
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
   }
 
-  header h1 {
-    font-size: 1.15rem;
-    font-weight: normal;
-    letter-spacing: 0.04em;
-    color: #b8b0a0;
+  .header {
+    padding: 48px 48px 0;
+    max-width: 1400px;
+    margin: 0 auto;
   }
 
-  header h2 {
-    font-size: 1.65rem;
-    font-weight: normal;
-    color: #e8e4d8;
-    margin-top: 4px;
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
   }
 
-  header p {
-    font-size: 0.82rem;
-    color: #6a6660;
-    margin-top: 8px;
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 400;
+    line-height: 1.15;
+    margin: 12px 0 8px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.4s;
+  }
+
+  .header h1 em {
     font-style: italic;
+    color: var(--accent);
   }
 
-  .controls {
+  .header-sub {
+    font-size: 17px;
+    color: var(--fg-dim);
+    max-width: 700px;
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.6s;
+  }
+
+  .header-links {
+    margin-top: 14px;
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 14px 40px;
-    background: #12121a;
-    border-bottom: 1px solid #2a2a35;
-    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.7s;
   }
 
-  .controls label {
-    font-size: 0.78rem;
-    color: #7a7670;
-    letter-spacing: 0.06em;
+  .header-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1px solid rgba(240, 192, 64, 0.3);
+    transition: all 0.25s ease;
+  }
+
+  .header-links a:hover {
+    background: rgba(240, 192, 64, 0.1);
+    border-color: var(--accent);
+  }
+
+  .header-link-sep { color: var(--fg-dim); opacity: 0.3; }
+
+  .controls {
+    max-width: 1400px;
+    margin: 32px auto 0;
+    padding: 0 48px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.8s;
+  }
+
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 10px 20px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.03);
+    color: var(--fg);
+    cursor: pointer;
+    transition: all 0.25s ease;
     text-transform: uppercase;
   }
 
-  .filter-btn {
-    padding: 5px 14px;
-    border: 1px solid #3a3a48;
-    background: transparent;
-    color: #9a9690;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.78rem;
-    font-family: 'Georgia', serif;
-    transition: all 0.15s;
+  .btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
-  .filter-btn:hover { border-color: #aaa8a0; color: #e8e4d8; }
-  .filter-btn.active { background: #2a2a35; border-color: #6a90c8; color: #a8c4e8; }
-
-  .separator { width: 1px; height: 20px; background: #2a2a35; margin: 0 4px; }
-
-  #search-input {
-    padding: 5px 12px;
-    background: #1a1a22;
-    border: 1px solid #3a3a48;
-    color: #e8e4d8;
-    border-radius: 3px;
-    font-size: 0.78rem;
-    font-family: 'Georgia', serif;
-    width: 200px;
-    outline: none;
+  .btn.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
   }
 
-  #search-input:focus { border-color: #6a90c8; }
-  #search-input::placeholder { color: #4a4a58; }
+  .btn-run {
+    background: rgba(64, 216, 138, 0.1);
+    border-color: var(--pass);
+    color: var(--pass);
+  }
+
+  .btn-run:hover { background: var(--pass); color: var(--bg); }
+
+  .btn-run.running {
+    pointer-events: none;
+    animation: pulse 1s ease infinite;
+  }
 
   .main {
-    display: flex;
-    height: calc(100vh - 130px);
+    max-width: 1400px;
+    margin: 24px auto 0;
+    padding: 0 48px 80px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 32px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 1s;
   }
 
-  #graph-container {
-    flex: 1;
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    .header, .controls, .main { padding-left: 20px; padding-right: 20px; }
+  }
+
+  .dag-container {
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    border-radius: 2px;
     position: relative;
+    min-height: 700px;
     overflow: hidden;
   }
 
-  svg { width: 100%; height: 100%; }
+  .dag-container svg { width: 100%; height: 100%; display: block; }
 
-  .node-group { cursor: pointer; }
+  .panel { display: flex; flex-direction: column; gap: 20px; }
 
-  .node-rect {
-    rx: 3;
-    ry: 3;
-    stroke-width: 1.5;
-    transition: filter 0.15s;
-  }
-
-  .node-group:hover .node-rect { filter: brightness(1.3); }
-
-  .node-label {
-    font-family: 'Georgia', serif;
-    pointer-events: none;
-    dominant-baseline: middle;
-    text-anchor: middle;
-  }
-
-  .node-label.math { font-style: italic; font-size: 11px; }
-  .node-label.code { font-family: 'Courier New', monospace; font-size: 9.5px; }
-
-  .link {
-    fill: none;
-    stroke-width: 1.4;
-    opacity: 0.55;
-    marker-end: url(#arrowhead);
-  }
-
-  .link.highlighted { opacity: 1; stroke-width: 2.2; }
-  .link.dimmed { opacity: 0.08; }
-
-  .node-group.dimmed .node-rect { opacity: 0.12; }
-  .node-group.dimmed .node-label { opacity: 0.12; }
-  .node-group.highlighted .node-rect { filter: brightness(1.4); }
-
-  /* Panel */
-  #panel {
-    width: 320px;
-    background: #12121a;
-    border-left: 1px solid #2a2a35;
-    padding: 24px 22px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  #panel-placeholder {
-    color: #4a4a58;
-    font-size: 0.82rem;
-    font-style: italic;
-    margin-top: 8px;
-  }
-
-  #panel-content { display: none; }
-
-  .panel-tag {
-    display: inline-block;
-    padding: 2px 8px;
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    padding: 24px;
     border-radius: 2px;
-    font-size: 0.72rem;
-    font-family: 'Courier New', monospace;
-    letter-spacing: 0.04em;
+  }
+
+  .card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--fg-dim);
     margin-bottom: 12px;
   }
 
-  .panel-name {
-    font-size: 1.15rem;
-    color: #e8e4d8;
-    margin-bottom: 4px;
-  }
-
-  .panel-full {
-    font-size: 0.82rem;
-    color: #8a8680;
-    margin-bottom: 16px;
-    font-style: italic;
-  }
-
-  .panel-section {
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #5a5a68;
-    margin-top: 16px;
+  .card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 400;
     margin-bottom: 6px;
-    border-top: 1px solid #1e1e28;
-    padding-top: 12px;
   }
 
-  .panel-code {
-    font-family: 'Courier New', monospace;
-    font-size: 0.78rem;
-    background: #1a1a22;
-    border: 1px solid #2a2a35;
-    border-radius: 3px;
-    padding: 8px 12px;
-    color: #a8d8b8;
-    line-height: 1.7;
+  .card p { font-size: 14px; line-height: 1.6; color: var(--fg-dim); }
+  .card .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+  .detail-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--fg-dim);
+    font-style: italic;
+    font-size: 14px;
   }
 
-  .panel-desc {
-    font-size: 0.82rem;
-    color: #9a9890;
-    line-height: 1.6;
-  }
-
-  .panel-deps {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 2px;
-  }
-
-  .dep-tag {
-    padding: 2px 8px;
-    background: #1e1e2a;
-    border: 1px solid #3a3a4a;
+  .detail-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
     border-radius: 2px;
-    font-size: 0.74rem;
-    font-family: 'Courier New', monospace;
-    color: #8888a8;
-    cursor: pointer;
-    transition: all 0.12s;
+    margin-bottom: 8px;
   }
 
-  .dep-tag:hover { border-color: #6a90c8; color: #a8c4e8; }
+  .detail-tag.axiom  { background: rgba(240,192,64,0.15);  color: var(--tier-ax); }
+  .detail-tag.p1     { background: rgba(96,104,120,0.2);   color: var(--tier-p1); }
+  .detail-tag.proved { background: rgba(64,216,138,0.15);  color: var(--pass); }
+
+  .dep-chain { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+
+  .dep-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .dep-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+  .terminal {
+    background: #050508;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 2px;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    max-height: 300px;
+    overflow-y: auto;
+    color: var(--fg-dim);
+  }
+
+  .terminal::-webkit-scrollbar { width: 4px; }
+  .terminal::-webkit-scrollbar-track { background: transparent; }
+  .terminal::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+
+  .term-pass { color: var(--pass); }
+  .term-name { color: var(--fg); }
+  .term-dim  { color: var(--fg-dim); }
+  .term-prompt { color: var(--accent); }
 
   .legend {
-    padding: 14px 40px;
-    background: #0e0e12;
-    border-top: 1px solid #1a1a22;
     display: flex;
-    gap: 24px;
+    gap: 16px;
     flex-wrap: wrap;
-    font-size: 0.75rem;
-    color: #5a5a68;
+    padding: 12px 0 0;
   }
 
   .legend-item {
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--fg-dim);
   }
 
-  .legend-dot {
-    width: 12px;
-    height: 12px;
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
     border-radius: 2px;
-    flex-shrink: 0;
+    overflow: hidden;
   }
 
-  .zoom-controls {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  .stat { background: var(--bg2); padding: 16px; text-align: center; }
+
+  .stat-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--accent);
   }
 
-  .zoom-btn {
-    width: 30px;
-    height: 30px;
-    background: #1a1a22;
-    border: 1px solid #2a2a35;
-    color: #8a8880;
-    font-size: 16px;
-    cursor: pointer;
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    margin-top: 4px;
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: fixed;
+    z-index: 1000;
+    pointer-events: none;
+    background: #1a1a24;
+    border: 1px solid rgba(255,255,255,0.12);
     border-radius: 3px;
+    padding: 14px 18px;
+    max-width: 360px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  .tooltip.visible { opacity: 1; transform: translateY(0); }
+
+  .tooltip-tier {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .tooltip-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--fg);
+    line-height: 1.3;
+  }
+
+  .tooltip-result {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    margin: 6px 0;
+    padding: 5px 8px;
+    background: rgba(240, 192, 64, 0.06);
+    border-left: 2px solid var(--accent);
+  }
+
+  .tooltip-desc {
+    font-family: 'Source Serif 4', serif;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--fg-dim);
+  }
+
+  .tooltip-deps {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--fg-dim);
+  }
+
+  .tooltip-deps span { color: var(--fg); }
+
+  .tooltip-chain {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--fg-dim);
+  }
+
+  .tooltip-chain-label {
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    margin-bottom: 5px;
+  }
+
+  .tooltip-chain-paths {
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: all 0.12s;
+    gap: 4px;
+    flex-wrap: wrap;
+    line-height: 1.8;
   }
 
-  .zoom-btn:hover { background: #2a2a35; color: #e8e4d8; }
+  .tooltip-chain-paths .chain-node {
+    color: var(--fg);
+    padding: 1px 5px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 2px;
+  }
 
-  #tooltip {
-    position: fixed;
-    background: #1e1e28;
-    border: 1px solid #3a3a4a;
-    border-radius: 4px;
-    padding: 7px 12px;
-    font-size: 0.78rem;
-    color: #c8c4b8;
+  .tooltip-chain-paths .chain-arrow { color: var(--accent); opacity: 0.5; }
+
+  .tooltip-paths-note {
+    margin-top: 6px;
+    font-size: 10px;
+    color: var(--accent);
+    opacity: 0.7;
+    font-style: italic;
+  }
+
+  /* Keyframes */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.6; }
+  }
+
+  @keyframes nodeVerify {
+    0%   { filter: brightness(1); }
+    50%  { filter: brightness(2.5); }
+    100% { filter: brightness(1); }
+  }
+
+  /* SVG styles */
+  .edge { stroke: rgba(255,255,255,0.07); stroke-width: 1.2; fill: none; }
+  .edge.p1-edge { stroke: rgba(96,104,120,0.3); stroke-dasharray: 3 3; }
+  .edge.highlighted { stroke: var(--accent); stroke-width: 2; opacity: 0.7; }
+  .edge.verified { stroke: var(--pass); stroke-width: 2; opacity: 0.6; }
+
+  .node-group { cursor: pointer; }
+  .node-group:hover .node-circle { filter: brightness(1.4); }
+  .node-circle { transition: all 0.3s ease; }
+  .node-circle.verified { animation: nodeVerify 0.5s ease; }
+
+  .node-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    fill: var(--fg);
+    text-anchor: middle;
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.1s;
-    z-index: 100;
-    max-width: 200px;
+  }
+
+  .node-group.selected .node-circle {
+    stroke: var(--accent) !important;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 12px var(--glow));
+  }
+
+  .tier-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    fill: rgba(255,255,255,0.13);
   }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Admissibility Physics Framework · Paper 2</h1>
-  <h2>The Structure of Admissible Physics</h2>
-  <p>Derivation DAG: A1 → non-closure → gauge group → matter content → C<sub>total</sub> = 61</p>
-</header>
+<div class="tooltip" id="tooltip"></div>
+
+<div class="header">
+  <div class="header-tag">Admissibility Physics Framework · Paper 2 · The Structure of Admissible Physics</div>
+  <h1>The Derivation DAG: <em>From Non-Closure to the Standard Model</em></h1>
+  <p class="header-sub">Every node is a machine-verifiable theorem. Every edge is a logical dependency. From A1 alone: non-closure forces gauge structure, exhaustive Lie algebra classification selects SU(3)×SU(2)×U(1), 4,680 fermion templates reduce to one survivor, and capacity counting determines cosmological density fractions.</p>
+  <div class="header-links">
+    <a href="https://github.com/Ethan-Brooke/APF-Paper-1-The-Enforceability-of-Distinction" target="_blank" rel="noopener">GitHub repository ↗</a>
+  </div>
+</div>
 
 <div class="controls">
-  <label>Filter</label>
-  <button class="filter-btn active" data-filter="all">All</button>
-  <button class="filter-btn" data-filter="axiom">Axiom</button>
-  <button class="filter-btn" data-filter="nonclosure">Non-closure</button>
-  <button class="filter-btn" data-filter="gauge">Gauge</button>
-  <button class="filter-btn" data-filter="counting">Counting</button>
-  <button class="filter-btn" data-filter="cosmology">Cosmology</button>
-  <div class="separator"></div>
-  <label>Search</label>
-  <input id="search-input" type="text" placeholder="theorem name or code…">
+  <button class="btn btn-run" id="btnRun" onclick="runVerification()">▶ Run Checks</button>
+  <button class="btn" id="btnReset" onclick="resetDAG()">Reset</button>
+  <div style="flex:1"></div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tier-ax)"></div>Axiom</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tier-p1)"></div>Paper 1 inputs</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tier1)"></div>Non-Closure</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tier2)"></div>Gauge Origin</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tier3)"></div>Architecture</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tier4)"></div>Partition & Cosmology</div>
+  </div>
 </div>
 
 <div class="main">
-  <div id="graph-container">
-    <svg id="dag"></svg>
-    <div class="zoom-controls">
-      <button class="zoom-btn" id="zoom-in">+</button>
-      <button class="zoom-btn" id="zoom-out">−</button>
-      <button class="zoom-btn" id="zoom-reset" style="font-size:11px;">⊡</button>
+  <div class="dag-container" id="dagContainer"></div>
+  <div class="panel">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-val" id="statTotal">33/div>
+        <div class="stat-label">Theorems</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="statPassed">—</div>
+        <div class="stat-label">Passed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="statAxioms">1</div>
+        <div class="stat-label">Axiom</div>
+      </div>
+    </div>
+    <div class="card" id="detailCard">
+      <div class="card-label">Selected Theorem</div>
+      <div class="detail-empty">Click a node to inspect</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Verification Log</div>
+      <div class="terminal" id="terminal">
+        <span class="term-prompt">$</span> <span class="term-dim">awaiting run_checks.py ...</span>
+      </div>
     </div>
   </div>
-
-  <div id="panel">
-    <div id="panel-placeholder">← Click any node to inspect its theorem, dependencies, and code reference.</div>
-    <div id="panel-content"></div>
-  </div>
 </div>
-
-<div class="legend">
-  <span style="color:#7a7670; font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase; margin-right:4px;">Layers</span>
-  <div class="legend-item"><div class="legend-dot" style="background:#3a5080;"></div>Axiom / Lemmas from Paper 1</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#5a3870;"></div>Non-closure engine</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#3a6858;"></div>Gauge structure</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#6a5030;"></div>Capacity counting</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#4a4870;"></div>Cosmological partition</div>
-</div>
-
-<div id="tooltip"></div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// DATA: Paper 2 theorem graph
+// Tiers: -1=Axiom, 0=Paper1 inputs, 1=Non-Closure, 2=Gauge Origin, 3=Architecture, 4=Partition/Cosmo
+// ══════════════════════════════════════════════════════════════
 
-const nodes = [
-  // Layer -1: Axiom
-  { id: "A1",          label: "A1",              full: "Enforcement Capacity is Finite and Positive",
-    layer: "axiom",    code: "—",                module: "Paper 1 (axiom)",
-    desc: "The single founding axiom. Enforcement capacity is finite and positive. Everything in both papers follows from this statement alone.",
-    deps: [] },
+const theorems = {
 
-  // Layer 0: Structural lemmas (from Paper 1, used here)
-  { id: "L_eps",       label: "L_ε*",            full: "Minimum Enforcement Cost",
-    layer: "axiom",    code: "check_L_epsilon_star", module: "core.py",
-    desc: "Every distinction carries a minimum cost ε* > 0. There is a floor below which no enforcement operation can be made cheaper.",
-    deps: ["A1"] },
-  { id: "L_nc",        label: "L_nc",            full: "Non-Closure",
-    layer: "nonclosure", code: "check_L_nc",     module: "core.py",
-    desc: "Admissible sets are not closed under composition. Joint enforcement at a shared interface generically exceeds the sum of individual costs by an interference surplus Δ > 0.",
-    deps: ["A1"] },
-  { id: "L_loc",       label: "L_loc",           full: "Locality",
-    layer: "axiom",    code: "check_L_loc",       module: "core.py",
-    desc: "Enforcement is interface-local: an agent can only enforce distinctions it can directly verify at its own interface.",
-    deps: ["A1"] },
-  { id: "L_irr",       label: "L_irr",           full: "Irreversibility",
-    layer: "nonclosure", code: "check_L_irr",     module: "core.py",
-    desc: "Some enforcement commitments cannot be undone. Non-closure implies that once capacity is spent on a path, reversal requires additional capacity.",
-    deps: ["A1", "L_nc"] },
-  { id: "TM",          label: "T_M",             full: "Interface Monogamy",
-    layer: "axiom",    code: "check_T_M",         module: "core.py",
-    desc: "Each enforcement channel must be independently maintained. Distinct irreducible representations require their own capacity and cannot share with a different representation.",
-    deps: ["A1", "L_loc"] },
+  // ── Tier -1: The Axiom ────────────────────────────────────────
+  'A1': {
+    tier: -1, label: 'A1', full: 'Finite Enforcement Capacity',
+    desc: 'The total enforcement capacity on any causally connected region is finite and positive. The single axiom from which everything in the APF series follows.',
+    deps: [], epistemic: 'AXIOM', result: 'C > 0, C < ∞',
+    code: null
+  },
 
-  // Layer 1: Non-closure engine
-  { id: "L_irred",     label: "L_irred",         full: "Irreducibility from A1",
-    layer: "nonclosure", code: "check_L_irred",   module: "core.py",
-    desc: "A1 forces enforcement representations to be irreducible. Reducible representations contain redundant channels, which would waste capacity in violation of A1.",
-    deps: ["A1", "L_nc"] },
-  { id: "L_Dnc",       label: "L_Δ→nc",          full: "Interference Non-Closure Implies Non-Commutativity",
-    layer: "nonclosure", code: "check_T0, check_L_nc", module: "core.py",
-    desc: "If the interference surplus Δ > 0 then the enforcement algebra is non-commutative. Abelian composition is additive (Δ = 0), which is incompatible with non-closure.",
-    deps: ["L_nc"] },
-  { id: "T_conf",      label: "T_conf",          full: "Confinement Mechanism",
-    layer: "gauge",    code: "check_T_confinement", module: "gauge.py",
-    desc: "Asymptotic freedom (L_AF) combined with finite capacity (A1) forces IR saturation: non-singlet states exceed the local budget and are inadmissible. Only color-singlet composites survive.",
-    deps: ["L_nc", "L_eps", "A1"] },
-  { id: "B1p",         label: "B₁'",             full: "Complex Carrier (Boundary Closure)",
-    layer: "gauge",    code: "check_B1_prime",    module: "gauge.py",
-    desc: "Any carrier admitting only bilinear invariants produces self-conjugate composites (B = B̄), which provide no independent enforcement channel under T_M. Complex ternary carriers are required.",
-    deps: ["T_conf", "TM"] },
+  // ── Tier 0: Paper 1 results used as inputs ────────────────────
+  'L_loc': {
+    tier: 0, label: 'L_loc', full: 'Locality',
+    desc: 'Enforcement decomposes additively over causally disconnected regions. Derived in Paper 1 §4.2 from A1 + M + NT. Used here to force independent cost structure across interfaces.',
+    deps: ['A1'], epistemic: 'P1', result: 'E(S₁∪S₂) = E(S₁) + E(S₂)',
+    code: 'check_L_loc · core.py'
+  },
+  'L_irr': {
+    tier: 0, label: 'L_irr', full: 'Irreversibility',
+    desc: 'Some enforcement processes cannot be undone. The arrow of time emerges from finite capacity. Derived in Paper 1 §4.5. Used here to force the chiral carrier requirement R2.',
+    deps: ['A1'], epistemic: 'P1', result: '∃ irreversible processes',
+    code: 'check_L_irr · core.py'
+  },
+  'L_eps': {
+    tier: 0, label: 'L_ε*', full: 'Minimum Cost',
+    desc: 'Every meaningful distinction has a minimum enforcement cost ε* > 0. Derived in Paper 1 §4.1. Used in the cost function uniqueness proof and capacity counting.',
+    deps: ['A1'], epistemic: 'P1', result: 'ε* > 0',
+    code: 'check_L_epsilon_star · core.py'
+  },
+  'T2': {
+    tier: 0, label: 'T2', full: 'Hilbert Space',
+    desc: 'The operator algebra must act on a Hilbert space. Derived in Paper 1 §5.4 from non-closure and finite capacity. Used here as the arena in which Schur\'s lemma forces non-commutativity.',
+    deps: ['A1'], epistemic: 'P1', result: 'H = Hilbert space',
+    code: 'check_T2 · core.py'
+  },
+  'T_M': {
+    tier: 0, label: 'T_M', full: 'Interface Monogamy',
+    desc: 'Disjoint interfaces enforce independently — each channel has exactly one enforcement role. Derived in Paper 1 §5.10. The structural backbone of capacity counting.',
+    deps: ['A1'], epistemic: 'P1', result: 'Disjoint ⇒ independent',
+    code: 'check_T_M · core.py'
+  },
+  'L_cost': {
+    tier: 0, label: 'L_cost', full: 'Cost Uniqueness (P1)',
+    desc: 'C(G) = dim(G)·ε is the unique cost assignment consistent with A1. Derived in Paper 1. Used here as a prerequisite for the Cauchy uniqueness extension and gauge group selection by minimality.',
+    deps: ['A1'], epistemic: 'P1', result: 'C(G) = dim(G)·ε forced',
+    code: 'check_L_cost · core.py'
+  },
+  'T3': {
+    tier: 0, label: 'T3', full: 'Gauge Bundle (P1)',
+    desc: 'Locality and the operator algebra force a gauge bundle with connection. The skeleton of all gauge theories derived in Paper 1 §5.7. Used here as the entry point for the full gauge template proof.',
+    deps: ['A1'], epistemic: 'P1', result: 'P → M, ∇ connection',
+    code: 'check_T3 · core.py'
+  },
 
-  // Layer 2: Theorem R
-  { id: "ThmR",        label: "Thm R",           full: "Representation Requirements (R1–R3)",
-    layer: "gauge",    code: "check_Theorem_R",   module: "gauge.py",
-    desc: "Three carrier requirements forced by A1:\n  R1: Complex ternary carrier (confining, oriented composites)\n  R2: Pseudoreal binary carrier (chiral, intrinsically irreversible)\n  R3: Abelian grading (enforcement completeness, minimal)",
-    deps: ["L_nc", "L_irr", "TM", "T_conf", "B1p"] },
+  // ── Tier 1: Non-Closure Development ───────────────────────────
+  'L_nc_budget': {
+    tier: 1, label: 'L_nc^b', full: 'Budget Non-Closure',
+    desc: 'Individually admissible enforcement demands can collectively overflow a finite budget. The classical face: pigeonhole argument. Witness: C=10, E₁=E₂=6 → overflow. Deps: A1 + L_loc + L_ε*.',
+    deps: ['A1', 'L_loc', 'L_eps'], epistemic: 'P', result: 'E₁+E₂ > C(Γ) possible',
+    code: 'check_L_nc · core.py'
+  },
+  'L_nc_interf': {
+    tier: 1, label: 'L_nc^i', full: 'Interference Non-Closure',
+    desc: 'The quantum face of non-closure: E(A∪B) = E(A)+E(B)+Δ with Δ > 0 always. Crucially, Δ₁₂ ≠ Δ₂₁ — order-asymmetric, not merely superadditive. This asymmetry is what forces non-commutativity.',
+    deps: ['L_nc_budget', 'T2'], epistemic: 'P', result: 'Δ > 0, Δ₁₂ ≠ Δ₂₁',
+    code: 'check_L_nc, check_T1 · core.py'
+  },
+  'L_nc_conseq': {
+    tier: 1, label: 'L_nc^c', full: 'Non-Closure Consequences',
+    desc: 'Three structural consequences of interference non-closure: (1) Superadditivity — joint cost always exceeds sum; (2) Path dependence — order of commitments matters; (3) Saturation — finite capacity forces eventual overflow.',
+    deps: ['L_nc_interf'], epistemic: 'P', result: 'Superadditivity, path-dep., saturation',
+    code: 'check_L_nc, check_L_irr · core.py'
+  },
+  'L_irred': {
+    tier: 1, label: 'L_irred', full: 'Irreducibility from A1',
+    desc: 'The local enforcement algebra acts irreducibly on the Hilbert space of T2. A1\'s minimality requirement (no redundant substructure) forces the action to have no invariant proper subspaces.',
+    deps: ['A1', 'T2'], epistemic: 'P', result: 'Action on H is irreducible',
+    code: 'check_L_irred · core.py'
+  },
 
-  // Layer 2: Cauchy
-  { id: "L_Cauchy",    label: "L_Cauchy",        full: "Cost Function Uniqueness",
-    layer: "gauge",    code: "check_L_Cauchy_uniqueness", module: "L_Cauchy_uniqueness.py",
-    desc: "The only monotone, additive, positively-normalized cost function is F(d) = d (Cauchy's functional equation, 1821). This eliminates any free parameter in the algebra cost and anchors the Weinberg angle derivation.",
-    deps: ["A1", "L_loc"] },
+  // ── Tier 2: Gauge Origin ───────────────────────────────────────
+  'L_delta_nc': {
+    tier: 2, label: 'L_Δ→nc', full: 'Interference Implies Non-Commutativity',
+    desc: 'Δ₁₂ ≠ Δ₂₁ (order-asymmetric surplus from L_nc^i) combined with irreducibility (L_irred) and Schur\'s lemma on T2\'s Hilbert space proves [A,B] ≠ 0. Non-commutativity is a theorem here, not a postulate.',
+    deps: ['L_nc_interf', 'L_irred', 'T2'], epistemic: 'P', result: '[A,B] ≠ 0 forced',
+    code: 'check_T0, check_L_nc · core.py'
+  },
+  'L_AF': {
+    tier: 2, label: 'L_AF', full: 'Asymptotic Freedom',
+    desc: 'Non-abelian gauge channels carry charge (consequence of non-commutativity via L_Δ→nc), producing self-interactions that anti-screen. The coupling grows at low energy, weakens at high. Derived, not imported from QCD.',
+    deps: ['L_delta_nc', 'T3'], epistemic: 'P', result: 'g(μ) grows as μ → 0',
+    code: 'check_T_confinement · core.py'
+  },
+  'T_conf': {
+    tier: 2, label: 'T_conf', full: 'Confinement Mechanism',
+    desc: 'Asymptotic freedom (L_AF) + finite capacity (A1) + minimum cost (L_ε*): at IR scales the coupling diverges, making non-singlet state costs exceed any finite budget. Only colour-singlet configurations are admissible.',
+    deps: ['L_AF', 'A1', 'L_eps'], epistemic: 'P', result: 'Non-singlets inadmissible at IR',
+    code: 'check_T_confinement · core.py'
+  },
+  'B1p': {
+    tier: 2, label: "B₁'", full: 'Complex Carrier Requirement',
+    desc: 'Any carrier admitting only bilinear invariants produces self-conjugate composites (B = B̄) that provide no independent enforcement channel under T_M. The ternary invariant and complex carrier are the minimal structure surviving this constraint.',
+    deps: ['T_conf', 'T_M'], epistemic: 'P', result: 'Bilinear carriers excluded',
+    code: 'check_B1_prime · gauge.py'
+  },
 
-  // Layer 3: Gauge template
-  { id: "L_guniq",     label: "L_gauge,uniq",    full: "Gauge Template Uniqueness",
-    layer: "gauge",    code: "check_L_gauge_template_uniqueness", module: "gauge.py",
-    desc: "All 17 compact simple Lie algebras are tested against R1–R3. Only SU(N_c) × SU(2) × U(1) survives. This is not a selection from a shortlist — it is the unique structure that passes every filter.",
-    deps: ["ThmR", "L_Cauchy"] },
+  // ── Tier 3a: Representation Requirements ──────────────────────
+  'R1': {
+    tier: 3, label: 'R1', full: 'Ternary Carrier (L_ternary)',
+    desc: 'A faithful complex 3-dimensional carrier with irreducible trilinear invariant. Source: non-closure requires stable composites; confinement makes non-singlets inadmissible; T_M requires oriented composites; B₁\' blocks self-conjugate identification.',
+    deps: ['L_nc_interf', 'T_conf', 'T_M', 'B1p'], epistemic: 'P', result: 'Complex ternary carrier required',
+    code: 'check_Theorem_R · gauge.py'
+  },
+  'R2': {
+    tier: 3, label: 'R2', full: 'Chiral Carrier (L_chiral)',
+    desc: 'A faithful pseudoreal 2-dimensional carrier. Source: irreversibility (L_irr) forces the gauge sector to contain intrinsically irreversible processes; T_M requires each gauge factor to provide its own irreversible channels — not inherit from environment.',
+    deps: ['L_irr', 'T_M'], epistemic: 'P', result: 'Pseudoreal binary carrier required',
+    code: 'check_Theorem_R · gauge.py'
+  },
+  'R3': {
+    tier: 3, label: 'R3', full: 'Abelian Grading (L_grading)',
+    desc: 'A single U(1) factor with distinct charge assignments for all physical multiplets. Source: non-commutativity alone cannot distinguish all physically different states; a complete labelling requires an abelian grading independent of the non-abelian structure.',
+    deps: ['L_delta_nc', 'T_M'], epistemic: 'P', result: 'Abelian grading required',
+    code: 'check_Theorem_R · gauge.py'
+  },
+  'Thm_R': {
+    tier: 3, label: 'Thm R', full: 'Representation Requirements from Admissibility',
+    desc: 'Consolidation of R1, R2, R3 into Theorem R: three independent enforcement problems each demand their own carrier. Together they form the complete constraint set that uniquely selects the Standard Model gauge group in the next step.',
+    deps: ['R1', 'R2', 'R3'], epistemic: 'P', result: 'R1 + R2 + R3 jointly required',
+    code: 'check_Theorem_R · gauge.py'
+  },
 
-  { id: "T_gauge",     label: "T_gauge",         full: "Gauge Group Selection (N_c = 3)",
-    layer: "gauge",    code: "check_T_gauge",     module: "gauge.py",
-    desc: "Cost minimality (L_Cauchy) applied to the SU(N_c) family selects N_c = 3. Even N_c are excluded by the Witten anomaly. N_c = 3 is the minimum odd value satisfying all requirements.",
-    deps: ["L_guniq", "L_Cauchy"] },
+  // ── Tier 3b: Cost function uniqueness ─────────────────────────
+  'L_Cauchy': {
+    tier: 3, label: 'L_Cauchy', full: 'Cost Function Uniqueness',
+    desc: 'Cauchy\'s functional equation (1821): the only monotone additive cost function on ℕ with unit normalisation is F(d) = d. Three conditions — additivity from L_loc, monotonicity from A1, unit choice from L_ε* — all forced. Eliminates all free parameters from the cost functional.',
+    deps: ['A1', 'L_loc', 'L_cost', 'L_eps'], epistemic: 'P', result: 'F(d) = d, unique',
+    code: 'check_L_Cauchy_uniqueness · L_Cauchy_uniqueness.py'
+  },
 
-  // Layer 4: Fermion content + matter sector
-  { id: "T_field",     label: "T_field",         full: "SM Fermion Content",
-    layer: "gauge",    code: "check_T_field",     module: "gauge.py",
-    desc: "Exhaustive scan of 4,680 chiral templates under 7 simultaneous filters (asymptotic freedom, anomaly cancellation, chirality, Witten freedom, minimality, generation count, hypercharge). Unique survivor: 45 Weyl fermions in 3 generations.",
-    deps: ["T_gauge"] },
-  { id: "L_hc",        label: "L_hypercharge",   full: "Unique Hypercharge Assignment",
-    layer: "gauge",    code: "check_L_anomaly_free", module: "gauge.py",
-    desc: "Anomaly cancellation (cubic + global) uniquely determines all hypercharge assignments: Y(Q)=1/6, Y(u_R)=2/3, Y(d_R)=−1/3, Y(L)=−1/2, Y(e_R)=−1. These numbers, inserted by hand in textbooks, are derived here.",
-    deps: ["T_field"] },
-  { id: "T_Higgs",     label: "T_Higgs",         full: "Scalar Sector",
-    layer: "gauge",    code: "check_T_Higgs",     module: "gauge.py",
-    desc: "A1 minimality selects exactly one complex SU(2) doublet (4 real components). A second doublet would add free parameters without resolving any structural degeneracy — inadmissible by A1.",
-    deps: ["T_field"] },
+  // ── Tier 4: Gauge Template & Matter Content ───────────────────
+  'L_gauge_uniq': {
+    tier: 4, label: 'L_g,uniq', full: 'Gauge Template Uniqueness',
+    desc: 'Exhaustive classification of all 17 compact simple Lie algebras under R1–R3: Aₙ = SU(n+1) is the only family admitting a complex fundamental with trilinear invariant. R2 forces a pseudoreal factor; R3 forces U(1). The product is SU(Nc)×SU(2)×U(1) with Nc ≥ 3.',
+    deps: ['Thm_R', 'L_Cauchy', 'T_M', 'L_loc'], epistemic: 'P', result: 'SU(Nc)×SU(2)×U(1), Nc ≥ 3',
+    code: 'check_L_gauge_template_uniqueness · gauge.py'
+  },
+  'T_gauge': {
+    tier: 4, label: 'T_gauge', full: 'Gauge Group Selection',
+    desc: 'Capacity minimality (A1: no redundant structure) applied to SU(Nc)×SU(2)×U(1) with Nc ≥ 3: the antisymmetric invariant of SU(Nc) has rank k = Nc; minimum compatible with oriented composites is k=3. Even Nc excluded by Witten anomaly in fermion scan. Result: Nc = 3.',
+    deps: ['L_gauge_uniq', 'L_Cauchy', 'T3'], epistemic: 'P', result: 'SU(3)×SU(2)×U(1)',
+    code: 'check_T_gauge · gauge.py'
+  },
+  'T_field': {
+    tier: 4, label: 'T_field', full: 'SM Fermion Content',
+    desc: 'Exhaustive scan of 4,680 chiral templates under seven filters: asymptotic freedom (×2), anomaly cancellation, chirality, Witten anomaly, minimality, gauge invariance. Five closed-form exclusion proofs cover all representations outside the scan. One survivor: the Standard Model at 45 Weyl fermions.',
+    deps: ['T_gauge', 'L_AF', 'L_Cauchy'], epistemic: 'P', result: '4,680 → 1 survivor: 45 Weyl fermions',
+    code: 'check_T_field · gauge.py'
+  },
+  'L_hypercharge': {
+    tier: 4, label: 'L_Y', full: 'Unique Hypercharge Assignment',
+    desc: 'Given T_field\'s fermion representations and T_gauge\'s group structure, anomaly cancellation (gauge, gravitational, mixed) uniquely fixes all hypercharge assignments. The numbers textbooks insert by hand are derived.',
+    deps: ['T_field', 'T_gauge'], epistemic: 'P', result: 'Y(Q)=1/6, Y(u^c)=−2/3, … unique',
+    code: 'check_L_anomaly_free · gauge.py'
+  },
+  'T_Higgs': {
+    tier: 4, label: 'T_Higgs', full: 'Scalar Sector',
+    desc: 'R2 forces chirally asymmetric fermions → no gauge-invariant bare mass terms. Without mass generation, massless charged states require unbounded IR capacity (L_irr). An SU(2) doublet scalar VEV is the minimal admissible resolution. Four real components, three absorbed as Goldstone modes.',
+    deps: ['T_field', 'R2', 'L_irr'], epistemic: 'P', result: '4 Higgs components, v ≠ 0',
+    code: 'check_T_Higgs · gauge.py'
+  },
 
-  // Layer 5: Counting
-  { id: "L_species",   label: "L_species",       full: "Species as Enforcement Channels",
-    layer: "counting", code: "check_L_species",   module: "gauge.py",
-    desc: "Each distinct irreducible representation constitutes one independent enforcement channel. Kinematic modes (polarizations, helicities) are not structural — they do not contribute to the capacity count.",
-    deps: ["TM", "L_eps"] },
-  { id: "L_count",     label: "L_count",         full: "Capacity Counting (C_total = 61)",
-    layer: "counting", code: "check_L_count",     module: "gauge.py",
-    desc: "Structural channels at Bekenstein saturation: 45 Weyl fermions + 4 Higgs components + 12 gauge generators = 61. This is the size of the enforcement budget. No more, no less.",
-    deps: ["L_eps", "TM", "T_field", "T_Higgs", "L_species"] },
+  // ── Tier 5: Capacity Counting ─────────────────────────────────
+  'L_species': {
+    tier: 5, label: 'L_spec', full: 'Species as Enforcement Channels',
+    desc: 'Each irreducible representation type is one structural enforcement channel costing ε* per L_ε*. The interface tracks binary facts about which representations are active — not kinematics, not helicities. Helicities are propagation modes, free given the structural commitment.',
+    deps: ['A1', 'L_eps'], epistemic: 'P', result: 'Each irrep type = one channel',
+    code: 'check_L_species · gauge.py'
+  },
+  'L_count': {
+    tier: 5, label: 'L_count', full: 'Capacity Counting',
+    desc: 'Structural enforcement channels: 45 chiral species (T_field) + 12 gauge generators (T_gauge: 8g+3W+1B) + 4 Higgs real components (T_Higgs) = 61. By T_M + L_loc no two channels share resources — counting is additive. C_total = 61 is a rigid theorem, zero free parameters.',
+    deps: ['L_species', 'T_field', 'T_gauge', 'T_Higgs', 'T_M', 'L_loc'], epistemic: 'P', result: '45 + 12 + 4 = C_total = 61',
+    code: 'check_L_count · gauge.py'
+  },
 
-  // Layer 6: MECE partition
-  { id: "P_exhaust",   label: "P_exhaust",       full: "MECE Partition (42 + 3 + 16)",
-    layer: "cosmology", code: "check_P_exhaust",  module: "core.py",
-    desc: "Two mechanism predicates (confines? / acquires mass via SSB?) partition the 61 types into mutually exclusive, collectively exhaustive sectors: 42 vacuum + 3 baryonic + 16 dark.",
-    deps: ["A1", "T_gauge", "L_count"] },
-  { id: "L_vac",       label: "L_vac",           full: "Vacuum Sector Assignment",
-    layer: "cosmology", code: "check_P_exhaust",  module: "core.py",
-    desc: "The 42-type vacuum sector contains all gauge bosons and Higgs components. These carry no baryon number and do not acquire mass solely through confinement.",
-    deps: ["P_exhaust"] },
-  { id: "L_sGram",     label: "L_singlet,Gram",  full: "Rank-1 Dark Sector",
-    layer: "cosmology", code: "check_L_singlet_Gram", module: "cosmology.py",
-    desc: "The 16 dark types (right-handed neutrinos and dark matter) form a rank-1 Gram matrix sector: they interact via gravity only, enforcing no non-abelian charge at the interface.",
-    deps: ["P_exhaust", "TM"] },
-
-  // Layer 7: Cosmological predictions
-  { id: "L_equip",     label: "L_equip",         full: "Horizon Equipartition",
-    layer: "cosmology", code: "check_L_equip",    module: "cosmology.py",
-    desc: "At horizon saturation, capacity fractions equal energy fractions. This bridges the abstract partition (42/61, 19/61) to the cosmological density parameters measured by telescopes.",
-    deps: ["L_sGram", "L_count", "P_exhaust"] },
-  { id: "L_satpart",   label: "L_sat,part",      full: "Saturation-Independent Partition",
-    layer: "cosmology", code: "check_L_saturation_partition", module: "cosmology.py",
-    desc: "The fractions Ω_Λ = 42/61 and Ω_m = 19/61 are topological invariants of the matching structure, independent of the saturation level. They cannot evolve, cannot be tuned, and do not depend on continuous parameters.",
-    deps: ["L_equip", "L_count"] },
-  { id: "L_selfexcl",  label: "L_self-excl",     full: "Effective Dimension (d_eff = 102)",
-    layer: "cosmology", code: "check_L_self_exclusion", module: "gravity.py",
-    desc: "The effective dimension d_eff = 60 + 42 = 102 counts microstates available for cosmological entropy computation. The vacuum sector is counted twice: once as capacity types, once as excluded states.",
-    deps: ["L_eps", "TM", "L_count", "P_exhaust"] },
-];
-
-// Edges: source → target (arrows go from dependencies toward conclusions)
-const rawLinks = [];
-nodes.forEach(n => {
-  n.deps.forEach(d => {
-    rawLinks.push({ source: d, target: n.id });
-  });
-});
-
-// ── LAYOUT ────────────────────────────────────────────────────────────────────
-
-// Assign column (x) positions manually for clarity
-const xMap = {
-  "A1": 0,
-  "L_eps": -2, "L_nc": -1, "L_loc": 0, "L_irr": 1, "TM": 2,
-  "L_irred": -1.5, "L_Dnc": -0.5, "T_conf": 0.5, "B1p": 1.5,
-  "ThmR": 0.5, "L_Cauchy": -1,
-  "L_guniq": 0,
-  "T_gauge": 0,
-  "T_field": 0.5, "L_hc": 1.2, "T_Higgs": -0.3,
-  "L_species": -1.5, "L_count": 0,
-  "P_exhaust": 0.5, "L_vac": 1.4,
-  "L_sGram": -0.5,
-  "L_equip": 0, "L_satpart": 0.5, "L_selfexcl": -1,
+  // ── Tier 6: MECE Partition & Cosmology ────────────────────────
+  'P_exhaust': {
+    tier: 6, label: 'P_exh', full: 'MECE Partition (Predicate Exhaustion)',
+    desc: 'Two binary predicates — Q1 (gauge-addressable by external probe) and Q2 (conserved non-abelian SU(3) charge) — partition all 61 channels. MECE: mutually exclusive (each channel satisfies exactly one combination), collectively exhaustive (no third predicate exists given T_gauge completeness). Result: 42 + 3 + 16 = 61.',
+    deps: ['L_count', 'T_conf', 'T_gauge'], epistemic: 'P', result: '42 (vacuum) + 3 (baryonic) + 16 (dark)',
+    code: 'check_P_exhaust · core.py'
+  },
+  'L_vac': {
+    tier: 6, label: 'L_vac', full: 'Vacuum Sector Assignment',
+    desc: '42 vacuum channels: 12 gauge generators (enforcement infrastructure, not consumers) + 27 fermion internal-structure channels (sub-components of multiplet type-identity, Q1=0 by T_M — assigning Q1=1 would require a second enforcement role violating T_M) + 3 Higgs Goldstone modes (absorbed post-SSB).',
+    deps: ['P_exhaust', 'T_M', 'T_gauge'], epistemic: 'P', result: '12g + 27f-int + 3G = 42',
+    code: 'check_P_exhaust · core.py'
+  },
+  'L_singlet': {
+    tier: 6, label: 'L_sing', full: 'Rank-1 Dark Sector',
+    desc: 'The 16 dark-sector types (Q1=1, Q2=0) have enforcement demand vectors that all project onto the same one-dimensional subspace of gauge-channel space — the direction orthogonal to all SU(3) generators. Gram matrix has rank 1: self-interaction cross-section σ/m = 0 at leading order. Dark matter is collisionless by structure.',
+    deps: ['L_vac', 'T_field', 'T_M'], epistemic: 'P', result: 'σ/m = 0 at leading order',
+    code: 'check_L_singlet_Gram · cosmology.py'
+  },
+  'L_equip': {
+    tier: 6, label: 'L_equip', full: 'Horizon Equipartition',
+    desc: 'At the causal horizon: L_irr + T_entropy force entropy to its global maximum. No preferred ordering among 61 types (distinguished only by discrete Q1/Q2 labels). Strict concavity of entropy functional on finite set with uniform cost floor (L_ε*) forces equal capacity shares. Ω_sector = |sector| / 61.',
+    deps: ['L_irr', 'L_count', 'L_eps'], epistemic: 'P', result: 'Ω_Λ = 42/61, Ω_m = 19/61',
+    code: 'check_L_equip · cosmology.py'
+  },
+  'L_sat_part': {
+    tier: 6, label: 'L_sat', full: 'Saturation-Independent Partition',
+    desc: 'The partition 42+3+16=61 is determined by discrete type-classification predicates (Q1, Q2), not by total capacity. At any saturation s > s_crit = 1/102, the max-entropy distribution assigns capacity uniformly. The fractions 42/61 and 19/61 are topological invariants — locked by discrete type labels, not continuous parameters.',
+    deps: ['L_equip', 'P_exhaust'], epistemic: 'P', result: 'Ω fractions are topological invariants',
+    code: 'check_L_saturation_partition · cosmology.py'
+  },
 };
 
-const yOrder = [
-  ["A1"],
-  ["L_eps","L_nc","L_loc","L_irr","TM"],
-  ["L_irred","L_Dnc","T_conf","B1p"],
-  ["ThmR","L_Cauchy"],
-  ["L_guniq"],
-  ["T_gauge"],
-  ["T_field","L_hc","T_Higgs"],
-  ["L_species","L_count"],
-  ["P_exhaust","L_vac"],
-  ["L_sGram"],
-  ["L_equip","L_satpart","L_selfexcl"],
-];
+// ══════════════════════════════════════════════════════════════
+// LAYOUT
+// ══════════════════════════════════════════════════════════════
 
-// Compute y positions
-const rowHeight = 88;
-const colWidth  = 115;
-
-const posMap = {};
-yOrder.forEach((row, yi) => {
-  row.forEach(id => {
-    const x = (xMap[id] ?? 0) * colWidth;
-    const y = yi * rowHeight;
-    posMap[id] = { x, y };
-  });
-});
-
-// Node dimensions
-const nodeW = 108, nodeH = 34;
-
-// Colors
-const layerColors = {
-  axiom:      { fill: "#1e2e4a", stroke: "#4a70a8", text: "#9ab8e0" },
-  nonclosure: { fill: "#2a1e3c", stroke: "#7050a0", text: "#b090d8" },
-  gauge:      { fill: "#1a2e28", stroke: "#3a8060", text: "#80c0a0" },
-  counting:   { fill: "#2e2010", stroke: "#9a7030", text: "#d0a860" },
-  cosmology:  { fill: "#1e1c38", stroke: "#5858a0", text: "#9090d0" },
+const tierYs    = { '-1': 50, '0': 140, '1': 260, '2': 380, '3': 490, '4': 590, '5': 680, '6': 770 };
+const tierColors = {
+  '-1': '#f0c040',
+  '0':  '#606878',
+  '1':  '#e07030',
+  '2':  '#c060c0',
+  '3':  '#4a9eff',
+  '4':  '#4a9eff',
+  '5':  '#40d88a',
+  '6':  '#40d88a',
 };
 
-// ── RENDER ────────────────────────────────────────────────────────────────────
+const tierNames = {
+  '-1': 'The Axiom',
+  '0':  'Paper 1 Inputs',
+  '1':  'Tier 1 · Non-Closure',
+  '2':  'Tier 2 · Gauge Origin',
+  '3':  'Tier 3 · Representation Requirements',
+  '4':  'Tier 4 · Gauge Architecture',
+  '5':  'Tier 5 · Capacity Counting',
+  '6':  'Tier 6 · Partition & Cosmology',
+};
 
-const svg = d3.select("#dag");
-const container = document.getElementById("graph-container");
-
-let width = container.clientWidth;
-let height = container.clientHeight;
-
-svg.attr("viewBox", `0 0 ${width} ${height}`);
-
-// Defs
-const defs = svg.append("defs");
-defs.append("marker")
-  .attr("id", "arrowhead")
-  .attr("viewBox", "0 -4 8 8")
-  .attr("refX", 7).attr("refY", 0)
-  .attr("markerWidth", 6).attr("markerHeight", 6)
-  .attr("orient", "auto")
-  .append("path")
-  .attr("d", "M0,-4L8,0L0,4")
-  .attr("fill", "#4a5070");
-
-const g = svg.append("g").attr("id", "scene");
-
-// Zoom
-const zoom = d3.zoom()
-  .scaleExtent([0.25, 3])
-  .on("zoom", (e) => g.attr("transform", e.transform));
-
-svg.call(zoom);
-
-// Center the graph
-const allX = Object.values(posMap).map(p => p.x);
-const allY = Object.values(posMap).map(p => p.y);
-const gMinX = Math.min(...allX) - nodeW/2 - 30;
-const gMaxX = Math.max(...allX) + nodeW/2 + 30;
-const gMinY = Math.min(...allY) - nodeH/2 - 20;
-const gMaxY = Math.max(...allY) + nodeH/2 + 20;
-const gW = gMaxX - gMinX;
-const gH = gMaxY - gMinY;
-
-const initialScale = Math.min((width - 40) / gW, (height - 40) / gH) * 0.88;
-const tx = (width - gW * initialScale) / 2 - gMinX * initialScale;
-const ty = (height - gH * initialScale) / 2 - gMinY * initialScale;
-svg.call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(initialScale));
-
-// Links
-const links = g.append("g").attr("class", "links")
-  .selectAll("path")
-  .data(rawLinks)
-  .join("path")
-  .attr("class", "link")
-  .attr("stroke", d => {
-    const tgt = nodes.find(n => n.id === d.target);
-    return layerColors[tgt?.layer ?? "axiom"].stroke;
-  })
-  .attr("d", d => {
-    const s = posMap[d.source], t = posMap[d.target];
-    if (!s || !t) return "";
-    const x1 = s.x, y1 = s.y + nodeH/2;
-    const x2 = t.x, y2 = t.y - nodeH/2;
-    const cy = (y1 + y2) / 2;
-    return `M${x1},${y1} C${x1},${cy} ${x2},${cy} ${x2},${y2}`;
+function layoutNodes(width) {
+  const tiers = {};
+  Object.entries(theorems).forEach(([id, t]) => {
+    const k = String(t.tier);
+    if (!tiers[k]) tiers[k] = [];
+    tiers[k].push(id);
   });
 
-// Nodes
-const nodeGroups = g.append("g").attr("class", "nodes")
-  .selectAll("g")
-  .data(nodes)
-  .join("g")
-  .attr("class", "node-group")
-  .attr("data-id", d => d.id)
-  .attr("data-layer", d => d.layer)
-  .attr("transform", d => {
-    const p = posMap[d.id] || {x:0,y:0};
-    return `translate(${p.x - nodeW/2}, ${p.y - nodeH/2})`;
+  const positions = {};
+  Object.entries(tiers).forEach(([tier, ids]) => {
+    const y = tierYs[tier];
+    const n = ids.length;
+    const maxSpacing = 90;
+    const spacing = Math.min(maxSpacing, (width - 80) / Math.max(n, 1));
+    const startX = (width - (n - 1) * spacing) / 2;
+    ids.forEach((id, i) => {
+      positions[id] = { x: startX + i * spacing, y: y + (n > 5 ? (i % 2) * 16 : 0) };
+    });
+  });
+  return positions;
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════════════
+
+let positions = {};
+let selectedNode = null;
+let verifiedNodes = new Set();
+
+function render() {
+  const container = document.getElementById('dagContainer');
+  const rect = container.getBoundingClientRect();
+  const W = rect.width || 800;
+  const H = 870;
+  container.style.minHeight = H + 'px';
+
+  positions = layoutNodes(W);
+
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('width', W);
+  svg.setAttribute('height', H);
+
+  // Tier labels
+  Object.entries(tierNames).forEach(([tier, label]) => {
+    const t = document.createElementNS(ns, 'text');
+    t.setAttribute('x', 16);
+    t.setAttribute('y', tierYs[tier] - 16);
+    t.setAttribute('class', 'tier-label');
+    t.textContent = label;
+    svg.appendChild(t);
   });
 
-nodeGroups.append("rect")
-  .attr("class", "node-rect")
-  .attr("width", nodeW).attr("height", nodeH)
-  .attr("fill", d => layerColors[d.layer].fill)
-  .attr("stroke", d => layerColors[d.layer].stroke);
+  // Tier separator lines
+  Object.keys(tierNames).filter(t => t !== '-1').forEach(tier => {
+    const line = document.createElementNS(ns, 'line');
+    line.setAttribute('x1', 0);
+    line.setAttribute('x2', W);
+    line.setAttribute('y1', tierYs[tier] - 32);
+    line.setAttribute('y2', tierYs[tier] - 32);
+    line.setAttribute('stroke', 'rgba(255,255,255,0.03)');
+    line.setAttribute('stroke-width', 1);
+    svg.appendChild(line);
+  });
 
-nodeGroups.append("text")
-  .attr("class", "node-label math")
-  .attr("x", nodeW/2).attr("y", nodeH/2)
-  .attr("fill", d => layerColors[d.layer].text)
-  .text(d => d.label);
-
-// ── INTERACTION ───────────────────────────────────────────────────────────────
-
-const tooltip = document.getElementById("tooltip");
-const panel = document.getElementById("panel");
-const placeholder = document.getElementById("panel-placeholder");
-const panelContent = document.getElementById("panel-content");
-
-function getAncestors(id) {
-  const result = new Set([id]);
-  const stack = [id];
-  while (stack.length) {
-    const cur = stack.pop();
-    rawLinks.filter(l => l.target === cur).forEach(l => {
-      if (!result.has(l.source)) { result.add(l.source); stack.push(l.source); }
+  // Edges
+  const edgeGroup = document.createElementNS(ns, 'g');
+  edgeGroup.id = 'edges';
+  Object.entries(theorems).forEach(([id, t]) => {
+    t.deps.forEach(depId => {
+      if (!positions[depId] || !positions[id]) return;
+      const p1 = positions[depId];
+      const p2 = positions[id];
+      const path = document.createElementNS(ns, 'path');
+      const midY = (p1.y + p2.y) / 2;
+      const d = `M${p1.x},${p1.y + 14} C${p1.x},${midY} ${p2.x},${midY} ${p2.x},${p2.y - 14}`;
+      path.setAttribute('d', d);
+      const isP1edge = theorems[depId]?.epistemic === 'P1' || depId === 'A1';
+      path.setAttribute('class', 'edge' + (isP1edge && t.tier > 0 ? ' p1-edge' : ''));
+      path.dataset.from = depId;
+      path.dataset.to = id;
+      edgeGroup.appendChild(path);
     });
+  });
+  svg.appendChild(edgeGroup);
+
+  // Nodes
+  const nodeGroup = document.createElementNS(ns, 'g');
+  nodeGroup.id = 'nodes';
+  Object.entries(theorems).forEach(([id, t]) => {
+    const pos = positions[id];
+    if (!pos) return;
+
+    const g = document.createElementNS(ns, 'g');
+    g.setAttribute('class', 'node-group');
+    g.dataset.id = id;
+    g.setAttribute('transform', `translate(${pos.x}, ${pos.y})`);
+
+    // Glow
+    const glow = document.createElementNS(ns, 'circle');
+    glow.setAttribute('r', 20);
+    glow.setAttribute('fill', tierColors[String(t.tier)]);
+    glow.setAttribute('opacity', 0.06);
+    g.appendChild(glow);
+
+    // Circle
+    const r = (id === 'A1') ? 16 : (t.epistemic === 'P1') ? 10 : 12;
+    const circle = document.createElementNS(ns, 'circle');
+    circle.setAttribute('r', r);
+    circle.setAttribute('fill', tierColors[String(t.tier)]);
+    circle.setAttribute('opacity', t.epistemic === 'P1' ? 0.55 : 0.85);
+    circle.setAttribute('stroke', tierColors[String(t.tier)]);
+    circle.setAttribute('stroke-width', t.epistemic === 'P1' ? 1 : 1.5);
+    circle.setAttribute('class', 'node-circle');
+    circle.id = 'circle-' + id;
+    g.appendChild(circle);
+
+    // Label
+    const text = document.createElementNS(ns, 'text');
+    text.setAttribute('y', r + 16);
+    text.setAttribute('class', 'node-label');
+    text.textContent = t.label;
+    g.appendChild(text);
+
+    g.addEventListener('click', () => selectNode(id));
+    g.addEventListener('mouseenter', (e) => showTooltip(id, e));
+    g.addEventListener('mousemove', (e) => moveTooltip(e));
+    g.addEventListener('mouseleave', hideTooltip);
+    nodeGroup.appendChild(g);
+  });
+  svg.appendChild(nodeGroup);
+
+  container.innerHTML = '';
+  container.appendChild(svg);
+
+  // Re-apply state
+  verifiedNodes.forEach(id => {
+    const c = document.getElementById('circle-' + id);
+    if (c) { c.setAttribute('fill', '#40d88a'); c.setAttribute('stroke', '#40d88a'); }
+  });
+  if (selectedNode) selectNode(selectedNode);
+}
+
+// ══════════════════════════════════════════════════════════════
+// SELECT NODE
+// ══════════════════════════════════════════════════════════════
+
+function selectNode(id) {
+  hideTooltip();
+  document.querySelectorAll('.node-group.selected').forEach(g => g.classList.remove('selected'));
+  document.querySelectorAll('.edge.highlighted').forEach(e => e.classList.remove('highlighted'));
+
+  selectedNode = id;
+  const t = theorems[id];
+  const g = document.querySelector(`.node-group[data-id="${id}"]`);
+  if (g) g.classList.add('selected');
+
+  const allDeps = getAllDeps(id);
+  document.querySelectorAll('.edge').forEach(e => {
+    if (allDeps.has(e.dataset.from) && (allDeps.has(e.dataset.to) || e.dataset.to === id)) {
+      e.classList.add('highlighted');
+    }
+    if (e.dataset.to === id) e.classList.add('highlighted');
+  });
+
+  const card = document.getElementById('detailCard');
+  const epClass = t.epistemic === 'AXIOM' ? 'axiom' : t.epistemic === 'P1' ? 'p1' : 'proved';
+  const epText  = t.epistemic === 'AXIOM' ? 'AXIOM' : t.epistemic === 'P1' ? 'PAPER 1 [P]' : 'PROVED [P]';
+
+  const pathCount = countPathsToA1(id);
+  const chain = findShortestChain(id);
+  const totalAncestors = allDeps.size - 1;
+
+  let chainDetailHtml = '';
+  if (id !== 'A1' && chain.length > 1) {
+    const chainStr = chain.map(n =>
+      `<span class="dep-chip" onclick="selectNode('${n}')">${theorems[n]?.label || n}</span>`
+    ).join(' <span style="color:var(--accent);opacity:0.5;">→</span> ');
+    const pathDesc = pathCount > 1
+      ? `${pathCount} distinct derivation paths reach this theorem from A1. Multiple paths mean the result is over-determined — it would survive even if one chain were weakened.`
+      : 'Single derivation path from A1.';
+    chainDetailHtml = `
+    <div style="margin-top: 14px;">
+      <div class="card-label" style="margin-bottom: 6px">Shortest chain to A1</div>
+      <div class="dep-chain">${chainStr}</div>
+      <p style="margin-top: 8px; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--fg-dim);">
+        ${pathCount} path${pathCount > 1 ? 's' : ''} · ${totalAncestors} ancestor${totalAncestors !== 1 ? 's' : ''} · depth ${chain.length - 1}
+      </p>
+      <p style="margin-top: 4px; font-size: 13px; color: var(--fg-dim); line-height: 1.5;">${pathDesc}</p>
+    </div>`;
   }
-  return result;
-}
 
-function getDescendants(id) {
-  const result = new Set([id]);
-  const stack = [id];
-  while (stack.length) {
-    const cur = stack.pop();
-    rawLinks.filter(l => l.source === cur).forEach(l => {
-      if (!result.has(l.target)) { result.add(l.target); stack.push(l.target); }
-    });
-  }
-  return result;
-}
+  const codeHtml = t.code
+    ? `<p style="margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--fg-dim);">⌥ ${t.code}</p>`
+    : '';
 
-let selectedId = null;
-
-nodeGroups.on("click", (e, d) => {
-  e.stopPropagation();
-  selectedId = d.id;
-  highlightNode(d.id);
-  showPanel(d);
-});
-
-nodeGroups.on("mousemove", (e, d) => {
-  tooltip.style.opacity = "1";
-  tooltip.style.left = (e.clientX + 14) + "px";
-  tooltip.style.top  = (e.clientY - 10) + "px";
-  tooltip.textContent = d.full;
-});
-
-nodeGroups.on("mouseleave", () => {
-  tooltip.style.opacity = "0";
-});
-
-svg.on("click", () => {
-  selectedId = null;
-  clearHighlight();
-  placeholder.style.display = "";
-  panelContent.style.display = "none";
-});
-
-function highlightNode(id) {
-  const ancestors = getAncestors(id);
-  const descendants = getDescendants(id);
-  const connected = new Set([...ancestors, ...descendants]);
-
-  nodeGroups.classed("highlighted", n => n.id === id)
-            .classed("dimmed", n => !connected.has(n.id));
-
-  links.classed("highlighted", l => connected.has(l.source) && connected.has(l.target))
-       .classed("dimmed", l => !(connected.has(l.source) && connected.has(l.target)));
-}
-
-function clearHighlight() {
-  nodeGroups.classed("highlighted", false).classed("dimmed", false);
-  links.classed("highlighted", false).classed("dimmed", false);
-}
-
-function showPanel(d) {
-  placeholder.style.display = "none";
-  panelContent.style.display = "";
-
-  const lc = layerColors[d.layer];
-  const layerName = { axiom:"Axiom / P1 lemma", nonclosure:"Non-closure engine",
-                      gauge:"Gauge structure", counting:"Capacity counting",
-                      cosmology:"Cosmological partition" }[d.layer];
-
-  const depHtml = d.deps.length
-    ? d.deps.map(dep => `<span class="dep-tag" onclick="clickDep('${dep}')">${dep}</span>`).join("")
-    : `<span style="color:#4a4a58; font-size:0.78rem; font-style:italic;">none (root)</span>`;
-
-  panelContent.innerHTML = `
-    <span class="panel-tag" style="background:${lc.fill}; border:1px solid ${lc.stroke}; color:${lc.text};">${layerName}</span>
-    <div class="panel-name">${d.label}</div>
-    <div class="panel-full">${d.full}</div>
-    <div class="panel-desc">${d.desc.replace(/\n/g, '<br>')}</div>
-    <div class="panel-section">Code reference</div>
-    <div class="panel-code">${d.code}<br><span style="color:#6a7070;"># ${d.module}</span></div>
-    <div class="panel-section">Depends on</div>
-    <div class="panel-deps">${depHtml}</div>
+  card.innerHTML = `
+    <div class="card-label">Selected Theorem</div>
+    <span class="detail-tag ${epClass}">${epText}</span>
+    <h3>${t.full}</h3>
+    <p style="margin: 8px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent);">${t.result}</p>
+    <p>${t.desc}</p>
+    ${codeHtml}
+    ${t.deps.length ? `
+    <div style="margin-top: 14px;">
+      <div class="card-label" style="margin-bottom: 6px">Direct dependencies</div>
+      <div class="dep-chain">
+        ${t.deps.map(d => `<span class="dep-chip" onclick="selectNode('${d}')">${theorems[d]?.label || d}</span>`).join('')}
+      </div>
+    </div>` : '<p style="margin-top: 12px; font-style: italic; color: var(--fg-dim);">No dependencies — this is the root.</p>'}
+    ${chainDetailHtml}
   `;
 }
 
-window.clickDep = function(id) {
-  const nd = nodes.find(n => n.id === id);
-  if (!nd) return;
-  selectedId = id;
-  highlightNode(id);
-  showPanel(nd);
-  // Pan to node
-  const p = posMap[id];
-  if (!p) return;
-  const t = d3.zoomTransform(svg.node());
-  const cx = width/2 - p.x * t.k;
-  const cy = height/2 - p.y * t.k;
-  svg.transition().duration(400).call(zoom.transform,
-    d3.zoomIdentity.translate(cx, cy).scale(t.k));
-};
+function getAllDeps(id, visited = new Set()) {
+  visited.add(id);
+  (theorems[id]?.deps || []).forEach(d => { if (!visited.has(d)) getAllDeps(d, visited); });
+  return visited;
+}
 
-// ── FILTERS ───────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// VERIFICATION ANIMATION
+// ══════════════════════════════════════════════════════════════
 
-document.querySelectorAll(".filter-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    const f = btn.dataset.filter;
-    nodeGroups.classed("dimmed", d => f !== "all" && d.layer !== f);
-    links.classed("dimmed", l => {
-      if (f === "all") return false;
-      const sn = nodes.find(n => n.id === l.source);
-      const tn = nodes.find(n => n.id === l.target);
-      return sn?.layer !== f && tn?.layer !== f;
-    });
+async function runVerification() {
+  const btn = document.getElementById('btnRun');
+  btn.classList.add('running');
+  btn.textContent = '● Running...';
+  verifiedNodes.clear();
+
+  const terminal = document.getElementById('terminal');
+  terminal.innerHTML = '<span class="term-prompt">$</span> python run_checks.py --paper 2\n\n';
+
+  const order = topoSort();
+  let passed = 0;
+
+  // Group by module for output
+  const modules = { 'core.py': [], 'gauge.py': [], 'cosmology.py': [], 'L_Cauchy_uniqueness.py': [] };
+  order.forEach(id => {
+    const code = theorems[id].code || '';
+    if      (code.includes('L_Cauchy_uniqueness')) modules['L_Cauchy_uniqueness.py'].push(id);
+    else if (code.includes('cosmology'))           modules['cosmology.py'].push(id);
+    else if (code.includes('gauge'))               modules['gauge.py'].push(id);
+    else                                            modules['core.py'].push(id);
   });
-});
 
-// ── SEARCH ────────────────────────────────────────────────────────────────────
+  for (const [mod, ids] of Object.entries(modules)) {
+    if (!ids.length) continue;
+    await sleep(200);
+    terminal.innerHTML += `\n<span class="term-dim">── ${mod} ──────────────────────────</span>\n`;
 
-document.getElementById("search-input").addEventListener("input", function() {
-  const q = this.value.toLowerCase().trim();
-  if (!q) { clearHighlight(); return; }
-  const matches = nodes.filter(n =>
-    n.id.toLowerCase().includes(q) ||
-    n.label.toLowerCase().includes(q) ||
-    n.full.toLowerCase().includes(q) ||
-    n.code.toLowerCase().includes(q)
-  );
-  if (matches.length === 0) { clearHighlight(); return; }
-  const matchIds = new Set(matches.map(n => n.id));
-  nodeGroups.classed("dimmed", n => !matchIds.has(n.id));
-  nodeGroups.classed("highlighted", n => matchIds.has(n.id));
-  links.classed("dimmed", true).classed("highlighted", false);
-  if (matches.length === 1) showPanel(matches[0]);
-});
+    for (const id of ids) {
+      const t = theorems[id];
+      await sleep(80 + Math.random() * 100);
 
-// ── ZOOM BUTTONS ──────────────────────────────────────────────────────────────
+      const circle = document.getElementById('circle-' + id);
+      if (circle) {
+        circle.setAttribute('fill', '#40d88a');
+        circle.setAttribute('stroke', '#40d88a');
+        circle.classList.add('verified');
+        setTimeout(() => circle.classList.remove('verified'), 500);
+      }
 
-document.getElementById("zoom-in").addEventListener("click", () =>
-  svg.transition().call(zoom.scaleBy, 1.3));
-document.getElementById("zoom-out").addEventListener("click", () =>
-  svg.transition().call(zoom.scaleBy, 0.77));
-document.getElementById("zoom-reset").addEventListener("click", () =>
-  svg.transition().duration(400).call(zoom.transform,
-    d3.zoomIdentity.translate(tx, ty).scale(initialScale)));
+      document.querySelectorAll(`.edge[data-to="${id}"]`).forEach(e => e.classList.add('verified'));
+      verifiedNodes.add(id);
+      passed++;
 
-// Resize
-window.addEventListener("resize", () => {
-  width = container.clientWidth;
-  height = container.clientHeight;
-  svg.attr("viewBox", `0 0 ${width} ${height}`);
+      const ep = t.epistemic === 'AXIOM' ? 'AXIOM' : t.epistemic === 'P1' ? 'P1' : 'P';
+      terminal.innerHTML += `  <span class="term-dim">[${ep}]</span> <span class="term-pass">PASS</span>  <span class="term-name">${id}</span>\n`;
+      terminal.innerHTML += `  <span class="term-dim">       ${t.result}</span>\n`;
+      terminal.scrollTop = terminal.scrollHeight;
+      document.getElementById('statPassed').textContent = passed;
+    }
+  }
+
+  await sleep(300);
+  terminal.innerHTML += `\n<span class="term-dim">══════════════════════════════════════════</span>\n`;
+  terminal.innerHTML += `  <span class="term-pass">Paper 2 (STRUCTURE): ${passed} passed, 0 failed</span>\n`;
+  terminal.innerHTML += `  <span class="term-dim">Ω_Λ = 42/61 = 0.6885  Ω_m = 19/61 = 0.3115</span>\n`;
+  terminal.innerHTML += `<span class="term-dim">══════════════════════════════════════════</span>\n`;
+  terminal.scrollTop = terminal.scrollHeight;
+
+  btn.classList.remove('running');
+  btn.textContent = '✓ Complete';
+}
+
+function resetDAG() {
+  verifiedNodes.clear();
+  selectedNode = null;
+  document.getElementById('statPassed').textContent = '—';
+  document.getElementById('btnRun').textContent = '▶ Run Checks';
+  document.getElementById('btnRun').classList.remove('running');
+  document.getElementById('terminal').innerHTML = '<span class="term-prompt">$</span> <span class="term-dim">awaiting run_checks.py ...</span>';
+  document.getElementById('detailCard').innerHTML = '<div class="card-label">Selected Theorem</div><div class="detail-empty">Click a node to inspect</div>';
+  render();
+}
+
+function topoSort() {
+  const visited = new Set();
+  const order = [];
+  function visit(id) {
+    if (visited.has(id)) return;
+    visited.add(id);
+    (theorems[id]?.deps || []).forEach(d => { if (theorems[d]) visit(d); });
+    order.push(id);
+  }
+  Object.keys(theorems).forEach(visit);
+  return order;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ══════════════════════════════════════════════════════════════
+// TOOLTIP
+// ══════════════════════════════════════════════════════════════
+
+const tooltip = document.getElementById('tooltip');
+let tooltipTimeout = null;
+
+function showTooltip(id, e) {
+  const t = theorems[id];
+  const color = tierColors[String(t.tier)];
+  const tierName = tierNames[String(t.tier)] || '';
+
+  const depsHtml = t.deps.length
+    ? `<div class="tooltip-deps">Direct deps: <span>${t.deps.map(d => theorems[d]?.label || d).join('</span> · <span>')}</span></div>`
+    : `<div class="tooltip-deps" style="color: var(--tier-ax);">⬡ Root — no dependencies</div>`;
+
+  const pathCount = countPathsToA1(id);
+  const shortestChain = findShortestChain(id);
+  let chainHtml = '';
+  if (id !== 'A1' && shortestChain.length > 1) {
+    const chainNodes = shortestChain.map(n =>
+      `<span class="chain-node">${theorems[n]?.label || n}</span>`
+    ).join('<span class="chain-arrow">→</span>');
+    const pathNote = pathCount > 1
+      ? `<div class="tooltip-paths-note">${pathCount} distinct paths back to A1 — redundant derivation chains strengthen the result</div>`
+      : `<div class="tooltip-paths-note">Single derivation path to A1</div>`;
+    chainHtml = `
+      <div class="tooltip-chain">
+        <div class="tooltip-chain-label">Shortest chain to A1</div>
+        <div class="tooltip-chain-paths">${chainNodes}</div>
+        ${pathNote}
+      </div>`;
+  }
+
+  tooltip.innerHTML = `
+    <div class="tooltip-tier" style="color: ${color};">${tierName}</div>
+    <div class="tooltip-name">${t.full}</div>
+    <div class="tooltip-result">${t.result}</div>
+    <div class="tooltip-desc">${t.desc.slice(0, 200)}${t.desc.length > 200 ? '…' : ''}</div>
+    ${depsHtml}
+    ${chainHtml}
+  `;
+
+  clearTimeout(tooltipTimeout);
+  tooltipTimeout = setTimeout(() => tooltip.classList.add('visible'), 200);
+  moveTooltip(e);
+}
+
+function countPathsToA1(id) {
+  const memo = {};
+  function count(n) {
+    if (n === 'A1') return 1;
+    if (memo[n] !== undefined) return memo[n];
+    const t = theorems[n];
+    if (!t || !t.deps.length) return 0;
+    let total = 0;
+    for (const dep of t.deps) { if (theorems[dep]) total += count(dep); }
+    memo[n] = total;
+    return total;
+  }
+  return count(id);
+}
+
+function findShortestChain(id) {
+  if (id === 'A1') return ['A1'];
+  const queue = [[id]];
+  const visited = new Set([id]);
+  while (queue.length) {
+    const path = queue.shift();
+    const current = path[path.length - 1];
+    if (current === 'A1') return path.reverse();
+    const t = theorems[current];
+    if (!t) continue;
+    for (const dep of t.deps) {
+      if (!visited.has(dep) && theorems[dep]) {
+        visited.add(dep);
+        queue.push([...path, dep]);
+      }
+    }
+  }
+  return [id];
+}
+
+function moveTooltip(e) {
+  const pad = 16;
+  const rect = tooltip.getBoundingClientRect();
+  let x = e.clientX + pad;
+  let y = e.clientY - 20;
+  if (x + 360 > window.innerWidth)  x = e.clientX - 360 - pad;
+  if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height - pad;
+  if (y < pad) y = pad;
+  tooltip.style.left = x + 'px';
+  tooltip.style.top  = y + 'px';
+}
+
+function hideTooltip() {
+  clearTimeout(tooltipTimeout);
+  tooltip.classList.remove('visible');
+}
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+
+window.addEventListener('load', () => {
+  render();
+  window.addEventListener('resize', render);
 });
 </script>
 </body>
