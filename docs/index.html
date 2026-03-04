@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APF Paper 2 — Derivation DAG</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: #0e0e12;
+    color: #e8e4d8;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  header {
+    padding: 28px 40px 20px;
+    border-bottom: 1px solid #2a2a35;
+    background: #0e0e12;
+  }
+
+  header h1 {
+    font-size: 1.15rem;
+    font-weight: normal;
+    letter-spacing: 0.04em;
+    color: #b8b0a0;
+  }
+
+  header h2 {
+    font-size: 1.65rem;
+    font-weight: normal;
+    color: #e8e4d8;
+    margin-top: 4px;
+  }
+
+  header p {
+    font-size: 0.82rem;
+    color: #6a6660;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 40px;
+    background: #12121a;
+    border-bottom: 1px solid #2a2a35;
+    flex-wrap: wrap;
+  }
+
+  .controls label {
+    font-size: 0.78rem;
+    color: #7a7670;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .filter-btn {
+    padding: 5px 14px;
+    border: 1px solid #3a3a48;
+    background: transparent;
+    color: #9a9690;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-family: 'Georgia', serif;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover { border-color: #aaa8a0; color: #e8e4d8; }
+  .filter-btn.active { background: #2a2a35; border-color: #6a90c8; color: #a8c4e8; }
+
+  .separator { width: 1px; height: 20px; background: #2a2a35; margin: 0 4px; }
+
+  #search-input {
+    padding: 5px 12px;
+    background: #1a1a22;
+    border: 1px solid #3a3a48;
+    color: #e8e4d8;
+    border-radius: 3px;
+    font-size: 0.78rem;
+    font-family: 'Georgia', serif;
+    width: 200px;
+    outline: none;
+  }
+
+  #search-input:focus { border-color: #6a90c8; }
+  #search-input::placeholder { color: #4a4a58; }
+
+  .main {
+    display: flex;
+    height: calc(100vh - 130px);
+  }
+
+  #graph-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  svg { width: 100%; height: 100%; }
+
+  .node-group { cursor: pointer; }
+
+  .node-rect {
+    rx: 3;
+    ry: 3;
+    stroke-width: 1.5;
+    transition: filter 0.15s;
+  }
+
+  .node-group:hover .node-rect { filter: brightness(1.3); }
+
+  .node-label {
+    font-family: 'Georgia', serif;
+    pointer-events: none;
+    dominant-baseline: middle;
+    text-anchor: middle;
+  }
+
+  .node-label.math { font-style: italic; font-size: 11px; }
+  .node-label.code { font-family: 'Courier New', monospace; font-size: 9.5px; }
+
+  .link {
+    fill: none;
+    stroke-width: 1.4;
+    opacity: 0.55;
+    marker-end: url(#arrowhead);
+  }
+
+  .link.highlighted { opacity: 1; stroke-width: 2.2; }
+  .link.dimmed { opacity: 0.08; }
+
+  .node-group.dimmed .node-rect { opacity: 0.12; }
+  .node-group.dimmed .node-label { opacity: 0.12; }
+  .node-group.highlighted .node-rect { filter: brightness(1.4); }
+
+  /* Panel */
+  #panel {
+    width: 320px;
+    background: #12121a;
+    border-left: 1px solid #2a2a35;
+    padding: 24px 22px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  #panel-placeholder {
+    color: #4a4a58;
+    font-size: 0.82rem;
+    font-style: italic;
+    margin-top: 8px;
+  }
+
+  #panel-content { display: none; }
+
+  .panel-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 0.72rem;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+  }
+
+  .panel-name {
+    font-size: 1.15rem;
+    color: #e8e4d8;
+    margin-bottom: 4px;
+  }
+
+  .panel-full {
+    font-size: 0.82rem;
+    color: #8a8680;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .panel-section {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #5a5a68;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    border-top: 1px solid #1e1e28;
+    padding-top: 12px;
+  }
+
+  .panel-code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    background: #1a1a22;
+    border: 1px solid #2a2a35;
+    border-radius: 3px;
+    padding: 8px 12px;
+    color: #a8d8b8;
+    line-height: 1.7;
+  }
+
+  .panel-desc {
+    font-size: 0.82rem;
+    color: #9a9890;
+    line-height: 1.6;
+  }
+
+  .panel-deps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .dep-tag {
+    padding: 2px 8px;
+    background: #1e1e2a;
+    border: 1px solid #3a3a4a;
+    border-radius: 2px;
+    font-size: 0.74rem;
+    font-family: 'Courier New', monospace;
+    color: #8888a8;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+
+  .dep-tag:hover { border-color: #6a90c8; color: #a8c4e8; }
+
+  .legend {
+    padding: 14px 40px;
+    background: #0e0e12;
+    border-top: 1px solid #1a1a22;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    color: #5a5a68;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .zoom-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .zoom-btn {
+    width: 30px;
+    height: 30px;
+    background: #1a1a22;
+    border: 1px solid #2a2a35;
+    color: #8a8880;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+  }
+
+  .zoom-btn:hover { background: #2a2a35; color: #e8e4d8; }
+
+  #tooltip {
+    position: fixed;
+    background: #1e1e28;
+    border: 1px solid #3a3a4a;
+    border-radius: 4px;
+    padding: 7px 12px;
+    font-size: 0.78rem;
+    color: #c8c4b8;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.1s;
+    z-index: 100;
+    max-width: 200px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Admissibility Physics Framework · Paper 2</h1>
+  <h2>The Structure of Admissible Physics</h2>
+  <p>Derivation DAG: A1 → non-closure → gauge group → matter content → C<sub>total</sub> = 61</p>
+</header>
+
+<div class="controls">
+  <label>Filter</label>
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="axiom">Axiom</button>
+  <button class="filter-btn" data-filter="nonclosure">Non-closure</button>
+  <button class="filter-btn" data-filter="gauge">Gauge</button>
+  <button class="filter-btn" data-filter="counting">Counting</button>
+  <button class="filter-btn" data-filter="cosmology">Cosmology</button>
+  <div class="separator"></div>
+  <label>Search</label>
+  <input id="search-input" type="text" placeholder="theorem name or code…">
+</div>
+
+<div class="main">
+  <div id="graph-container">
+    <svg id="dag"></svg>
+    <div class="zoom-controls">
+      <button class="zoom-btn" id="zoom-in">+</button>
+      <button class="zoom-btn" id="zoom-out">−</button>
+      <button class="zoom-btn" id="zoom-reset" style="font-size:11px;">⊡</button>
+    </div>
+  </div>
+
+  <div id="panel">
+    <div id="panel-placeholder">← Click any node to inspect its theorem, dependencies, and code reference.</div>
+    <div id="panel-content"></div>
+  </div>
+</div>
+
+<div class="legend">
+  <span style="color:#7a7670; font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase; margin-right:4px;">Layers</span>
+  <div class="legend-item"><div class="legend-dot" style="background:#3a5080;"></div>Axiom / Lemmas from Paper 1</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#5a3870;"></div>Non-closure engine</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3a6858;"></div>Gauge structure</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#6a5030;"></div>Capacity counting</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#4a4870;"></div>Cosmological partition</div>
+</div>
+
+<div id="tooltip"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const nodes = [
+  // Layer -1: Axiom
+  { id: "A1",          label: "A1",              full: "Enforcement Capacity is Finite and Positive",
+    layer: "axiom",    code: "—",                module: "Paper 1 (axiom)",
+    desc: "The single founding axiom. Enforcement capacity is finite and positive. Everything in both papers follows from this statement alone.",
+    deps: [] },
+
+  // Layer 0: Structural lemmas (from Paper 1, used here)
+  { id: "L_eps",       label: "L_ε*",            full: "Minimum Enforcement Cost",
+    layer: "axiom",    code: "check_L_epsilon_star", module: "core.py",
+    desc: "Every distinction carries a minimum cost ε* > 0. There is a floor below which no enforcement operation can be made cheaper.",
+    deps: ["A1"] },
+  { id: "L_nc",        label: "L_nc",            full: "Non-Closure",
+    layer: "nonclosure", code: "check_L_nc",     module: "core.py",
+    desc: "Admissible sets are not closed under composition. Joint enforcement at a shared interface generically exceeds the sum of individual costs by an interference surplus Δ > 0.",
+    deps: ["A1"] },
+  { id: "L_loc",       label: "L_loc",           full: "Locality",
+    layer: "axiom",    code: "check_L_loc",       module: "core.py",
+    desc: "Enforcement is interface-local: an agent can only enforce distinctions it can directly verify at its own interface.",
+    deps: ["A1"] },
+  { id: "L_irr",       label: "L_irr",           full: "Irreversibility",
+    layer: "nonclosure", code: "check_L_irr",     module: "core.py",
+    desc: "Some enforcement commitments cannot be undone. Non-closure implies that once capacity is spent on a path, reversal requires additional capacity.",
+    deps: ["A1", "L_nc"] },
+  { id: "TM",          label: "T_M",             full: "Interface Monogamy",
+    layer: "axiom",    code: "check_T_M",         module: "core.py",
+    desc: "Each enforcement channel must be independently maintained. Distinct irreducible representations require their own capacity and cannot share with a different representation.",
+    deps: ["A1", "L_loc"] },
+
+  // Layer 1: Non-closure engine
+  { id: "L_irred",     label: "L_irred",         full: "Irreducibility from A1",
+    layer: "nonclosure", code: "check_L_irred",   module: "core.py",
+    desc: "A1 forces enforcement representations to be irreducible. Reducible representations contain redundant channels, which would waste capacity in violation of A1.",
+    deps: ["A1", "L_nc"] },
+  { id: "L_Dnc",       label: "L_Δ→nc",          full: "Interference Non-Closure Implies Non-Commutativity",
+    layer: "nonclosure", code: "check_T0, check_L_nc", module: "core.py",
+    desc: "If the interference surplus Δ > 0 then the enforcement algebra is non-commutative. Abelian composition is additive (Δ = 0), which is incompatible with non-closure.",
+    deps: ["L_nc"] },
+  { id: "T_conf",      label: "T_conf",          full: "Confinement Mechanism",
+    layer: "gauge",    code: "check_T_confinement", module: "gauge.py",
+    desc: "Asymptotic freedom (L_AF) combined with finite capacity (A1) forces IR saturation: non-singlet states exceed the local budget and are inadmissible. Only color-singlet composites survive.",
+    deps: ["L_nc", "L_eps", "A1"] },
+  { id: "B1p",         label: "B₁'",             full: "Complex Carrier (Boundary Closure)",
+    layer: "gauge",    code: "check_B1_prime",    module: "gauge.py",
+    desc: "Any carrier admitting only bilinear invariants produces self-conjugate composites (B = B̄), which provide no independent enforcement channel under T_M. Complex ternary carriers are required.",
+    deps: ["T_conf", "TM"] },
+
+  // Layer 2: Theorem R
+  { id: "ThmR",        label: "Thm R",           full: "Representation Requirements (R1–R3)",
+    layer: "gauge",    code: "check_Theorem_R",   module: "gauge.py",
+    desc: "Three carrier requirements forced by A1:\n  R1: Complex ternary carrier (confining, oriented composites)\n  R2: Pseudoreal binary carrier (chiral, intrinsically irreversible)\n  R3: Abelian grading (enforcement completeness, minimal)",
+    deps: ["L_nc", "L_irr", "TM", "T_conf", "B1p"] },
+
+  // Layer 2: Cauchy
+  { id: "L_Cauchy",    label: "L_Cauchy",        full: "Cost Function Uniqueness",
+    layer: "gauge",    code: "check_L_Cauchy_uniqueness", module: "L_Cauchy_uniqueness.py",
+    desc: "The only monotone, additive, positively-normalized cost function is F(d) = d (Cauchy's functional equation, 1821). This eliminates any free parameter in the algebra cost and anchors the Weinberg angle derivation.",
+    deps: ["A1", "L_loc"] },
+
+  // Layer 3: Gauge template
+  { id: "L_guniq",     label: "L_gauge,uniq",    full: "Gauge Template Uniqueness",
+    layer: "gauge",    code: "check_L_gauge_template_uniqueness", module: "gauge.py",
+    desc: "All 17 compact simple Lie algebras are tested against R1–R3. Only SU(N_c) × SU(2) × U(1) survives. This is not a selection from a shortlist — it is the unique structure that passes every filter.",
+    deps: ["ThmR", "L_Cauchy"] },
+
+  { id: "T_gauge",     label: "T_gauge",         full: "Gauge Group Selection (N_c = 3)",
+    layer: "gauge",    code: "check_T_gauge",     module: "gauge.py",
+    desc: "Cost minimality (L_Cauchy) applied to the SU(N_c) family selects N_c = 3. Even N_c are excluded by the Witten anomaly. N_c = 3 is the minimum odd value satisfying all requirements.",
+    deps: ["L_guniq", "L_Cauchy"] },
+
+  // Layer 4: Fermion content + matter sector
+  { id: "T_field",     label: "T_field",         full: "SM Fermion Content",
+    layer: "gauge",    code: "check_T_field",     module: "gauge.py",
+    desc: "Exhaustive scan of 4,680 chiral templates under 7 simultaneous filters (asymptotic freedom, anomaly cancellation, chirality, Witten freedom, minimality, generation count, hypercharge). Unique survivor: 45 Weyl fermions in 3 generations.",
+    deps: ["T_gauge"] },
+  { id: "L_hc",        label: "L_hypercharge",   full: "Unique Hypercharge Assignment",
+    layer: "gauge",    code: "check_L_anomaly_free", module: "gauge.py",
+    desc: "Anomaly cancellation (cubic + global) uniquely determines all hypercharge assignments: Y(Q)=1/6, Y(u_R)=2/3, Y(d_R)=−1/3, Y(L)=−1/2, Y(e_R)=−1. These numbers, inserted by hand in textbooks, are derived here.",
+    deps: ["T_field"] },
+  { id: "T_Higgs",     label: "T_Higgs",         full: "Scalar Sector",
+    layer: "gauge",    code: "check_T_Higgs",     module: "gauge.py",
+    desc: "A1 minimality selects exactly one complex SU(2) doublet (4 real components). A second doublet would add free parameters without resolving any structural degeneracy — inadmissible by A1.",
+    deps: ["T_field"] },
+
+  // Layer 5: Counting
+  { id: "L_species",   label: "L_species",       full: "Species as Enforcement Channels",
+    layer: "counting", code: "check_L_species",   module: "gauge.py",
+    desc: "Each distinct irreducible representation constitutes one independent enforcement channel. Kinematic modes (polarizations, helicities) are not structural — they do not contribute to the capacity count.",
+    deps: ["TM", "L_eps"] },
+  { id: "L_count",     label: "L_count",         full: "Capacity Counting (C_total = 61)",
+    layer: "counting", code: "check_L_count",     module: "gauge.py",
+    desc: "Structural channels at Bekenstein saturation: 45 Weyl fermions + 4 Higgs components + 12 gauge generators = 61. This is the size of the enforcement budget. No more, no less.",
+    deps: ["L_eps", "TM", "T_field", "T_Higgs", "L_species"] },
+
+  // Layer 6: MECE partition
+  { id: "P_exhaust",   label: "P_exhaust",       full: "MECE Partition (42 + 3 + 16)",
+    layer: "cosmology", code: "check_P_exhaust",  module: "core.py",
+    desc: "Two mechanism predicates (confines? / acquires mass via SSB?) partition the 61 types into mutually exclusive, collectively exhaustive sectors: 42 vacuum + 3 baryonic + 16 dark.",
+    deps: ["A1", "T_gauge", "L_count"] },
+  { id: "L_vac",       label: "L_vac",           full: "Vacuum Sector Assignment",
+    layer: "cosmology", code: "check_P_exhaust",  module: "core.py",
+    desc: "The 42-type vacuum sector contains all gauge bosons and Higgs components. These carry no baryon number and do not acquire mass solely through confinement.",
+    deps: ["P_exhaust"] },
+  { id: "L_sGram",     label: "L_singlet,Gram",  full: "Rank-1 Dark Sector",
+    layer: "cosmology", code: "check_L_singlet_Gram", module: "cosmology.py",
+    desc: "The 16 dark types (right-handed neutrinos and dark matter) form a rank-1 Gram matrix sector: they interact via gravity only, enforcing no non-abelian charge at the interface.",
+    deps: ["P_exhaust", "TM"] },
+
+  // Layer 7: Cosmological predictions
+  { id: "L_equip",     label: "L_equip",         full: "Horizon Equipartition",
+    layer: "cosmology", code: "check_L_equip",    module: "cosmology.py",
+    desc: "At horizon saturation, capacity fractions equal energy fractions. This bridges the abstract partition (42/61, 19/61) to the cosmological density parameters measured by telescopes.",
+    deps: ["L_sGram", "L_count", "P_exhaust"] },
+  { id: "L_satpart",   label: "L_sat,part",      full: "Saturation-Independent Partition",
+    layer: "cosmology", code: "check_L_saturation_partition", module: "cosmology.py",
+    desc: "The fractions Ω_Λ = 42/61 and Ω_m = 19/61 are topological invariants of the matching structure, independent of the saturation level. They cannot evolve, cannot be tuned, and do not depend on continuous parameters.",
+    deps: ["L_equip", "L_count"] },
+  { id: "L_selfexcl",  label: "L_self-excl",     full: "Effective Dimension (d_eff = 102)",
+    layer: "cosmology", code: "check_L_self_exclusion", module: "gravity.py",
+    desc: "The effective dimension d_eff = 60 + 42 = 102 counts microstates available for cosmological entropy computation. The vacuum sector is counted twice: once as capacity types, once as excluded states.",
+    deps: ["L_eps", "TM", "L_count", "P_exhaust"] },
+];
+
+// Edges: source → target (arrows go from dependencies toward conclusions)
+const rawLinks = [];
+nodes.forEach(n => {
+  n.deps.forEach(d => {
+    rawLinks.push({ source: d, target: n.id });
+  });
+});
+
+// ── LAYOUT ────────────────────────────────────────────────────────────────────
+
+// Assign column (x) positions manually for clarity
+const xMap = {
+  "A1": 0,
+  "L_eps": -2, "L_nc": -1, "L_loc": 0, "L_irr": 1, "TM": 2,
+  "L_irred": -1.5, "L_Dnc": -0.5, "T_conf": 0.5, "B1p": 1.5,
+  "ThmR": 0.5, "L_Cauchy": -1,
+  "L_guniq": 0,
+  "T_gauge": 0,
+  "T_field": 0.5, "L_hc": 1.2, "T_Higgs": -0.3,
+  "L_species": -1.5, "L_count": 0,
+  "P_exhaust": 0.5, "L_vac": 1.4,
+  "L_sGram": -0.5,
+  "L_equip": 0, "L_satpart": 0.5, "L_selfexcl": -1,
+};
+
+const yOrder = [
+  ["A1"],
+  ["L_eps","L_nc","L_loc","L_irr","TM"],
+  ["L_irred","L_Dnc","T_conf","B1p"],
+  ["ThmR","L_Cauchy"],
+  ["L_guniq"],
+  ["T_gauge"],
+  ["T_field","L_hc","T_Higgs"],
+  ["L_species","L_count"],
+  ["P_exhaust","L_vac"],
+  ["L_sGram"],
+  ["L_equip","L_satpart","L_selfexcl"],
+];
+
+// Compute y positions
+const rowHeight = 88;
+const colWidth  = 115;
+
+const posMap = {};
+yOrder.forEach((row, yi) => {
+  row.forEach(id => {
+    const x = (xMap[id] ?? 0) * colWidth;
+    const y = yi * rowHeight;
+    posMap[id] = { x, y };
+  });
+});
+
+// Node dimensions
+const nodeW = 108, nodeH = 34;
+
+// Colors
+const layerColors = {
+  axiom:      { fill: "#1e2e4a", stroke: "#4a70a8", text: "#9ab8e0" },
+  nonclosure: { fill: "#2a1e3c", stroke: "#7050a0", text: "#b090d8" },
+  gauge:      { fill: "#1a2e28", stroke: "#3a8060", text: "#80c0a0" },
+  counting:   { fill: "#2e2010", stroke: "#9a7030", text: "#d0a860" },
+  cosmology:  { fill: "#1e1c38", stroke: "#5858a0", text: "#9090d0" },
+};
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+
+const svg = d3.select("#dag");
+const container = document.getElementById("graph-container");
+
+let width = container.clientWidth;
+let height = container.clientHeight;
+
+svg.attr("viewBox", `0 0 ${width} ${height}`);
+
+// Defs
+const defs = svg.append("defs");
+defs.append("marker")
+  .attr("id", "arrowhead")
+  .attr("viewBox", "0 -4 8 8")
+  .attr("refX", 7).attr("refY", 0)
+  .attr("markerWidth", 6).attr("markerHeight", 6)
+  .attr("orient", "auto")
+  .append("path")
+  .attr("d", "M0,-4L8,0L0,4")
+  .attr("fill", "#4a5070");
+
+const g = svg.append("g").attr("id", "scene");
+
+// Zoom
+const zoom = d3.zoom()
+  .scaleExtent([0.25, 3])
+  .on("zoom", (e) => g.attr("transform", e.transform));
+
+svg.call(zoom);
+
+// Center the graph
+const allX = Object.values(posMap).map(p => p.x);
+const allY = Object.values(posMap).map(p => p.y);
+const gMinX = Math.min(...allX) - nodeW/2 - 30;
+const gMaxX = Math.max(...allX) + nodeW/2 + 30;
+const gMinY = Math.min(...allY) - nodeH/2 - 20;
+const gMaxY = Math.max(...allY) + nodeH/2 + 20;
+const gW = gMaxX - gMinX;
+const gH = gMaxY - gMinY;
+
+const initialScale = Math.min((width - 40) / gW, (height - 40) / gH) * 0.88;
+const tx = (width - gW * initialScale) / 2 - gMinX * initialScale;
+const ty = (height - gH * initialScale) / 2 - gMinY * initialScale;
+svg.call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(initialScale));
+
+// Links
+const links = g.append("g").attr("class", "links")
+  .selectAll("path")
+  .data(rawLinks)
+  .join("path")
+  .attr("class", "link")
+  .attr("stroke", d => {
+    const tgt = nodes.find(n => n.id === d.target);
+    return layerColors[tgt?.layer ?? "axiom"].stroke;
+  })
+  .attr("d", d => {
+    const s = posMap[d.source], t = posMap[d.target];
+    if (!s || !t) return "";
+    const x1 = s.x, y1 = s.y + nodeH/2;
+    const x2 = t.x, y2 = t.y - nodeH/2;
+    const cy = (y1 + y2) / 2;
+    return `M${x1},${y1} C${x1},${cy} ${x2},${cy} ${x2},${y2}`;
+  });
+
+// Nodes
+const nodeGroups = g.append("g").attr("class", "nodes")
+  .selectAll("g")
+  .data(nodes)
+  .join("g")
+  .attr("class", "node-group")
+  .attr("data-id", d => d.id)
+  .attr("data-layer", d => d.layer)
+  .attr("transform", d => {
+    const p = posMap[d.id] || {x:0,y:0};
+    return `translate(${p.x - nodeW/2}, ${p.y - nodeH/2})`;
+  });
+
+nodeGroups.append("rect")
+  .attr("class", "node-rect")
+  .attr("width", nodeW).attr("height", nodeH)
+  .attr("fill", d => layerColors[d.layer].fill)
+  .attr("stroke", d => layerColors[d.layer].stroke);
+
+nodeGroups.append("text")
+  .attr("class", "node-label math")
+  .attr("x", nodeW/2).attr("y", nodeH/2)
+  .attr("fill", d => layerColors[d.layer].text)
+  .text(d => d.label);
+
+// ── INTERACTION ───────────────────────────────────────────────────────────────
+
+const tooltip = document.getElementById("tooltip");
+const panel = document.getElementById("panel");
+const placeholder = document.getElementById("panel-placeholder");
+const panelContent = document.getElementById("panel-content");
+
+function getAncestors(id) {
+  const result = new Set([id]);
+  const stack = [id];
+  while (stack.length) {
+    const cur = stack.pop();
+    rawLinks.filter(l => l.target === cur).forEach(l => {
+      if (!result.has(l.source)) { result.add(l.source); stack.push(l.source); }
+    });
+  }
+  return result;
+}
+
+function getDescendants(id) {
+  const result = new Set([id]);
+  const stack = [id];
+  while (stack.length) {
+    const cur = stack.pop();
+    rawLinks.filter(l => l.source === cur).forEach(l => {
+      if (!result.has(l.target)) { result.add(l.target); stack.push(l.target); }
+    });
+  }
+  return result;
+}
+
+let selectedId = null;
+
+nodeGroups.on("click", (e, d) => {
+  e.stopPropagation();
+  selectedId = d.id;
+  highlightNode(d.id);
+  showPanel(d);
+});
+
+nodeGroups.on("mousemove", (e, d) => {
+  tooltip.style.opacity = "1";
+  tooltip.style.left = (e.clientX + 14) + "px";
+  tooltip.style.top  = (e.clientY - 10) + "px";
+  tooltip.textContent = d.full;
+});
+
+nodeGroups.on("mouseleave", () => {
+  tooltip.style.opacity = "0";
+});
+
+svg.on("click", () => {
+  selectedId = null;
+  clearHighlight();
+  placeholder.style.display = "";
+  panelContent.style.display = "none";
+});
+
+function highlightNode(id) {
+  const ancestors = getAncestors(id);
+  const descendants = getDescendants(id);
+  const connected = new Set([...ancestors, ...descendants]);
+
+  nodeGroups.classed("highlighted", n => n.id === id)
+            .classed("dimmed", n => !connected.has(n.id));
+
+  links.classed("highlighted", l => connected.has(l.source) && connected.has(l.target))
+       .classed("dimmed", l => !(connected.has(l.source) && connected.has(l.target)));
+}
+
+function clearHighlight() {
+  nodeGroups.classed("highlighted", false).classed("dimmed", false);
+  links.classed("highlighted", false).classed("dimmed", false);
+}
+
+function showPanel(d) {
+  placeholder.style.display = "none";
+  panelContent.style.display = "";
+
+  const lc = layerColors[d.layer];
+  const layerName = { axiom:"Axiom / P1 lemma", nonclosure:"Non-closure engine",
+                      gauge:"Gauge structure", counting:"Capacity counting",
+                      cosmology:"Cosmological partition" }[d.layer];
+
+  const depHtml = d.deps.length
+    ? d.deps.map(dep => `<span class="dep-tag" onclick="clickDep('${dep}')">${dep}</span>`).join("")
+    : `<span style="color:#4a4a58; font-size:0.78rem; font-style:italic;">none (root)</span>`;
+
+  panelContent.innerHTML = `
+    <span class="panel-tag" style="background:${lc.fill}; border:1px solid ${lc.stroke}; color:${lc.text};">${layerName}</span>
+    <div class="panel-name">${d.label}</div>
+    <div class="panel-full">${d.full}</div>
+    <div class="panel-desc">${d.desc.replace(/\n/g, '<br>')}</div>
+    <div class="panel-section">Code reference</div>
+    <div class="panel-code">${d.code}<br><span style="color:#6a7070;"># ${d.module}</span></div>
+    <div class="panel-section">Depends on</div>
+    <div class="panel-deps">${depHtml}</div>
+  `;
+}
+
+window.clickDep = function(id) {
+  const nd = nodes.find(n => n.id === id);
+  if (!nd) return;
+  selectedId = id;
+  highlightNode(id);
+  showPanel(nd);
+  // Pan to node
+  const p = posMap[id];
+  if (!p) return;
+  const t = d3.zoomTransform(svg.node());
+  const cx = width/2 - p.x * t.k;
+  const cy = height/2 - p.y * t.k;
+  svg.transition().duration(400).call(zoom.transform,
+    d3.zoomIdentity.translate(cx, cy).scale(t.k));
+};
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const f = btn.dataset.filter;
+    nodeGroups.classed("dimmed", d => f !== "all" && d.layer !== f);
+    links.classed("dimmed", l => {
+      if (f === "all") return false;
+      const sn = nodes.find(n => n.id === l.source);
+      const tn = nodes.find(n => n.id === l.target);
+      return sn?.layer !== f && tn?.layer !== f;
+    });
+  });
+});
+
+// ── SEARCH ────────────────────────────────────────────────────────────────────
+
+document.getElementById("search-input").addEventListener("input", function() {
+  const q = this.value.toLowerCase().trim();
+  if (!q) { clearHighlight(); return; }
+  const matches = nodes.filter(n =>
+    n.id.toLowerCase().includes(q) ||
+    n.label.toLowerCase().includes(q) ||
+    n.full.toLowerCase().includes(q) ||
+    n.code.toLowerCase().includes(q)
+  );
+  if (matches.length === 0) { clearHighlight(); return; }
+  const matchIds = new Set(matches.map(n => n.id));
+  nodeGroups.classed("dimmed", n => !matchIds.has(n.id));
+  nodeGroups.classed("highlighted", n => matchIds.has(n.id));
+  links.classed("dimmed", true).classed("highlighted", false);
+  if (matches.length === 1) showPanel(matches[0]);
+});
+
+// ── ZOOM BUTTONS ──────────────────────────────────────────────────────────────
+
+document.getElementById("zoom-in").addEventListener("click", () =>
+  svg.transition().call(zoom.scaleBy, 1.3));
+document.getElementById("zoom-out").addEventListener("click", () =>
+  svg.transition().call(zoom.scaleBy, 0.77));
+document.getElementById("zoom-reset").addEventListener("click", () =>
+  svg.transition().duration(400).call(zoom.transform,
+    d3.zoomIdentity.translate(tx, ty).scale(initialScale)));
+
+// Resize
+window.addEventListener("resize", () => {
+  width = container.clientWidth;
+  height = container.clientHeight;
+  svg.attr("viewBox", `0 0 ${width} ${height}`);
+});
+</script>
+</body>
+</html>

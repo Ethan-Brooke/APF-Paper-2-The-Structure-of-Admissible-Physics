@@ -1,0 +1,56 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+type: software
+
+title: "APF Paper 2: The Structure of Admissible Physics"
+subtitle: "Non-Closure, Gauge Origin, Capacity Counting, and the 61-Type Partition"
+
+authors:
+  - family-names: Brooke
+    given-names: E. S.
+    orcid: "https://orcid.org/0009-0001-2261-4682"
+    email: ebrooke@cleanwater1.com
+    affiliation: "Independent Researcher"
+
+abstract: >
+  Paper 2 of the Admissibility Physics Framework (APF). Starting from a single axiom (A1:
+  enforcement capacity is finite and positive), this paper derives the gauge group
+  SU(3) × SU(2) × U(1), the Standard Model fermion content (45 Weyl fermions, uniquely
+  selected from 4,680 candidates), the total capacity budget C_total = 61, and the
+  cosmological density fractions Ω_Λ = 42/61 and Ω_m = 19/61. The cost function is proved
+  unique via Cauchy's functional equation (1821). Zero free parameters are introduced;
+  zero physics is imported.
+
+version: "v5.0"
+date-released: "2026-03-04"
+license: CC-BY-4.0
+
+repository-code: "https://github.com/Ethan-Brooke/APF-Paper-2-The-Structure-of-Admissible-Physics"
+url: "https://ethan-brooke.github.io/APF-Paper-2-The-Structure-of-Admissible-Physics/"
+
+doi: "10.5281/zenodo.XXXXXXX"
+
+keywords:
+  - admissibility physics
+  - foundations of physics
+  - Standard Model derivation
+  - gauge group uniqueness
+  - non-closure theorem
+  - Cauchy functional equation
+  - capacity counting
+  - cosmological constant
+  - dark matter
+  - zero free parameters
+  - machine-verifiable proofs
+
+references:
+  - type: software
+    title: "APF Paper 1: The Enforceability of Distinction"
+    subtitle: "Finite Capacity, the Quantum Skeleton, and the Correlation Space"
+    authors:
+      - family-names: Brooke
+        given-names: E. S.
+        orcid: "https://orcid.org/0009-0001-2261-4682"
+    repository-code: "https://github.com/Ethan-Brooke/APF-Paper-1-The-Enforceability-of-Distinction"
+    doi: "10.5281/zenodo.15115815"
+    year: 2025
