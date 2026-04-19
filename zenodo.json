@@ -1,0 +1,33 @@
+{
+  "title": "APF Paper 2 — The Structure of Admissible Physics: Non-Closure, Gauge Origin, Capacity Counting, and the 61-Type Partition",
+  "description": "<p>Non-closure theorem: the admissibility algebra admits no single representation valid across all admissibility regimes. Gauge template uniqueness (SU(3)*SU(2)*U(1) with N_c=3); 1-of-4680 surviving fermion template (45 Standard Model fermions); capacity partition C_total = 61 = 42 + 19 yielding cosmological fractions Omega_Lambda = 42/61 and Omega_m = 19/61, weak mixing angle sin^2(theta_W) = 3/13.</p><p>This repository is the executable mathematical appendix for Paper 2 of the Admissibility Physics Framework (APF). All theorems trace to named check functions in the bundled <code>apf/</code> package.</p>",
+  "creators": [
+    {
+      "name": "Brooke, Ethan",
+      "affiliation": "Independent Researcher, San Anselmo, California, USA",
+      "orcid": "0009-0001-2261-4682"
+    }
+  ],
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": ["gauge theory", "Standard Model", "non-closure", "fermion content", "cosmological constant", "weak mixing angle", "Cabibbo angle", "admissibility"],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Ethan-Brooke/APF-Paper-2-The-Structure-of-Admissible-Physics",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.18604839",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.18604548",
+      "relation": "references",
+      "scheme": "doi"
+    }
+  ],
+  "version": "5.3-PLEC"
+}
