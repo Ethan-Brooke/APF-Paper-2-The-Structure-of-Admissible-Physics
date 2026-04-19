@@ -1,6 +1,6 @@
 {
   "schema": "apf.repo_map.v1",
-  "generated_at": "2026-04-19T04:12:57.129454+00:00",
+  "generated_at": "2026-04-19T15:42:08.678721+00:00",
   "paper": {
     "number": 2,
     "title": "The Structure of Admissible Physics: Non-Closure, Gauge Origin, Capacity Counting, and the 61-Type Partition",
@@ -319,6 +319,13 @@
         "ai_context/theorems.json"
       ]
     },
+    "ai_context/repo_map.json": {
+      "purpose": "This file: machine-readable map of the repo (purpose/audience/read-order per file, edges, corpus inventory)",
+      "audience": "AI",
+      "read_order": null,
+      "tier": "data",
+      "references": []
+    },
     "run_checks.py": {
       "purpose": "Verification entry point: executes the bundled checks and prints pass/fail summary",
       "audience": "code",
@@ -620,7 +627,161 @@
       "tier": "context",
       "references": []
     },
+    "61_channels_v5.html": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "apf_storyboard.jsx": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "CITATION.cff": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "derivation_graph.json": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "fermion_scan_standalone.py": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "interactive_dag.html": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "L_Cauchy_uniqueness.py": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "repo_map.json": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "storyboard.html": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "theorems.json": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "archive/APF_Paper2_Colab.ipynb": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "archive/APF_Reviewer_Walkthrough_v1_handcrafted.ipynb": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "archive/Paper_2_STRUCTURE_v7.pdf": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "archive/Paper_2_STRUCTURE_v7.tex": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "archive/README.md": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "archive/REVIEWERS_GUIDE_v1_handcrafted.md": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "archive/zenodo_paper2_v1.json": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "archive/apf_v1_handcrafted/apf_utils.py": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "archive/apf_v1_handcrafted/bank.py": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "archive/apf_v1_handcrafted/core.py": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "archive/apf_v1_handcrafted/gauge.py": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
     "artifacts/61_channels_v5.html": {
+      "purpose": "(uncategorized; see file directly)",
+      "audience": "unknown",
+      "read_order": null,
+      "tier": "other",
+      "references": []
+    },
+    "docs/storyboard.html": {
       "purpose": "(uncategorized; see file directly)",
       "audience": "unknown",
       "read_order": null,
@@ -796,7 +957,7 @@
     }
   ],
   "metadata": {
-    "total_files": 57,
+    "total_files": 80,
     "total_edges": 33,
     "bundled_checks": 14,
     "corpus_size": 10

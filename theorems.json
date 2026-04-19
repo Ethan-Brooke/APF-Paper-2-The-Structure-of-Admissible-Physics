@@ -31,7 +31,7 @@
     "P+lattice": "[P+lattice] uses lattice QCD input",
     "": "(untagged)"
   },
-  "codebase_path": "/sessions/brave-modest-bohr/mnt/__APF Library/Codebase/APF_Codebase_v6.9",
+  "codebase_path": "/sessions/intelligent-charming-volta/mnt/__APF Library/Codebase/APF_Codebase_v6.9",
   "entries": [
     {
       "name": "A1",
@@ -4184,7 +4184,7 @@
       "epistemic": "RED_TEAM",
       "tier": 5,
       "summary": "DAG chain verification: 45 entries, 0 missing, 0 mismatches, consumption OK. CHAIN INTACT.",
-      "key_result": "45 DAG entries, 186 consumption links",
+      "key_result": "45 DAG entries, 182 consumption links",
       "dependencies": [],
       "cross_refs": [],
       "bundled_in_this_repo": false
@@ -5158,16 +5158,11 @@
       "name": "L_SA_moments",
       "module": "supplements",
       "kind": "lemma",
-      "epistemic": "P",
-      "tier": 4,
-      "summary": "Physical Yukawa spectral action coefficients from APF D_F (L_ST_Dirac [P]). Normalization: Y_s = lambda_s * M_s^APF where lambda_s = y_s^heaviest/sv_s[0]. APF structural ratio sv_d/sv_u = 1.8871 (derived: M_d[2,2]/M_u[2,2] = 2/1.125). c = 2.630437, d = 2.304827, N_f = 48. Top dominates c at 99.97...",
-      "key_result": "c=2.6304, d=2.3048, d/c^2=0.33311\u22481/3 (err 0.07%). Top dominates c at 99.97%. APF confirms CCM. [P]",
-      "dependencies": [
-        "L_ST_Dirac",
-        "L_NLO_texture",
-        "L_NNLO_down_mass",
-        "T_PMNS"
-      ],
+      "epistemic": "",
+      "tier": null,
+      "summary": "",
+      "key_result": "",
+      "dependencies": [],
       "cross_refs": [],
       "bundled_in_this_repo": false
     },
@@ -5250,17 +5245,11 @@
       "name": "L_ST_index",
       "module": "supplements",
       "kind": "lemma",
-      "epistemic": "P",
-      "tier": 4,
-      "summary": "Index(D_F) = 0 for all four sectors (u,d,\u03bd,e). Three independent proofs: (a) rank: M_Y square (3\u00d73) \u2192 ker(M)=ker(M\u2020) \u2192 Index=0. (b) McKean-Singer: Tr_s[exp(-tD\u00b2)]=Tr[exp(-tM\u2020M)]-Tr[exp(-tMM\u2020)]=0 at t=0.001,0.01,0.1,1.0 (all < 1e-10). (c) Anomaly: [U(1)]^3=\u2211Y\u00b3=0 (L_anomaly_free [P]). CPT chain: T_...",
-      "key_result": "Index(D_F)=0 (all sectors). McKean-Singer verified (4 t-values). L_anomaly_index upgraded to [P] via algebraic McKean-Singer. [P]",
-      "dependencies": [
-        "L_ST_Dirac",
-        "L_ST_Hilbert",
-        "T_CPT",
-        "L_anomaly_free",
-        "L_anomaly_index"
-      ],
+      "epistemic": "",
+      "tier": null,
+      "summary": "",
+      "key_result": "",
+      "dependencies": [],
       "cross_refs": [],
       "bundled_in_this_repo": false
     },
@@ -5666,17 +5655,11 @@
       "name": "L_mc_mt_twoloop_RG",
       "module": "supplements",
       "kind": "lemma",
-      "epistemic": "P",
-      "tier": 3,
-      "summary": "Two-loop QCD-Yukawa correction to \u03b3_c \u2212 \u03b3_t: +(16/3)g\u2083\u00b2y_t\u00b2/(16\u03c0\u00b2)\u00b2. Integral I\u2082 = -0.00157 (1.9% of I\u2081). m_c: 2.8% \u2192 2.6%. Zero new parameters.",
+      "epistemic": "",
+      "tier": null,
+      "summary": "",
       "key_result": "",
-      "dependencies": [
-        "L_alpha_s_zero_input",
-        "L_sigma_normalization",
-        "L_mc_mt_RG",
-        "L_hierarchy",
-        "T_gauge"
-      ],
+      "dependencies": [],
       "cross_refs": [],
       "bundled_in_this_repo": false
     },

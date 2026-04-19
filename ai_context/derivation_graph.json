@@ -1,10 +1,10 @@
 {
   "schema": "apf.derivation_graph.v1",
   "metadata": {
-    "total_nodes": 368,
-    "total_edges": 1516,
+    "total_nodes": 367,
+    "total_edges": 1502,
     "bank_registered_nodes": 342,
-    "external_primitive_nodes": 26,
+    "external_primitive_nodes": 25,
     "bundled_nodes": 14
   },
   "axioms": [
@@ -2180,18 +2180,18 @@
       "id": "L_ST_index",
       "name": "L_ST_index",
       "module": "supplements",
-      "epistemic": "P",
-      "tier": 4,
-      "summary": "Index(D_F) = 0 for all four sectors (u,d,\u03bd,e). Three independent proofs: (a) rank: M_Y square (3\u00d73) \u2192 ker(M)=ker(M\u2020) \u2192 Index=0. (b) McKean-Singer: Tr_s[exp(-tD\u00b2)]=Tr[exp(-tM\u2020M)]-Tr[exp(-tMM\u2020)]=0 at t=0.001,0.01,0.1,1.0 (all < 1e-10). (c) Anomaly: ...",
+      "epistemic": "",
+      "tier": null,
+      "summary": "",
       "bundled": false
     },
     {
       "id": "L_SA_moments",
       "name": "L_SA_moments",
       "module": "supplements",
-      "epistemic": "P",
-      "tier": 4,
-      "summary": "Physical Yukawa spectral action coefficients from APF D_F (L_ST_Dirac [P]). Normalization: Y_s = lambda_s * M_s^APF where lambda_s = y_s^heaviest/sv_s[0]. APF structural ratio sv_d/sv_u = 1.8871 (derived: M_d[2,2]/M_u[2,2] = 2/1.125). c = 2.630437...",
+      "epistemic": "",
+      "tier": null,
+      "summary": "",
       "bundled": false
     },
     {
@@ -2558,9 +2558,9 @@
       "id": "L_mc_mt_twoloop_RG",
       "name": "L_mc_mt_twoloop_RG",
       "module": "supplements",
-      "epistemic": "P",
-      "tier": 3,
-      "summary": "Two-loop QCD-Yukawa correction to \u03b3_c \u2212 \u03b3_t: +(16/3)g\u2083\u00b2y_t\u00b2/(16\u03c0\u00b2)\u00b2. Integral I\u2082 = -0.00157 (1.9% of I\u2081). m_c: 2.8% \u2192 2.6%. Zero new parameters.",
+      "epistemic": "",
+      "tier": null,
+      "summary": "",
       "bundled": false
     },
     {
@@ -3205,15 +3205,6 @@
     {
       "id": "L_graviton_scattering",
       "name": "L_graviton_scattering",
-      "module": "axiom_or_primitive",
-      "epistemic": "axiom",
-      "tier": 0,
-      "summary": "Axiom or structural primitive (not a bank-registered check). See FRAMEWORK_OVERVIEW.md for the axioms.",
-      "bundled": false
-    },
-    {
-      "id": "L_hierarchy",
-      "name": "L_hierarchy",
       "module": "axiom_or_primitive",
       "epistemic": "axiom",
       "tier": 0,
@@ -8721,51 +8712,6 @@
       "kind": "dependency"
     },
     {
-      "source": "L_ST_Dirac",
-      "target": "L_ST_index",
-      "kind": "dependency"
-    },
-    {
-      "source": "L_ST_Hilbert",
-      "target": "L_ST_index",
-      "kind": "dependency"
-    },
-    {
-      "source": "T_CPT",
-      "target": "L_ST_index",
-      "kind": "dependency"
-    },
-    {
-      "source": "L_anomaly_free",
-      "target": "L_ST_index",
-      "kind": "dependency"
-    },
-    {
-      "source": "L_anomaly_index",
-      "target": "L_ST_index",
-      "kind": "dependency"
-    },
-    {
-      "source": "L_ST_Dirac",
-      "target": "L_SA_moments",
-      "kind": "dependency"
-    },
-    {
-      "source": "L_NLO_texture",
-      "target": "L_SA_moments",
-      "kind": "dependency"
-    },
-    {
-      "source": "L_NNLO_down_mass",
-      "target": "L_SA_moments",
-      "kind": "dependency"
-    },
-    {
-      "source": "T_PMNS",
-      "target": "L_SA_moments",
-      "kind": "dependency"
-    },
-    {
       "source": "L_SA_moments",
       "target": "L_SA_sector_dominance",
       "kind": "dependency"
@@ -9943,31 +9889,6 @@
     {
       "source": "L_upGram_PSD_saturation",
       "target": "L_upGram_schur_margin",
-      "kind": "dependency"
-    },
-    {
-      "source": "L_alpha_s_zero_input",
-      "target": "L_mc_mt_twoloop_RG",
-      "kind": "dependency"
-    },
-    {
-      "source": "L_sigma_normalization",
-      "target": "L_mc_mt_twoloop_RG",
-      "kind": "dependency"
-    },
-    {
-      "source": "L_mc_mt_RG",
-      "target": "L_mc_mt_twoloop_RG",
-      "kind": "dependency"
-    },
-    {
-      "source": "L_hierarchy",
-      "target": "L_mc_mt_twoloop_RG",
-      "kind": "dependency"
-    },
-    {
-      "source": "T_gauge",
-      "target": "L_mc_mt_twoloop_RG",
       "kind": "dependency"
     },
     {

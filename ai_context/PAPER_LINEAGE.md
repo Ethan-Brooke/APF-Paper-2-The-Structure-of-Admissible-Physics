@@ -9,7 +9,7 @@ This file tracks the version history of Paper 2 (The Structure of Admissible Phy
 - **Version in this repo:** v5.3-PLEC
 - **File in this repo:** `Paper_2_Structure_of_Admissible_Physics_v5.3-PLEC.tex` + `.pdf`
 - **Page count:** 48 pp
-- **Release date:** 2026-04-18
+- **Release date:** 2026-04-19
 - **Codebase version at build:** v6.9 (2026-04-18)
 
 ## Zenodo record
