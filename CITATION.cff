@@ -24,7 +24,7 @@ abstract: >
   completeness is an open obligation, declared. This release is version-locked to the
   canonical codebase at v24.3.423 (commit 5bc6193).
 
-version: "v7.0"
+version: "v7.1"
 date-released: "2026-07-14"
 license: CC-BY-4.0
 

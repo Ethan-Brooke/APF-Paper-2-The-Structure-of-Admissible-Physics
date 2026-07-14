@@ -37,7 +37,7 @@ This is the **paper-companion release repo for Paper 2 of the Admissibility Phys
 
 The repo bundles:
 
-- The manuscript (v7.0) and BOTH Technical Supplements (`.tex` + `.pdf`): Supplement I — The Classification Core (v5.1) and Supplement II — The Foundational Gauge Program (v1.0)
+- The manuscript (v7.1) and BOTH Technical Supplements (`.tex` + `.pdf`): Supplement I — The Classification Core (v5.2) and Supplement II — The Foundational Gauge Program (v1.0)
 - A vendored subset of the APF codebase containing the `check_*` functions Paper 2 directly references (`apf/core.py`, `apf/ec_inventory_reading.py`, `apf/apf_utils.py`, `apf/bank.py`), version-locked at canonical commit 5bc6193 (v24.3.423)
 - One-command verifiers (`verify_all.py`, with `--paper2-core` as the fast path; `run_checks.py` as a kept alias)
 - THE CANONICAL SCAN EXECUTABLE (`fermion_scan_standalone.py`, v4) and the audit bundle it emits (`release_audit/`: scan_inputs.json, scan_outputs.csv, filter_waterfall.csv, near_misses.csv, kill_index.csv, chirality_audit.csv, certificate.sha256)
@@ -77,7 +77,7 @@ If you're loading this repo cold and want to understand Paper 2 well enough to r
 4. **`README.md`** — paper-specific orientation and the verification recipe. Badges, theorem table, install.
 5. **`apf/core.py`** — the vendored code. Read at least one check function fully. This is ground truth.
 6. **`run_checks.py`** + run it — confirms the local state works.
-7. **`Paper_2_Structure_of_Admissible_Physics_v7.0.tex`** or `.pdf` — the manuscript (formal content: Supplement I v5.1, Supplement II v1.0). Read §1 (intro) and the section you care about. Don't try to read the whole paper first.
+7. **`Paper_2_Structure_of_Admissible_Physics_v7.1.tex`** or `.pdf` — the manuscript (formal content: Supplement I v5.2, Supplement II v1.0). Read §1 (intro) and the section you care about. Don't try to read the whole paper first.
 8. **Technical Supplement** if present — canonical proofs. Dense; dip in only where you need depth.
 9. **`ai_context/wiki/`** — concept pages (Axiom A1, Derivation Chain, Born Rule, etc.) and per-paper pages. Navigate from `wiki/INDEX.md`.
 10. **`ai_context/AUDIT_DISCIPLINE.md`** — read before you propose any substantive change or critique. This is the posture the project expects from AI contributors.

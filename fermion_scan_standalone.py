@@ -3,7 +3,7 @@
 APF Fermion Template Scan -- Canonical Standalone Verification Script
 
 THIS IS THE CANONICAL EXECUTABLE for the Paper 2 fermion-content scan.
-Every count in the waterfall table of Technical Supplement I (v5.1),
+Every count in the waterfall table of Technical Supplement I (v5.2),
 S "Fermion content: complete scan of the declared space", is generated
 by this script, and the release's audit files are emitted by it:
 
@@ -47,10 +47,11 @@ WHAT IT DOES:
      equivalence.
   7. Verifies all four anomaly conditions with exact rational
      arithmetic.
-  8. Runs built-in red-team challenges RT1-RT5, including the
-     two-colored-doublet class-dominance mini-enumeration (RT4) and
+  8. Runs built-in red-team challenges RT1-RT6, including the
+     two-colored-doublet class-dominance mini-enumeration (RT4),
      the true-chirality audit statistic (RT5, the release-audit-layer
-     report promised at filter F3).
+     report promised at filter F3), and filter-order invariance
+     across all 5,040 orderings (RT6).
   9. Asserts the final verification conditions, including the
      three-predicate count triple (10/5 canonical | 8/4 spectator |
      4/2 uniform) and winner invariance.
@@ -74,7 +75,18 @@ OUTPUT: complete audit trail matching the waterfall table in
 Technical Supplement I, S "Fermion content".
 
 REFERENCE: E.S. Brooke, "Technical Supplement I to Paper 2: The
-           Classification Core," v5.1.
+           Classification Core," v5.2.
+
+REVISION NOTES (v4.1, 2026-07-14 -- the review 5.1.01 pass):
+  - RT6 ADDED: filter-order invariance.  All 7! = 5,040 orderings of the
+    seven filters are evaluated on the 1,680-template set under the
+    TOTAL spectator-reduction F6 predicate (the canonical full-system
+    decision procedure is complete on the reachable set but not total
+    on all templates, so the total variant carries the permutation
+    sweep; the conjunction argument is predicate-independent).  Every
+    ordering yields the same 4 post-CPT survivors and the same unique
+    DOF-45 winner.  This backs the order-invariance lemma of
+    Supplement I in executable form.
 
 REVISION NOTES (v4, 2026-07-14 -- the version-locked release pass):
   - CANONICAL F6 PREDICATE implemented: full-system non-degeneracy.
@@ -123,14 +135,14 @@ from itertools import combinations_with_replacement, combinations
 import math
 import sys
 
-SCRIPT_VERSION = "4.0"
+SCRIPT_VERSION = "4.1"
 VERSION_LOCK = {
-    "script": "fermion_scan_standalone.py v4.0 (2026-07-14)",
+    "script": "fermion_scan_standalone.py v4.1 (2026-07-14)",
     "codebase": "v24.3.423",
     "commit": "5bc6193",
     "bank": 3912,
-    "paper_main": "Paper_2_Structure_of_Admissible_Physics_v7.0",
-    "supplement_I": "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.1",
+    "paper_main": "Paper_2_Structure_of_Admissible_Physics_v7.1",
+    "supplement_I": "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.2",
     "supplement_II": "Paper_2_Foundational_Gauge_Program_Supplement_v1.0",
 }
 
@@ -412,8 +424,8 @@ def f6_full_system(t):
     Solve the complete anomaly system -- three linear conditions plus
     the [U(1)]^3 cubic -- exactly over the rationals, spectators
     included, and require a NON-DEGENERATE rational solution
-    (Y_Q != 0 on the colored doublet: electromagnetic completeness,
-    an independent declared assumption of the scan).
+    (Y_Q != 0 on the colored doublet: the F6 non-degeneracy
+    requirement, an independent phenomenological assumption of the scan).
 
     Returns (nondegenerate: bool, weakly_solvable: bool, witness, note).
     The witness is an exact solution vector (primitive integer
@@ -800,9 +812,9 @@ def run_scan(emit_audit=False, audit_dir='release_audit'):
                 'weakly_solvable': weak,
                 'witness': (witness_str(t, wit)
                             if wit is not None else ''),
-                'note': note + '; excluded by electromagnetic completeness '
-                        '(Y_Q != 0), the independent declared assumption '
-                        'of the scan',
+                'note': note + '; excluded by the F6 non-degeneracy '
+                        'requirement (Y_Q != 0), the independent '
+                        'phenomenological assumption of the scan',
             })
     for dof, t in survivors_with_dof[1:]:
         near_misses.append({
@@ -1066,6 +1078,46 @@ def run_scan(emit_audit=False, audit_dir='release_audit'):
     print(f"    solution points; reported, never consumed as a filter.")
     print(f"    PASS")
 
+    # RT6: Filter-order invariance -- all 7! orderings, total predicate.
+    print(f"\n  RT6: Filter-order invariance (all 7! = 5,040 orderings)")
+    from itertools import permutations
+    # Total per-template predicates (each a set of passing templates).
+    # F6 here is the TOTAL spectator-reduction variant (the canonical
+    # full-system procedure is complete on the reachable set, not total
+    # on all 1,680); the conjunction argument is predicate-independent.
+    all_set = list(dict.fromkeys(all_templates))
+    P = {
+        'F1': {t for t in all_set if b0_su3(t) > 0},
+        'F2': {t for t in all_set if b0_su2(t) > 0},
+        'F3': {t for t in all_set if passes_content(t)},
+        'F4': {t for t in all_set if passes_SU3_cubic_anomaly(t)},
+        'F5': {t for t in all_set if passes_Witten(t)},
+        'F6': {t for t in all_set if f6_spectator_reduction(t)},
+        'F7': {t for t in all_set if tuple(sorted(t)) == cpt_canonical(t)},
+    }
+    names = list(P)
+    reference = None
+    distinct_orders = 0
+    for order in permutations(names):
+        surv = set(all_set)
+        for k in order:
+            surv &= P[k]
+        fs = frozenset(surv)
+        if reference is None:
+            reference = fs
+        assert fs == reference, f"order {order} changed the survivor set"
+        distinct_orders += 1
+    assert distinct_orders == 5040
+    ref_dofs = sorted(compute_dof(t) for t in reference)
+    print(f"    Orderings evaluated: {distinct_orders}")
+    print(f"    Survivor set identical in every ordering: "
+          f"{len(reference)} post-CPT survivors at DOF {ref_dofs}")
+    assert len(reference) == 4, \
+        "spectator-predicate post-all-filters survivors must be 4"
+    assert min(ref_dofs) == 45 and ref_dofs.count(45) == 1
+    print(f"    Unique DOF-45 winner invariant under all orderings")
+    print(f"    PASS")
+
     # ==================================================================
     # Final assertions
     # ==================================================================
@@ -1111,7 +1163,7 @@ def run_scan(emit_audit=False, audit_dir='release_audit'):
     print(f"  [ok] All 5 exclusion proofs verified (P4 at class "
           f"dominance, 54 > 45)")
     print(f"  [ok] Both hypercharge solutions verified (exact rational)")
-    print(f"  [ok] Red-team challenges RT1-RT5 passed")
+    print(f"  [ok] Red-team challenges RT1-RT6 passed")
     print(f"\n  ALL CHECKS PASSED.")
 
     # ==================================================================
@@ -1181,8 +1233,8 @@ def emit_audit_files(audit_dir, all_templates, kill, waterfall_rows, triple,
             'F5': 'sum dim(r3) over SU(2)-doublet entries even (Witten)',
             'F6': 'CANONICAL: full-system non-degeneracy -- the complete '
                   'anomaly system (three linear + the cubic) admits a '
-                  'rational solution with Y_Q != 0 (electromagnetic '
-                  'completeness, an independent declared assumption)',
+                  'rational solution with Y_Q != 0 (the F6 non-degeneracy '
+                  'requirement, an independent phenomenological assumption)',
             'F7': 'CPT quotient',
             'minimality': 'unique minimum-DOF survivor',
         },

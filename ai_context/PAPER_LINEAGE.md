@@ -8,16 +8,16 @@ Zenodo deposits, and the canonical codebase.
 
 ## Current release
 
-- **Main paper:** v7.0 — `Paper_2_Structure_of_Admissible_Physics_v7.0.tex` + `.pdf` (59 pp)
-- **Technical Supplement I — The Classification Core:** v5.1 —
-  `Paper_2_Structure_of_Admissible_Physics_Supplement_v5.1.tex` + `.pdf` (60 pp)
+- **Main paper:** v7.1 — `Paper_2_Structure_of_Admissible_Physics_v7.1.tex` + `.pdf` (60 pp)
+- **Technical Supplement I — The Classification Core:** v5.2 —
+  `Paper_2_Structure_of_Admissible_Physics_Supplement_v5.2.tex` + `.pdf` (61 pp)
 - **Technical Supplement II — The Foundational Gauge Program:** v1.0 —
   `Paper_2_Foundational_Gauge_Program_Supplement_v1.0.tex` + `.pdf`
 - **Release date:** 2026-07-14
 - **Codebase version at build:** v24.3.423 (commit 5bc6193; bank 3912,
   native verify_all --bank-audit 3912/3912 gap 0)
-- **Canonical scan executable:** `fermion_scan_standalone.py` v4.0
-  (emits `release_audit/`)
+- **Canonical scan executable:** `fermion_scan_standalone.py` v4.1
+  (RT1–RT6 incl. filter-order invariance; emits `release_audit/`)
 
 ## Zenodo records
 
@@ -28,6 +28,18 @@ Zenodo deposits, and the canonical codebase.
   deposits. The v2 standalone scan is archived at 10.5281/zenodo.19154197.
 
 ## Version history (newest first)
+
+- **v7.1 main + Supp I v5.2** (2026-07-14): the review 5.1.01 pass (second
+  consecutive non-reject; the reviewer independently reproduced the
+  canonical waterfall). Feasibility/minimality corrected (five feasible
+  classes, unique minimum); "electromagnetic completeness" retired as F6's
+  name (the predicate is nonzero quark-doublet hypercharge); chirality
+  decoupled from F6; the one-U(1) closure conditionalized on I-typing's
+  relative-torus matter action (H3); generation universality promoted to a
+  named premise with the L_mu−L_tau direction owned exactly; the
+  Lie-carrier and N_c claims scoped to their tested lists; P3 reproved a
+  priori (F2+F5 joint budget); script descriptions synchronized (v4.1,
+  RT1–RT6); engine metadata re-scoped (Declared-Ansatz Classification).
 
 - **v7.0 main + Supp I v5.1 + Supp II v1.0** (2026-07-14): the v5.1
   acceptance pass after review 5.0.01 (MAJOR REVISION — first non-reject of

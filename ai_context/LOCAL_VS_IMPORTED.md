@@ -1,4 +1,4 @@
-# Local vs Imported — Paper 2 (main v7.0 · Supp I v5.1 · Supp II v1.0)
+# Local vs Imported — Paper 2 (main v7.1 · Supp I v5.2 · Supp II v1.0)
 
 ## Locally proved in Paper 2's supplements
 
@@ -25,8 +25,13 @@
 
 - The representation list and multiplicity caps of the scan (completeness
   outside them is an OPEN obligation, declared).
-- **Electromagnetic completeness** (F6's non-degeneracy, Y_Q != 0) —
-  independent assumption, declared at point of use.
+- **F6 non-degeneracy** (nonzero quark-doublet hypercharge, Y_Q != 0;
+  the name "electromagnetic completeness" is retired) — independent
+  phenomenological assumption, declared at point of use.
+- **I-typing's action clause** — the relative-torus matter action
+  (central-character matrix), input to the one-U(1) closure (H3).
+- **Generation universality** — all continuous abelian charges act
+  identically on the three generation copies (C3/H3).
 - N_gen = 3, consumed by F1–F2.
 
 ## Standard mathematical imports

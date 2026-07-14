@@ -1,11 +1,11 @@
 {
   "version_lock": {
-    "script": "fermion_scan_standalone.py v4.0 (2026-07-14)",
+    "script": "fermion_scan_standalone.py v4.1 (2026-07-14)",
     "codebase": "v24.3.423",
     "commit": "5bc6193",
     "bank": 3912,
-    "paper_main": "Paper_2_Structure_of_Admissible_Physics_v7.0",
-    "supplement_I": "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.1",
+    "paper_main": "Paper_2_Structure_of_Admissible_Physics_v7.1",
+    "supplement_I": "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.2",
     "supplement_II": "Paper_2_Foundational_Gauge_Program_Supplement_v1.0"
   },
   "generator": "fermion_scan_standalone.py --emit-audit (the canonical executable)",
@@ -95,7 +95,7 @@
     "F3": "doublet-singlet content (content predicate, not a chirality test; true chirality reported in chirality_audit.csv)",
     "F4": "sum A(r3) dim(r2) = 0",
     "F5": "sum dim(r3) over SU(2)-doublet entries even (Witten)",
-    "F6": "CANONICAL: full-system non-degeneracy -- the complete anomaly system (three linear + the cubic) admits a rational solution with Y_Q != 0 (electromagnetic completeness, an independent declared assumption)",
+    "F6": "CANONICAL: full-system non-degeneracy -- the complete anomaly system (three linear + the cubic) admits a rational solution with Y_Q != 0 (the F6 non-degeneracy requirement, an independent phenomenological assumption)",
     "F7": "CPT quotient",
     "minimality": "unique minimum-DOF survivor"
   },

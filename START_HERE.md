@@ -27,7 +27,7 @@ This file is structured in three tiers. **Tier 1** (§0 below) is the 60-second 
 - **You may:** summarize Paper 2's argument and results; explain the local 20-check subset; run all bundled checks to verify them; regenerate the audit bundle; cite the paper by its DOI.
 - **You may not:** claim mastery of the full APF corpus on the basis of this repo alone; re-derive results that belong to other papers using only material here; present imported results as locally derived in this repo; treat the bundled check subset as the whole engine (the canonical bank is 3,912 entries at v24.3.423; this repo contains a subset). Read `ai_context/DO_NOT_CLAIM.md` before summarizing — the review cycle's withdrawn claims (P4 tightness, the kinetic-mixing lemma, universal scan completeness, forward one-U(1)) are listed there.
 
-**Canonical state (one source of truth).** Codebase **v24.3.423**, commit **5bc6193** (2026-07-14). Full engine: **3,912** bank-registered entries (native `verify_all --bank-audit` 3912/3912, gap 0). This repo bundles **20** of those checks for Paper 2's dependency subset, and ships the papers at main **v7.0**, Supplement I **v5.1**, Supplement II **v1.0**. If you see a different count anywhere, this line is canonical.
+**Canonical state (one source of truth).** Codebase **v24.3.423**, commit **5bc6193** (2026-07-14). Full engine: **3,912** bank-registered entries (native `verify_all --bank-audit` 3912/3912, gap 0). This repo bundles **20** of those checks for Paper 2's dependency subset, and ships the papers at main **v7.1**, Supplement I **v5.2**, Supplement II **v1.0**. If you see a different count anywhere, this line is canonical.
 
 ---
 
@@ -240,7 +240,7 @@ You don't need to read all of these upfront. This is the "what's in the toolbox"
 
 Only after completing steps 1–7:
 
-- **`Paper_2_Structure_of_Admissible_Physics_v7.0.pdf`** — the manuscript. Read §1 (Introduction) and whichever section is relevant to your task. Don't try to read the whole paper before starting work. The formal content lives in the two Technical Supplements (I: The Classification Core, v5.1; II: The Foundational Gauge Program, v1.0).
+- **`Paper_2_Structure_of_Admissible_Physics_v7.1.pdf`** — the manuscript. Read §1 (Introduction) and whichever section is relevant to your task. Don't try to read the whole paper before starting work. The formal content lives in the two Technical Supplements (I: The Classification Core, v5.2; II: The Foundational Gauge Program, v1.0).
 - **`Paper_2_Structure_of_Admissible_Physics_Supplement_*.pdf`** (if present) — the Technical Supplement. Canonical proofs. Dense; dip in only where you need depth.
 
 The `.tex` sources are also included if you need to propose edits.

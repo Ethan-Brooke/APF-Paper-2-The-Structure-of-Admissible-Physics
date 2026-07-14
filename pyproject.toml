@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "apf-paper2"
-version = "7.0"
+version = "7.1"
 description = "Structure of Admissible Physics — executable mathematical appendix"
 readme = "README.md"
 license = {text = "MIT"}

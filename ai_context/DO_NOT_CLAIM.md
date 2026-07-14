@@ -1,7 +1,7 @@
-# Do Not Claim — Paper 2 (main v7.0 · Supp I v5.1 · Supp II v1.0)
+# Do Not Claim — Paper 2 (main v7.1 · Supp I v5.2 · Supp II v1.0)
 
 Anti-hallucination guards, harvested from four external review rounds
-(2026-07-13/14) and the internal audits. Consult before writing any summary,
+(2026-07-13/14, five reviews) and the internal audits. Consult before writing any summary,
 email, or reviewer response.
 
 1. **Do not claim the scan is universally complete.** The classification
@@ -14,10 +14,14 @@ email, or reviewer response.
    withdrawn (the 63 witness is Witten-odd; the 81 was a same-chirality
    corner). The licensed statement is class DOMINANCE: 54 > 45.
 
-3. **Do not claim F6 follows from EC, or from anomaly cancellation.**
-   Electromagnetic completeness (Y_Q != 0) is an independent declared
-   assumption of the scan, declared at its point of use. EC-injectivity and
-   F6 are computed to be logically independent (check_L_F6_not_from_EC).
+3. **Do not claim F6 follows from EC, or from anomaly cancellation — and
+   do not call it "electromagnetic completeness."** The name is retired
+   (review 5.1.01: at the forced Y_Q = 0 point the excluded template's
+   quark-doublet components carry Q_em = ±1/2 — colored matter is not
+   electromagnetically neutral there). F6 is the independent
+   phenomenological requirement of nonzero quark-doublet hypercharge
+   (Y_Q != 0), declared at its point of use. EC-injectivity and F6 are
+   computed to be logically independent (check_L_F6_not_from_EC).
 
 4. **Do not claim "EC is derived from A1 alone."** The EC derivation is dead
    as a derivation; what stands is the named reading R-EC-inv (A1-motivated,
@@ -71,3 +75,28 @@ email, or reviewer response.
 14. **Do not treat the bundled 20-check subset as the whole engine.** The
     canonical bank is 3,912 entries at v24.3.423; this repo carries the
     Paper 2 subset, version-locked at commit 5bc6193.
+
+15. **Do not claim the seven filters leave exactly one template.** They
+    leave five CPT-inequivalent feasible classes (45, 48, 66, 69, 72);
+    the separate minimality objective selects the unique 45-DOF minimum.
+
+16. **Do not claim chirality is settled by F6.** The excluded 42-DOF
+    template is chiral at its forced Y_Q = 0 point; the winner's
+    chirality is verified separately in the release audit layer
+    (conjugate-pair criterion), never by a filter.
+
+17. **Do not claim the anomaly system selects a direction IN the
+    relative torus unconditionally.** The unique ray is a fact of the
+    abstract five-charge space; that it lies in the image of the
+    T_rel matter action is supplied by I-typing's action clause (H3) —
+    u^c and d^c share the (3̄,1) type, so any type-factoring action
+    gives Y_u = Y_d.
+
+18. **Do not omit generation universality.** All continuous abelian
+    charges acting identically on the three generation copies is a
+    named premise (C3/H3); without it, L_μ−L_τ is an exact
+    anomaly-free second direction (all six conditions, mixed included).
+
+19. **Do not describe the N_c ranking as a joint optimization over all
+    template shapes.** It is family monotonicity plus the N_c = 3
+    enumeration; no template enumeration exists at N_c = 5, 7.

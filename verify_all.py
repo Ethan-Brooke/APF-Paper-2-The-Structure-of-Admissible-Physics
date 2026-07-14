@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """verify_all.py — full check registry for the Paper 2 companion repo.
 
-This is the command printed in Technical Supplement I (v5.1),
+This is the command printed in Technical Supplement I (v5.2),
 "Computational verification": running
 
     python verify_all.py
@@ -39,8 +39,8 @@ VERSION_LOCK = {
     'codebase': 'v24.3.423',
     'commit': '5bc6193',
     'bank': 3912,
-    'paper_main': 'Paper_2_Structure_of_Admissible_Physics_v7.0',
-    'supplement_I': 'Paper_2_Structure_of_Admissible_Physics_Supplement_v5.1',
+    'paper_main': 'Paper_2_Structure_of_Admissible_Physics_v7.1',
+    'supplement_I': 'Paper_2_Structure_of_Admissible_Physics_Supplement_v5.2',
     'supplement_II': 'Paper_2_Foundational_Gauge_Program_Supplement_v1.0',
 }
 
