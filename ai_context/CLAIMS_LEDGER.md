@@ -1,15 +1,15 @@
-# Claims Ledger — Paper 2 (main v7.1 · Supplement I v5.2 · Supplement II v1.0)
+# Claims Ledger — Paper 2 (main v7.2 · Supplement I v5.3 · Supplement II v1.0)
 
 Row-by-row attack surface. Every load-bearing claim maps to its proof
 location, its code check in THIS repo, its status, and the failure mode a
-skeptical reviewer would attack. "Supp I" = The Classification Core (v5.2);
+skeptical reviewer would attack. "Supp I" = The Classification Core (v5.3);
 "Supp II" = The Foundational Gauge Program (v1.0).
 
 | # | Claim | Status | Proof location | Code check (this repo) | Failure mode |
 |---|---|---|---|---|---|
 | 1 | Theorem R: carrier requirements R1–R2 derived; R3 under the admissibility-completeness reading | R1–R2 [P]; R3 reading-typed | Supp II §3 | `check_Theorem_R` | exhibit an admissible carrier violating R1/R2; adjudicate the R3 reading |
 | 2 | Nonabelian carrier ranking: SU(3)×SU(2) unique at minimum capacity cost; R3 requires ≥1 abelian grading | [P] on the tested classification (17 representatives; families closed by monotonicity) | Supp I §gauge consolidation (thm split, clause i) | `check_L_gauge_template_uniqueness` | a compact structure outside the tested set passing R1–R2 at lower cost |
-| 3 | One-U(1) closure: exactly one U(1) closes the template — proved A-POSTERIORI for the selected matter content, not forward | [P] a-posteriori; NOT a forward derivation | Supp I §one-U(1) closure (clause ii of the split theorem) | `check_L_gauge_template_uniqueness` (pointer); closure theorems in Supp I | a second admissible abelian factor on the selected content |
+| 3 | One-U(1) closure: exactly one U(1) closes the template — proved A-POSTERIORI for the selected matter content, conditional on I-typing's matter action; uniqueness is of the EFFECTIVE ray in T_phys = T_rel/ker(ρ_M), not of a subgroup of the unquotiented torus | conditional a-posteriori; NOT a forward derivation | Supp I §one-U(1) closure (clause ii of the split theorem) | `check_L_gauge_template_uniqueness` (pointer); closure theorems in Supp I | a second admissible abelian factor on the selected content |
 | 4 | C(G) = dim(G)·ε — under operational encoding + disjoint-anchor realizability (premises named in the statement) | [P | named premises] | Supp I §capacity; canonical core.py | `check_L_cost_gauge` | break either named premise; exhibit sub-dim(G) encoding |
 | 5 | The conditional classification theorem: relative to the declared representation list, caps, and filter inputs (C1–C10), the 1,680-template scan has the unique minimum-capacity survivor = SM at 45 Weyl DOF | conditional [P]; caps-completeness OPEN by declaration | Supp I §fermion scan | `check_T_field`, `check_L_F6_not_from_EC`, the canonical executable `fermion_scan_standalone.py` | an admissible sub-45-DOF template outside the declared caps; any waterfall count failing reproduction |
 | 6 | Canonical F6 = full-system non-degeneracy (10/5); the F6 non-degeneracy assumption (nonzero quark-doublet hypercharge, Y_Q ≠ 0 — the name "electromagnetic completeness" is retired) is an INDEPENDENT phenomenological assumption doing the work of removing the 42-DOF near-miss | declared input, point-of-use | Supp I §seven filters (F6) | `check_L_F6_not_from_EC`; `release_audit/near_misses.csv` | reject the assumption → the stripped generation survives below the SM |
@@ -29,5 +29,6 @@ and the foundational program (Supp II) are attacked at their own registers.
 
 ---
 
-*20 bank-registered checks verify Paper 2 in this repo, vendored at
-canonical codebase v24.3.423 (commit 5bc6193, bank 3912).*
+*20 bank-registered checks verify Paper 2 in this repo, vendored from
+canonical codebase v24.3.423 (numerical kernel 5bc6193, bank 3912;
+corrigenda-trail head).*

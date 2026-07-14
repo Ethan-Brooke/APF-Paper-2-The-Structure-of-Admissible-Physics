@@ -8,16 +8,18 @@ Zenodo deposits, and the canonical codebase.
 
 ## Current release
 
-- **Main paper:** v7.1 — `Paper_2_Structure_of_Admissible_Physics_v7.1.tex` + `.pdf` (60 pp)
-- **Technical Supplement I — The Classification Core:** v5.2 —
-  `Paper_2_Structure_of_Admissible_Physics_Supplement_v5.2.tex` + `.pdf` (61 pp)
+- **Main paper:** v7.2 — `Paper_2_Structure_of_Admissible_Physics_v7.2.tex` + `.pdf` (60 pp)
+- **Technical Supplement I — The Classification Core:** v5.3 —
+  `Paper_2_Structure_of_Admissible_Physics_Supplement_v5.3.tex` + `.pdf` (62 pp)
 - **Technical Supplement II — The Foundational Gauge Program:** v1.0 —
   `Paper_2_Foundational_Gauge_Program_Supplement_v1.0.tex` + `.pdf`
 - **Release date:** 2026-07-14
-- **Codebase version at build:** v24.3.423 (commit 5bc6193; bank 3912,
-  native verify_all --bank-audit 3912/3912 gap 0)
-- **Canonical scan executable:** `fermion_scan_standalone.py` v4.1
-  (RT1–RT6 incl. filter-order invariance; emits `release_audit/`)
+- **Codebase version at build:** v24.3.423 (numerical kernel 5bc6193;
+  bank 3912, native verify_all --bank-audit 3912/3912 gap 0;
+  count-neutral corrigenda trail in the release manifest)
+- **Canonical scan executable:** `fermion_scan_standalone.py` v4.2
+  (RT1–RT6; VERSION_LOCK split into numerical-kernel commit + corrigenda
+  trail; emits `release_audit/`)
 
 ## Zenodo records
 
@@ -28,6 +30,18 @@ Zenodo deposits, and the canonical codebase.
   deposits. The v2 standalone scan is archived at 10.5281/zenodo.19154197.
 
 ## Version history (newest first)
+
+- **v7.2 main + Supp I v5.3** (2026-07-15): the review 5.2.01 pass (MINOR
+  REVISION — acceptance named). P3 gains the color-dimension case split
+  (dim 6/8 doublets bust the SU(2) budget outright); the one-U(1)
+  uniqueness claim moved to the physical quotient T_phys = T_rel/ker(ρ_M)
+  (kernel countermodel owned); the B−L edge case rewritten to the licensed
+  EC/CM model-selection form (Y and B−L independent, all six anomaly
+  conditions vanish — computed); lem:min_abelian restated conditionally;
+  C5 anomaly count corrected (five perturbative + Witten); "chiral
+  template" → "Weyl-fermion template"; twistor and 11/3 glosses fixed
+  (Hughes 1980 / Nielsen 1981 sourced); VERSION_LOCK split into
+  numerical-kernel commit + corrigenda trail; engine P3 battery case-split.
 
 - **v7.1 main + Supp I v5.2** (2026-07-14): the review 5.1.01 pass (second
   consecutive non-reject; the reviewer independently reproduced the
@@ -64,15 +78,16 @@ Zenodo deposits, and the canonical codebase.
 
 ## What supersedes what
 
-**Main v7.0 + Supp I v5.1 + Supp II v1.0 supersede all earlier versions.**
+**Main v7.2 + Supp I v5.3 + Supp II v1.0 supersede all earlier versions.**
 For strict reproducibility of earlier work, cite the version DOI of the
 specific deposit used.
 
 ## Relationship to the canonical codebase
 
 All `\coderef{check_X}{module.py}` anchors in the current papers are valid
-against canonical codebase v24.3.423 (commit 5bc6193). The bundled `apf/`
-package is vendored from that commit; `python verify_all.py` runs the
+against canonical codebase v24.3.423 (numerical kernel commit 5bc6193;
+count-neutral corrigenda thereafter). The bundled `apf/` package is
+vendored at the corrigenda-trail head; `python verify_all.py` runs the
 20-check subset, and `python fermion_scan_standalone.py --emit-audit`
 regenerates the audit bundle byte-identically (see
 `release_audit/certificate.sha256`).

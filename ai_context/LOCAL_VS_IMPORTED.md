@@ -1,4 +1,4 @@
-# Local vs Imported — Paper 2 (main v7.1 · Supp I v5.2 · Supp II v1.0)
+# Local vs Imported — Paper 2 (main v7.2 · Supp I v5.3 · Supp II v1.0)
 
 ## Locally proved in Paper 2's supplements
 

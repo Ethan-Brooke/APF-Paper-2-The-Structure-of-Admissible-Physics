@@ -1,21 +1,24 @@
 """apf/core.py — Paper 2 subset.
 
 Vendored single-file extraction of the check functions cited in
-Paper 2: The Structure of Admissible Physics (main paper v7.1,
-Technical Supplement I v5.2, Technical Supplement II v1.0).
+Paper 2: The Structure of Admissible Physics (main paper v7.2,
+Technical Supplement I v5.3, Technical Supplement II v1.0).
 
-VERSION LOCK: canonical APF codebase v24.3.423, commit 5bc6193
-(2026-07-14; bank 3912, verify_all --bank-audit 3912/3912 gap 0).
+VERSION LOCK: canonical APF codebase v24.3.423.  NUMERICAL KERNEL at
+commit 5bc6193 (2026-07-14; bank 3912, verify_all --bank-audit
+3912/3912 gap 0) -- the commit at which the scan's numerical content
+was locked.  Later engine commits are count-neutral proof-scope and
+metadata corrigenda (the trail in the release manifest:
+668daa5 P4-summary; e230757 declared-ansatz re-scope + P3 F2+F5
+battery; this release's P3 color-dimension case split).
 This file carries 18 of the repo's 20-check subset; the other two
 (check_L_F6_not_from_EC, check_L_EC_inventory_reading) live in
-apf/ec_inventory_reading.py, vendored whole from the same commit.
+apf/ec_inventory_reading.py, vendored whole from the kernel commit.
 
-Each function is copied verbatim from its original source module
-(core.py or gauge.py at 5bc6193), with one documented exception:
-check_T_field's summary string carries the corrected P4 class bound
-(class minimum 54, dominance 54 > 45) per the 2026-07-14 corrigendum
-of record; the executed assertions are the canonical 54-witness
-battery, byte-identical to gauge.py at 5bc6193.
+Each function is copied verbatim from its source module at the
+corrigenda-trail head (byte-identical to the current canonical
+gauge.py/core.py); the numerical content of every check is that of
+the kernel commit.
 See https://doi.org/10.5281/zenodo.18529115 for the full codebase.
 """
 
@@ -2127,11 +2130,12 @@ def check_T_field():
                  unique common solution n = 3). This scan's uniform x3 cites
                  that family; lane record 2026-07-09.
              P3. Colorless SU(2) reps >= 3: excluded a priori by F2+F5
-                 jointly (review 5.1.01's proof, verified + adopted
-                 2026-07-14): one colored doublet (3) + colorless
-                 triplet (4) leaves 1/3 of the SU(2) AF budget, odd
-                 Witten parity forces a further colorless doublet (1),
-                 total 8 > 22/3. Computed below in exact Fractions.
+                 jointly, with the color-dimension case split (review
+                 5.2.01 item .01): dim-3 doublet (3) + triplet (4)
+                 leaves 1/3 of the budget and odd Witten parity forces
+                 a further colorless doublet (1), total 8 > 22/3;
+                 dim-6 (6+4=10) and dim-8 (8+4=12) doublets bust the
+                 budget outright. Computed below in exact Fractions.
              P4. Two-colored-doublet class: min DOF = 54 > 45 (class
                  dominance). Corrected enumeration of record 2026-07-14
                  (review 5.0.01 counterexample ACCEPTED): the class
@@ -2274,18 +2278,31 @@ def check_T_field():
     # P3: Colorless SU(2) triplets/quartets excluded by minimality
     #     STRENGTHENED 2026-07-14 (review 5.1.01 item .09/.11, ruling
     #     'do both'): the a-priori F2+F5 joint budget argument replaces
-    #     the dominance comparison. In units of (2/3)*T(r2)*dim(r3)*Ng:
-    _p3_cd = Fraction(2, 3) * Fraction(1, 2) * 3 * Ng   # colored doublet
+    #     the dominance comparison. CASE SPLIT 2026-07-15 (review
+    #     5.2.01 item .01, ruling 'proceed as recommended'): the
+    #     colored-doublet slot ranges over the declared color list, so
+    #     the budget runs over color dimension {3, 6, 8} -- the dim-3
+    #     case needs the Witten parity repair; dims 6/8 bust the
+    #     budget outright. In units of (2/3)*T(r2)*dim(r3)*Ng:
     _p3_tr = Fraction(2, 3) * Fraction(2) * 1 * Ng       # colorless triplet, T(3)=2
     _p3_ld = Fraction(2, 3) * Fraction(1, 2) * 1 * Ng   # parity-restoring colorless doublet
-    check(_p3_cd == 3 and _p3_tr == 4 and _p3_ld == 1,
-          "P3: budget terms must be 3 (colored doublet), 4 (triplet), 1 (doublet)")
-    check(Fraction(22, 3) - _p3_cd - _p3_tr == Fraction(1, 3),
-          "P3: doublet+triplet leave 1/3 of the SU(2) AF budget")
-    check(3 % 2 == 1,
-          "P3: one colored doublet alone is Witten-ODD (3 doublets w/ color mult)")
-    check(_p3_cd + _p3_tr + _p3_ld == 8 and 8 > Fraction(22, 3),
-          "P3: parity repair busts the budget -- 8 > 22/3, F2 fails")
+    check(_p3_tr == 4 and _p3_ld == 1,
+          "P3: triplet term must be 4; parity-repair doublet term must be 1")
+    for _p3_dim in (3, 6, 8):
+        _p3_cd = Fraction(2, 3) * Fraction(1, 2) * _p3_dim * Ng
+        check(_p3_cd == _p3_dim,
+              f"P3[dim {_p3_dim}]: colored-doublet term = its color dimension")
+        if _p3_dim % 2 == 1:
+            check(Fraction(22, 3) - _p3_cd - _p3_tr == Fraction(1, 3),
+                  "P3[dim 3]: doublet+triplet leave 1/3 of the SU(2) AF budget")
+            check(_p3_dim % 2 == 1,
+                  "P3[dim 3]: one colored doublet alone is Witten-ODD")
+            check(_p3_cd + _p3_tr + _p3_ld == 8 and 8 > Fraction(22, 3),
+                  "P3[dim 3]: parity repair busts the budget -- 8 > 22/3")
+        else:
+            check(_p3_cd + _p3_tr > Fraction(22, 3),
+                  f"P3[dim {_p3_dim}]: doublet+triplet = {_p3_dim + 4} > 22/3 "
+                  f"outright (parity even, no repair step)")
     #     (two-colored-doublet templates are P4-dominated; zero fail F3.
     #      The old dominance rider still holds and is kept as a check:)
     for r2 in ['3', '4']:

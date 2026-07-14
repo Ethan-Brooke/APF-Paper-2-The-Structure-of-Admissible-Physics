@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """verify_all.py — full check registry for the Paper 2 companion repo.
 
-This is the command printed in Technical Supplement I (v5.2),
+This is the command printed in Technical Supplement I (v5.3),
 "Computational verification": running
 
     python verify_all.py
@@ -12,9 +12,11 @@ path) and check_L_F6_not_from_EC (the canonical full-system waterfall,
 ec_inventory_reading.py) — with no dependencies beyond the Python
 standard library.
 
-VERSION LOCK: every check function is vendored from the canonical APF
-codebase at v24.3.423, commit 5bc6193 (2026-07-14; bank 3912,
-native verify_all --bank-audit 3912/3912 gap 0).
+VERSION LOCK: numerical kernel at canonical commit 5bc6193
+(v24.3.423, 2026-07-14; bank 3912, native verify_all --bank-audit
+3912/3912 gap 0); later engine commits are count-neutral corrigenda
+(trail in the release manifest), and check functions are vendored at
+the corrigenda-trail head.
 
 Usage:
     python verify_all.py                 # run all 20 checks
@@ -37,10 +39,12 @@ from apf.bank import REGISTRY, EXPECTED_CHECK_COUNT, get_check, run_all
 
 VERSION_LOCK = {
     'codebase': 'v24.3.423',
-    'commit': '5bc6193',
+    'numerical_kernel_commit': '5bc6193',   # scan numbers locked here;
+    # later engine commits are count-neutral corrigenda (trail in
+    # fermion_scan_standalone.VERSION_LOCK / release_audit/scan_inputs.json)
     'bank': 3912,
-    'paper_main': 'Paper_2_Structure_of_Admissible_Physics_v7.1',
-    'supplement_I': 'Paper_2_Structure_of_Admissible_Physics_Supplement_v5.2',
+    'paper_main': 'Paper_2_Structure_of_Admissible_Physics_v7.2',
+    'supplement_I': 'Paper_2_Structure_of_Admissible_Physics_Supplement_v5.3',
     'supplement_II': 'Paper_2_Foundational_Gauge_Program_Supplement_v1.0',
 }
 
@@ -89,8 +93,10 @@ def main():
     print('=' * 72)
     print('  APF Paper 2 — The Structure of Admissible Physics')
     print(f'  Version-locked release: canonical codebase '
-          f'{VERSION_LOCK["codebase"]} (commit {VERSION_LOCK["commit"]}, '
-          f'bank {VERSION_LOCK["bank"]})')
+          f'{VERSION_LOCK["codebase"]} (numerical kernel '
+          f'{VERSION_LOCK["numerical_kernel_commit"]}, bank '
+          f'{VERSION_LOCK["bank"]}; count-neutral corrigenda trail in '
+          f'the release manifest)')
     print(f'  Registry: {len(REGISTRY)} checks '
           f'(expected {EXPECTED_CHECK_COUNT})')
     print('=' * 72)

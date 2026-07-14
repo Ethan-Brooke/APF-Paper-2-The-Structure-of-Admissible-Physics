@@ -22,9 +22,10 @@ abstract: >
   follows arithmetically. Imported mathematics is named where used (the compact-simple Lie
   classification, the Witten anomaly theorem, the anomaly equations); the caps'
   completeness is an open obligation, declared. This release is version-locked to the
-  canonical codebase at v24.3.423 (commit 5bc6193).
+  canonical codebase at v24.3.423 (numerical kernel commit 5bc6193;
+  count-neutral corrigenda thereafter, trail in the release manifest).
 
-version: "v7.1"
+version: "v7.2"
 date-released: "2026-07-14"
 license: CC-BY-4.0
 

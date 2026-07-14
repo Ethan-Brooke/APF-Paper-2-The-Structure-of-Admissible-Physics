@@ -1,4 +1,4 @@
-# Do Not Claim — Paper 2 (main v7.1 · Supp I v5.2 · Supp II v1.0)
+# Do Not Claim — Paper 2 (main v7.2 · Supp I v5.3 · Supp II v1.0)
 
 Anti-hallucination guards, harvested from four external review rounds
 (2026-07-13/14, five reviews) and the internal audits. Consult before writing any summary,
@@ -74,7 +74,7 @@ email, or reviewer response.
 
 14. **Do not treat the bundled 20-check subset as the whole engine.** The
     canonical bank is 3,912 entries at v24.3.423; this repo carries the
-    Paper 2 subset, version-locked at commit 5bc6193.
+    Paper 2 subset (numerical kernel 5bc6193; corrigenda-trail head).
 
 15. **Do not claim the seven filters leave exactly one template.** They
     leave five CPT-inequivalent feasible classes (45, 48, 66, 69, 72);
@@ -100,3 +100,22 @@ email, or reviewer response.
 19. **Do not describe the N_c ranking as a joint optimization over all
     template shapes.** It is family monotonicity plus the N_c = 3
     enumeration; no template enumeration exists at N_c = 5, 7.
+
+20. **Do not claim B−L is a linear combination of hypercharge and
+    nonabelian quantum numbers in the ν_R-extended template.** Y and
+    B−L are linearly independent charge vectors there, and all six
+    anomaly conditions (mixed included) vanish for B−L — computed. The
+    licensed exclusion of a second massless factor is the EC/CM
+    model-selection premise (no further label-partition gain), stated
+    as such.
+
+21. **Do not claim a unique one-dimensional subgroup of the
+    unquotiented relative torus.** Torus directions differing by the
+    matter-action kernel induce the same physical action (the (6Y, 0)
+    countermodel). Uniqueness is of the effective charge ray in
+    T_phys = T_rel/ker(ρ_M).
+
+22. **Do not state P3 for the fundamental doublet only.** The
+    declared scan permits dim-6 and dim-8 colored doublets; the case
+    split (3+4+1 = 8; 6+4 = 10; 8+4 = 12, all > 22/3) is the licensed
+    form.

@@ -1,10 +1,10 @@
 # SHA-256 certificate for the Paper 2 scan audit bundle
-# generator: fermion_scan_standalone.py v4.1 (2026-07-14)
-# version lock: codebase v24.3.423 commit 5bc6193 bank 3912
-dbf946f962857cb71dfccffe85456547d586a1bbe5f45080ff22b90455b20e32  scan_inputs.json
+# generator: fermion_scan_standalone.py v4.2 (2026-07-15)
+# version lock: codebase v24.3.423 numerical kernel 5bc6193 bank 3912 (corrigenda trail in scan_inputs.json)
+b405dce83a76bfdf6486d1ff7107c461fcf7d8e66de5295179115e19a59c109c  scan_inputs.json
 bf3c1f4e1eeb8a9d2088c48bfa61f75fc0647f34ac9259dbed46073817ecde4e  scan_outputs.csv
 e11b6e84783e3a18cfb6c2aac06044662a5a2e9231361e09e710dbfeb2b1d211  filter_waterfall.csv
 83ab8e2a700b6069ff7e6be526ab3849a5bd5a83d6ed4e41cc73291133961536  near_misses.csv
 02c5c86705541d12eb297fb49307b585fb33440c902813a1719752703c69d40d  kill_index.csv
 bb7cd849ed3a284c8cc2c252e1a664699a15e5ef514cf72f17737d5e226d24c4  chirality_audit.csv
-f2576e153937f11c6f47b780dcca3bd2207792080b9b8879d324967d66c364d5  BUNDLE (ordered concatenation of the files above)
+eb9773fec5912560f8cfcec5e244812968c2eceb3e6a1c0a67e6c40e7e2dc806  BUNDLE (ordered concatenation of the files above)

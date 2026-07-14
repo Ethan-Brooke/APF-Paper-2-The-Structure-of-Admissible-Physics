@@ -1,6 +1,6 @@
 # Argument Flow — Paper 2 in One Page
 
-Paper 2 (main v7.0) states the argument; Technical Supplement I (v5.1, The
+Paper 2 (main v7.2) states the argument; Technical Supplement I (v5.3, The
 Classification Core) carries the conditional classification theorem with its
 full input ledger C1–C10; Technical Supplement II (v1.0, The Foundational
 Gauge Program) carries the foundational chain at its banked grades and the

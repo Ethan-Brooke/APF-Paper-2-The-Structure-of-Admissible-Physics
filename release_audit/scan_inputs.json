@@ -1,11 +1,17 @@
 {
   "version_lock": {
-    "script": "fermion_scan_standalone.py v4.1 (2026-07-14)",
+    "script": "fermion_scan_standalone.py v4.2 (2026-07-15)",
     "codebase": "v24.3.423",
-    "commit": "5bc6193",
+    "numerical_kernel_commit": "5bc6193",
+    "numerical_kernel_note": "the engine commit at which the scan's numerical content was locked (rep tables, caps, predicates, waterfall); every later engine commit on the corrigenda trail is a count-neutral proof-scope or metadata corrigendum -- the numerical certificate is invariant across them",
+    "corrigenda_trail": [
+      "668daa5 (check_T_field summary: P4 class-min 54)",
+      "e230757 (check_T_field declared-ansatz re-scope + P3 F2+F5 battery)",
+      "this release's engine commit (P3 color-dimension case split, review 5.2.01 item .01; hash pinned in the git history of the push that ships this manifest)"
+    ],
     "bank": 3912,
-    "paper_main": "Paper_2_Structure_of_Admissible_Physics_v7.1",
-    "supplement_I": "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.2",
+    "paper_main": "Paper_2_Structure_of_Admissible_Physics_v7.2",
+    "supplement_I": "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.3",
     "supplement_II": "Paper_2_Foundational_Gauge_Program_Supplement_v1.0"
   },
   "generator": "fermion_scan_standalone.py --emit-audit (the canonical executable)",

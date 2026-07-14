@@ -3,7 +3,7 @@
 APF Fermion Template Scan -- Canonical Standalone Verification Script
 
 THIS IS THE CANONICAL EXECUTABLE for the Paper 2 fermion-content scan.
-Every count in the waterfall table of Technical Supplement I (v5.2),
+Every count in the waterfall table of Technical Supplement I (v5.3),
 S "Fermion content: complete scan of the declared space", is generated
 by this script, and the release's audit files are emitted by it:
 
@@ -15,9 +15,13 @@ USAGE:  python3 fermion_scan_standalone.py [--emit-audit [DIR]]
 DEPENDENCIES: Python 3.8+ standard library only (fractions, itertools,
               math, json, hashlib, csv).  No external packages.
 
-VERSION LOCK: canonical APF codebase v24.3.423, commit 5bc6193
-(2026-07-14; bank 3912).  The canonical F6 machinery below is ported
-from apf/ec_inventory_reading.py (check_L_F6_not_from_EC) at that
+VERSION LOCK: canonical APF codebase v24.3.423; NUMERICAL KERNEL at
+commit 5bc6193 (2026-07-14; bank 3912) -- the commit at which the
+scan's numerical content was locked.  Later engine commits (the
+corrigenda trail in VERSION_LOCK) are count-neutral proof-scope and
+metadata corrigenda; the numerical certificate is invariant across
+them.  The canonical F6 machinery below is ported from
+apf/ec_inventory_reading.py (check_L_F6_not_from_EC) at the kernel
 commit; the in-repo copy of that module reproduces every count here
 as a bank check.
 
@@ -75,7 +79,7 @@ OUTPUT: complete audit trail matching the waterfall table in
 Technical Supplement I, S "Fermion content".
 
 REFERENCE: E.S. Brooke, "Technical Supplement I to Paper 2: The
-           Classification Core," v5.2.
+           Classification Core," v5.3.
 
 REVISION NOTES (v4.1, 2026-07-14 -- the review 5.1.01 pass):
   - RT6 ADDED: filter-order invariance.  All 7! = 5,040 orderings of the
@@ -135,14 +139,27 @@ from itertools import combinations_with_replacement, combinations
 import math
 import sys
 
-SCRIPT_VERSION = "4.1"
+SCRIPT_VERSION = "4.2"
 VERSION_LOCK = {
-    "script": "fermion_scan_standalone.py v4.1 (2026-07-14)",
+    "script": "fermion_scan_standalone.py v4.2 (2026-07-15)",
     "codebase": "v24.3.423",
-    "commit": "5bc6193",
+    "numerical_kernel_commit": "5bc6193",
+    "numerical_kernel_note": (
+        "the engine commit at which the scan's numerical content was "
+        "locked (rep tables, caps, predicates, waterfall); every later "
+        "engine commit on the corrigenda trail is a count-neutral "
+        "proof-scope or metadata corrigendum -- the numerical "
+        "certificate is invariant across them"),
+    "corrigenda_trail": [
+        "668daa5 (check_T_field summary: P4 class-min 54)",
+        "e230757 (check_T_field declared-ansatz re-scope + P3 F2+F5 battery)",
+        "this release's engine commit (P3 color-dimension case split, "
+        "review 5.2.01 item .01; hash pinned in the git history of the "
+        "push that ships this manifest)",
+    ],
     "bank": 3912,
-    "paper_main": "Paper_2_Structure_of_Admissible_Physics_v7.1",
-    "supplement_I": "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.2",
+    "paper_main": "Paper_2_Structure_of_Admissible_Physics_v7.2",
+    "supplement_I": "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.3",
     "supplement_II": "Paper_2_Foundational_Gauge_Program_Supplement_v1.0",
 }
 
@@ -654,8 +671,9 @@ def run_scan(emit_audit=False, audit_dir='release_audit'):
     print("=" * 70)
     print("APF FERMION TEMPLATE SCAN -- CANONICAL STANDALONE VERIFICATION")
     print(f"  script v{SCRIPT_VERSION}; version lock: codebase "
-          f"{VERSION_LOCK['codebase']} (commit {VERSION_LOCK['commit']}, "
-          f"bank {VERSION_LOCK['bank']})")
+          f"{VERSION_LOCK['codebase']} (numerical kernel "
+          f"{VERSION_LOCK['numerical_kernel_commit']}, bank "
+          f"{VERSION_LOCK['bank']}; corrigenda trail in the manifest)")
     print("=" * 70)
 
     all_templates = enumerate_templates()
@@ -1332,8 +1350,9 @@ def emit_audit_files(audit_dir, all_templates, kill, waterfall_rows, triple,
         fh.write('# SHA-256 certificate for the Paper 2 scan audit bundle\n')
         fh.write(f'# generator: {VERSION_LOCK["script"]}\n')
         fh.write(f'# version lock: codebase {VERSION_LOCK["codebase"]} '
-                 f'commit {VERSION_LOCK["commit"]} bank '
-                 f'{VERSION_LOCK["bank"]}\n')
+                 f'numerical kernel {VERSION_LOCK["numerical_kernel_commit"]} '
+                 f'bank {VERSION_LOCK["bank"]} '
+                 f'(corrigenda trail in scan_inputs.json)\n')
         for name in files:
             data = open(os.path.join(audit_dir, name), 'rb').read()
             h = hashlib.sha256(data).hexdigest()

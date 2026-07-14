@@ -168,7 +168,7 @@ This is a structured threat model. If any of the surfaces fails empirically, the
 
 The codebase has three files in `apf/`:
 
-- **`apf/core.py`** and **`apf/ec_inventory_reading.py`** — the 20 theorem check functions for this paper (version-locked at canonical commit 5bc6193). Each function constructs a mathematical witness, verifies the theorem's claim, and returns a structured result with name, dependencies, status, and key result.
+- **`apf/core.py`** and **`apf/ec_inventory_reading.py`** — the 20 theorem check functions for this paper (numerical kernel commit 5bc6193; corrigenda-trail head — see the release manifest). Each function constructs a mathematical witness, verifies the theorem's claim, and returns a structured result with name, dependencies, status, and key result.
 - **`apf/apf_utils.py`** — exact arithmetic utilities (mostly `Fraction`-based; numpy/scipy where required by specific numerical lemmas).
 - **`apf/bank.py`** — registry of all check functions in this repo, plus the `run_all()` runner.
 
