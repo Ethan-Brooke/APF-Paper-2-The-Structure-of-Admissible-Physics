@@ -7,9 +7,11 @@ Usage:
     python run_checks.py --check T_Born  # run a single theorem by name
 
 This is the standalone-repo verifier for Structure of Admissible Physics (APF Paper 2).
-The full APF codebase v6.9 (2026-04-23) verifies 437 checks across
-420 bank-registered theorems + apf/standalone/ across 34 registered modules — this paper's repo
-verifies the 14-theorem subset directly cited by the manuscript.
+The canonical APF codebase v24.3.423 (commit 5bc6193, 2026-07-14) verifies
+a 3912-entry theorem bank (native verify_all --bank-audit 3912/3912 gap 0) —
+this paper's repo verifies the 20-check subset directly cited by the
+manuscript. `python verify_all.py` is the canonical entry (this script is
+a kept convenience alias); `--paper2-core` on verify_all.py is the fast path.
 """
 
 import sys

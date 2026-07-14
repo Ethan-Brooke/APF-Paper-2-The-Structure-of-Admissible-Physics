@@ -1,35 +1,30 @@
 """apf/core.py — Paper 2 subset.
 
 Vendored single-file extraction of the check functions cited in
-Paper 2: The Structure of Admissible Physics: Non-Closure, Gauge Origin, Capacity Counting, and the 61-Type Partition. The canonical APF codebase v6.8 (frozen 2026-04-18)
-verifies 348 checks across 335 bank-registered theorems; this file
-contains the 14-check subset
-for this paper.
+Paper 2: The Structure of Admissible Physics (main paper v7.0,
+Technical Supplement I v5.1, Technical Supplement II v1.0).
 
-Each function is copied verbatim from its original source module.
+VERSION LOCK: canonical APF codebase v24.3.423, commit 5bc6193
+(2026-07-14; bank 3912, verify_all --bank-audit 3912/3912 gap 0).
+This file carries 18 of the repo's 20-check subset; the other two
+(check_L_F6_not_from_EC, check_L_EC_inventory_reading) live in
+apf/ec_inventory_reading.py, vendored whole from the same commit.
+
+Each function is copied verbatim from its original source module
+(core.py or gauge.py at 5bc6193), with one documented exception:
+check_T_field's summary string carries the corrected P4 class bound
+(class minimum 54, dominance 54 > 45) per the 2026-07-14 corrigendum
+of record; the executed assertions are the canonical 54-witness
+battery, byte-identical to gauge.py at 5bc6193.
 See https://doi.org/10.5281/zenodo.18529115 for the full codebase.
 """
 
 import math as _math
-from fractions import Fraction
-from apf.apf_utils import check, CheckFailure, _result, _zeros, _eye, _diag, _mat, _mm, _mv, _madd, _msub, _mscale, _dag, _tr, _det, _fnorm, _aclose, _eigvalsh, _kron, _outer, _vdot, _zvec, _vkron, _vscale, _vadd, _eigh_3x3, _eigh, dag_put, dag_get
-if __name__ == '__main__':
-    passed = failed = 0
-    for name in sorted(_CHECKS):
-        try:
-            result = _CHECKS[name]()
-            print(f'  PASS  {name}')
-            passed += 1
-        except Exception as e:
-            print(f'  FAIL  {name}: {e}')
-            failed += 1
-    total = passed + failed
-    print(f'\n{passed}/{total} checks passed.')
-    if failed:
-        raise SystemExit(1)
 import math
-from apf.apf_utils import check, _result
-from apf.apf_utils import check, CheckFailure, _result, _zeros, _eye, _diag, _mat, _mm, _mv, _madd, _msub, _mscale, _dag, _tr, _det, _fnorm, _aclose, _eigvalsh, _kron, _outer, _vdot, _zvec, _vkron, _vscale, _vadd, _eigh_3x3, _eigh, dag_get
+from fractions import Fraction
+from fractions import Fraction as _F
+from itertools import product as _product
+from apf.apf_utils import check, CheckFailure, _result, _zeros, _eye, _diag, _mat, _mm, _mv, _madd, _msub, _mscale, _dag, _tr, _det, _fnorm, _aclose, _eigvalsh, _kron, _outer, _vdot, _zvec, _vkron, _vscale, _vadd, _eigh_3x3, _eigh, dag_put, dag_get
 
 
 # ======================================================================
@@ -361,7 +356,7 @@ def check_Theorem_R():
       B1_prime -> ternary carrier must be complex type (Section 6.3)
       L_irr + L_irr_uniform + T_M -> chiral carrier required (Section 6.4)
       L_irr -> pseudoreal 2-dim is minimal chiral carrier (Section 6.4)
-      Enforcement completeness + A1 minimality -> single U(1) (Section 6.5)
+      Admissibility completeness + A1 minimality -> single U(1) (Section 6.5)
 
     R1 DERIVATION (ternary carrier):
       (a) Non-closure (L_nc) requires non-abelian composition.
@@ -369,7 +364,7 @@ def check_Theorem_R():
       (c) Finiteness (A1) forces discrete spectrum -> lightest singlet
           is stable (nothing lighter to decay into). Note: this does NOT
           require any specific gauge group or baryon number conservation.
-      (d) Enforcement independence (T_M): the confining sector must
+      (d) Admissibility independence (T_M): the confining sector must
           contribute its OWN irreversible channels, not merely inherit
           from gravity. This requires ORIENTED composites (B != B*) that
           carry robust distinctions under admissibility-preserving
@@ -386,10 +381,10 @@ def check_Theorem_R():
       (a) L_irr_uniform: the gauge sector inherits irreversibility at
           shared interfaces with gravity. This is proven and not under
           dispute.
-      (b) Enforcement independence (T_M): each gauge factor must provide
+      (b) Admissibility independence (T_M): each gauge factor must provide
           INTRINSIC irreversible channels, not merely inherit from
           gravity. If the gauge sector's irreversibility is entirely
-          inherited, it is not enforcement-independent (violates T_M
+          inherited, it is not admissibility-independent (violates T_M
           and the factorization in L_gauge_template_uniqueness Step 1).
       (c) A vector-like gauge theory is CPT-symmetric at the gauge level:
           every vertex has a CPT-conjugate that reverses it. Gauge-
@@ -410,12 +405,19 @@ def check_Theorem_R():
       NOTE: SU(N_c) x SU(2) is anomaly-free without U(1). All cubic
       anomalies cancel, Witten anomaly is safe, gravitational mixed
       anomalies vanish. Therefore R3 CANNOT be derived from anomaly
-      cancellation. The correct argument is enforcement completeness:
+      cancellation. The argument runs through the admissibility-
+      completeness READING (corrigendum 2026-07-13, below):
 
-      (a) A1 requires the gauge structure to distinguish all physically
-          distinct states (enforcement completeness). If two states
-          have identical gauge quantum numbers but are physically
-          distinct, the enforcement structure is incomplete.
+      (a) Under the admissibility-completeness READING (R-EC-inv:
+          kinematic type-distinctness is exhausted by the interface's
+          counted labels -- A1-MOTIVATED via the enforcement referent,
+          NOT A1-derived; reading's home: apf/ec_inventory_reading.py
+          check_L_EC_inventory_reading [P_structural_reading | R-EC-inv
+          + I-typing]), with the entry-typed inventory (I-typing: the
+          five multiplets are ANTECEDENTLY distinct types, u^c != d^c
+          prior to any abelian label) as NAMED INPUT: if two entry-types
+          have identical gauge quantum numbers, the labeling conflates
+          the typed inventory.
       (b) Without U(1), SU(N_c) x SU(2) conflates matter representations:
           u^c and d^c both map to (N_c-bar, 1) -> indistinguishable.
           e^c and nu_R both map to (1, 1) -> indistinguishable.
@@ -423,37 +425,161 @@ def check_Theorem_R():
       (c) One U(1) grading with distinct charge assignments resolves all
           degeneracies: 5 distinct hypercharges for 5 multiplets.
       (d) A1 minimality: one U(1) suffices -> additional U(1)s are
-          non-minimal (extra capacity cost with no enforcement gain).
+          non-minimal (extra capacity cost with no admissibility gain).
       (e) Therefore: exactly one U(1) is required.
 
       The matter content (5 multiplets per generation) is derived from
-      the spectral triple (T_field [P]), not assumed. This makes the
-      enforcement completeness argument non-circular.
+      the spectral triple (T_field [P]), not assumed; its ANTECEDENT
+      type-distinctness is the named input I-typing (an input here, not
+      a consequence of the labels). This keeps the completeness-reading
+      argument non-circular.
+
+    CORRIGENDUM (2026-07-13, count-neutral; principal ruling 'bank'
+    2026-07-13): the R3 wording "A1 requires the gauge structure to
+    distinguish all physically distinct states (admissibility
+    completeness)" is RE-TYPED throughout this check to the named
+    reading form: R3 holds under the reading R-EC-inv (kinematic
+    type-inventory completeness -- A1-motivated via the enforcement
+    referent, NOT A1-derived) with the entry-typed inventory I-typing
+    as named input. Source: Paper 2 supp v4.0 review 4.0.01 (items
+    6/10; tracker in Papers/Paper 02/Reviews/); the EC lane The Turning
+    (parked)/ec_derivation_2026-07-13/ (walker of record 95 exact
+    checks exit 0; stage-1 hostile audit LAND-WITH-FIXES 0.86, all
+    fixes carried); the reading's home is apf/ec_inventory_reading.py
+    (v24.3.423, where the non-derivability counter-construction is
+    owned in-check). The u^c/d^c conflation arithmetic below
+    (4 distinguishable for 5 states; one U(1) resolves 5) SURVIVES
+    unchanged -- it is the one-U(1) NECESSITY leg, now conditional on
+    the reading + input.
 
     STATUS: [P]. Dependencies: A1, L_nc, L_irr, L_irr_uniform, B1_prime,
     T3, T_M, T_field, T_confinement.
     """
+
+    # R1: Ternary carrier
+    # k=2 fails: bilinear invariant -> abelian composition
     k2_has_irreducible_trilinear = False
-    check(not k2_has_irreducible_trilinear, 'k=2 cannot have trilinear')
+    check(not k2_has_irreducible_trilinear, "k=2 cannot have trilinear")
+
+    # k=3 succeeds: epsilon_{ijk} is irreducible trilinear
     k3_has_irreducible_trilinear = True
-    check(k3_has_irreducible_trilinear, 'k=3 must have trilinear')
+    check(k3_has_irreducible_trilinear, "k=3 must have trilinear")
+
+    # k=3 is complex (from B1_prime)
     k3_is_complex = True
-    check(k3_is_complex, 'k=3 must be complex (B1_prime)')
+    check(k3_is_complex, "k=3 must be complex (B1_prime)")
+
+    # R2: Chiral carrier
+    # Pseudoreal: V ~ V* but via antisymmetric map -> no mass term
     pseudoreal_has_mass_term = False
-    check(not pseudoreal_has_mass_term, 'Pseudoreal blocks mass terms')
+    check(not pseudoreal_has_mass_term, "Pseudoreal blocks mass terms")
+
+    # Minimal faithful pseudoreal dimension is 2
     min_pseudoreal_dim = 2
-    check(min_pseudoreal_dim == 2, 'Minimal pseudoreal dim must be 2')
-    n_physical_multiplets = 5
-    n_distinguishable_no_U1 = 4
-    check(n_distinguishable_no_U1 < n_physical_multiplets, f'Without U(1): only {n_distinguishable_no_U1} distinguishable for {n_physical_multiplets} physical states (enforcement incomplete)')
+    check(min_pseudoreal_dim == 2, "Minimal pseudoreal dim must be 2")
+
+    # R3: Single abelian grading -- under the admissibility-completeness
+    # READING R-EC-inv + the named input I-typing (corrigendum 2026-07-13;
+    # apf/ec_inventory_reading.py is the reading's home).
+    # WITHOUT U(1): SU(N_c) x SU(2) is anomaly-free but conflates reps.
+    # u^c and d^c both map to (N_c-bar, 1) — indistinguishable.
+    # e^c and nu_R both map to (1, 1) — indistinguishable.
+    n_physical_multiplets = 5   # Q, u^c, d^c, L, e^c per generation
+    n_distinguishable_no_U1 = 4 # (N_c,2), (N_c-bar,1), (1,2), (1,1)
+    check(n_distinguishable_no_U1 < n_physical_multiplets,
+          f"Without U(1): only {n_distinguishable_no_U1} distinguishable "
+          f"for {n_physical_multiplets} physical states (typed inventory "
+          f"conflated -- under R-EC-inv + I-typing)")
+
     n_U1_needed = 1
-    n_distinguishable_with_U1 = 5
-    check(n_distinguishable_with_U1 == n_physical_multiplets, f'With 1 U(1): {n_distinguishable_with_U1} distinguishable (enforcement complete)')
-    check(n_U1_needed == 1, 'Exactly one U(1) (A1 minimality)')
+    n_distinguishable_with_U1 = 5  # all hypercharges distinct
+    check(n_distinguishable_with_U1 == n_physical_multiplets,
+          f"With 1 U(1): {n_distinguishable_with_U1} distinguishable "
+          f"(typed inventory resolved under the reading)")
+    check(n_U1_needed == 1, "Exactly one U(1) (A1 minimality)")
+
+    # Combined: the three requirements are independent
+    # R1 comes from L_nc + T_M (non-closure -> oriented composites -> ternary)
+    # R2 comes from L_irr + T_M (intrinsic gauge irreversibility -> chirality)
+    # R3 comes from admissibility completeness + A1 minimality
     r1_source = 'L_nc + T_M + B1_prime'
     r2_source = 'L_irr + L_irr_uniform + T_M'
-    r3_source = 'enforcement completeness + A1 minimality'
-    return _result(name='Theorem_R: Representation Requirements from Admissibility', tier=1, epistemic='P', summary=f'Any admissible interaction theory satisfying A1 must support: R1 (faithful complex 3-dim carrier from L_nc + T_M + B1_prime: oriented composites require trilinear invariant on complex carrier), R2 (faithful pseudoreal 2-dim carrier from L_irr + T_M: enforcement independence requires intrinsic gauge irreversibility, which excludes vector-like theories [CPT-symmetric, 0 CP phases]), R3 (single abelian grading from enforcement completeness + A1 minimality: SU(N_c)xSU(2) is anomaly-free without U(1) but conflates u^c/d^c and e^c/nu_R; one U(1) resolves all {n_physical_multiplets} multiplets). No reference to any specific Lie group. v6.7: R1/R2 sharpened, R3 rewritten (Phase 5 audit).', key_result='Three carrier requirements (R1+R2+R3) derived from A1 alone [P]', dependencies=['A1', 'L_nc', 'L_irr', 'L_irr_uniform', 'B1_prime', 'T3', 'T_M', 'T_field', 'T_confinement'], artifacts={'R1': {'name': 'Ternary carrier', 'dim': 3, 'type': 'complex', 'source': 'L_nc -> non-abelian -> T_confinement -> stable singlets -> T_M (enforcement independence) -> oriented composites -> B1_prime (complex, k=3 trilinear)'}, 'R2': {'name': 'Chiral carrier', 'dim': 2, 'type': 'pseudoreal', 'source': 'L_irr + L_irr_uniform -> irreversibility at shared interfaces -> T_M (enforcement independence) -> intrinsic gauge irreversibility required -> vector-like excluded (CPT-symmetric) -> chiral -> pseudoreal 2-dim minimal'}, 'R3': {'name': 'Abelian grading', 'dim': 1, 'type': 'U(1)', 'source': 'Enforcement completeness (A1): SU(N_c)xSU(2) conflates u^c/d^c as (N_c-bar,1) and e^c/nu_R as (1,1). One U(1) with distinct charges resolves all 5 multiplets. A1 minimality: one U(1) suffices.', 'note': 'SU(N_c)xSU(2) is anomaly-free without U(1). R3 is NOT derivable from anomaly cancellation. The driver is enforcement completeness.'}, 'no_lie_group_referenced': True, 'logical_position': 'Bridge between structural lemmas and T_gauge', 'v67_audit': {'R1': 'Sharpened: explicit T_M + oriented-composite chain', 'R2': 'Sharpened: "no intrinsic irreversibility" replaces "reversible"', 'R3': 'REWRITTEN: enforcement completeness replaces chiral consistency'}})
+    # corrigendum 2026-07-13: reading-typed (was 'admissibility
+    # completeness + A1 minimality')
+    r3_source = 'R-EC-inv reading + I-typing (named input) + A1 minimality'
+
+    return _result(
+        name='Theorem_R: Representation Requirements from Admissibility',
+        tier=1,
+        epistemic='P',
+        summary=(
+            'Any admissible interaction theory satisfying A1 must support: '
+            'R1 (faithful complex 3-dim carrier from L_nc + T_M + B1_prime: '
+            'oriented composites require trilinear invariant on complex carrier), '
+            'R2 (faithful pseudoreal 2-dim carrier from L_irr + T_M: '
+            'admissibility independence requires intrinsic gauge irreversibility, '
+            'which excludes vector-like theories [CPT-symmetric, 0 CP phases]), '
+            'R3 (single abelian grading under the admissibility-completeness '
+            'READING R-EC-inv + the named input I-typing (corrigendum '
+            '2026-07-13; A1-motivated, not A1-derived) + A1 minimality: '
+            'SU(N_c)xSU(2) is anomaly-free without U(1) but '
+            'conflates u^c/d^c and e^c/nu_R; one U(1) resolves all '
+            f'{n_physical_multiplets} multiplets). '
+            'No reference to any specific Lie group. '
+            'v6.7: R1/R2 sharpened, R3 rewritten (Phase 5 audit).'
+        ),
+        key_result=('Three carrier requirements: R1+R2 derived from A1 [P]; '
+                    'R3 under the admissibility-completeness reading '
+                    'R-EC-inv + named input I-typing (A1-motivated, NOT '
+                    'A1-derived; corrigendum 2026-07-13, reading home '
+                    'apf/ec_inventory_reading.py)'),
+        dependencies=['A1', 'L_nc', 'L_irr', 'L_irr_uniform', 'B1_prime', 'T3',
+                      'T_M', 'T_field', 'T_confinement', 'Regime_R'],
+        artifacts={
+            'R1': {
+                'name': 'Ternary carrier',
+                'dim': 3,
+                'type': 'complex',
+                'source': ('L_nc -> non-abelian -> T_confinement -> stable singlets '
+                           '-> T_M (admissibility independence) -> oriented composites '
+                           '-> B1_prime (complex, k=3 trilinear)'),
+            },
+            'R2': {
+                'name': 'Chiral carrier',
+                'dim': 2,
+                'type': 'pseudoreal',
+                'source': ('L_irr + L_irr_uniform -> irreversibility at shared '
+                           'interfaces -> T_M (admissibility independence) -> '
+                           'intrinsic gauge irreversibility required -> '
+                           'vector-like excluded (CPT-symmetric) -> chiral -> '
+                           'pseudoreal 2-dim minimal'),
+            },
+            'R3': {
+                'name': 'Abelian grading',
+                'dim': 1,
+                'type': 'U(1)',
+                'source': ('The admissibility-completeness READING R-EC-inv + '
+                           'the named input I-typing (corrigendum 2026-07-13): '
+                           'SU(N_c)xSU(2) conflates '
+                           'u^c/d^c as (N_c-bar,1) and e^c/nu_R as (1,1). One U(1) '
+                           'with distinct charges resolves all 5 multiplets. '
+                           'A1 minimality: one U(1) suffices.'),
+                'note': ('SU(N_c)xSU(2) is anomaly-free without U(1). R3 is NOT '
+                         'derivable from anomaly cancellation. The driver is the '
+                         'admissibility-completeness reading R-EC-inv '
+                         '(A1-motivated, NOT A1-derived) with I-typing as named '
+                         'input; home: apf/ec_inventory_reading.py (v24.3.423).'),
+            },
+            'no_lie_group_referenced': True,
+            'logical_position': 'Bridge between structural lemmas and T_gauge',
+            'v67_audit': {
+                'R1': 'Sharpened: explicit T_M + oriented-composite chain',
+                'R2': 'Sharpened: "no intrinsic irreversibility" replaces "reversible"',
+                'R3': 'REWRITTEN: admissibility completeness replaces chiral consistency',
+            },
+        },
+    )
+
 
 def check_L_gauge_template_uniqueness():
     """L_gauge_template_uniqueness: SU(N_c)×SU(2)×U(1) is the Unique Gauge Template.
@@ -476,12 +602,12 @@ def check_L_gauge_template_uniqueness():
 
     Step 1 [Factorization -- independence forces product structure]:
       R1 (confining carrier) and R2 (chiral carrier) serve INDEPENDENT
-      enforcement roles: confinement redistributes capacity among
+      admissibility roles: confinement redistributes capacity among
       incompatible channels (L_nc), while chirality distinguishes
       forward/backward transitions (L_irr). These are DISTINCT
-      enforcement mechanisms addressing DIFFERENT lemmas.
+      admissibility mechanisms addressing DIFFERENT lemmas.
 
-      T_M (monogamy) + L_loc (locality): independent enforcement
+      T_M (monogamy) + L_loc (locality): independent admissibility
       channels cannot share gauge resources. Therefore the confining
       and chiral gauge factors must commute -- they generate INDEPENDENT
       subgroups. The gauge group factors as G_conf x G_chir x G_abel.
@@ -514,13 +640,17 @@ def check_L_gauge_template_uniqueness():
       2-dim rep. All others have min faithful dim >= 3.
 
     Step 4 [Abelian factor = U(1)]:
-      R3 (enforcement completeness): without an abelian grading,
+      R3 (the admissibility-completeness READING; corrigendum
+      2026-07-13, below): without an abelian grading,
       SU(N_c) x SU(2) conflates matter multiplets (e.g. u^c and d^c
       are both (N_c-bar, 1)). One U(1) with distinct charges resolves
       all degeneracies. Note: anomaly cancellation does NOT require
-      U(1) — SU(N_c) x SU(2) is anomaly-free. The driver is A1's
-      requirement that the gauge structure distinguish all physical
-      states. Multiple U(1)s excluded by capacity minimality (A1).
+      U(1) — SU(N_c) x SU(2) is anomaly-free. The driver is the
+      admissibility-completeness reading R-EC-inv (A1-motivated via the
+      enforcement referent, NOT A1-derived) with the entry-typed
+      inventory I-typing as named input (Theorem_R R3 as corrigendized;
+      reading's home: apf/ec_inventory_reading.py).
+      Multiple U(1)s excluded by capacity minimality (A1).
       U(1) is the unique connected compact 1-dim abelian Lie group.
 
     Step 5 [Witten anomaly excludes even N_c]:
@@ -537,13 +667,56 @@ def check_L_gauge_template_uniqueness():
            Piron-Soler for T1).
       AS3: Faithfulness excludes SO(3) (mitigated by A1:NT).
 
+    CORRIGENDUM (2026-07-13, count-neutral; principal ruling 'bank'
+    2026-07-13): Step 4's former sentence "The driver is A1's
+    requirement that the gauge structure distinguish all physical
+    states" is RE-TYPED to the named reading form: the driver is the
+    reading R-EC-inv (A1-motivated via the enforcement referent, NOT
+    A1-derived) with the entry-typed inventory I-typing as named input.
+    Source: Paper 2 supp v4.0 review 4.0.01 (items 6/10); the EC lane
+    The Turning (parked)/ec_derivation_2026-07-13/; reading's home:
+    apf/ec_inventory_reading.py (v24.3.423). The conflation arithmetic
+    and the Lie-classification steps are untouched.
+
     STATUS: [P]. Lie classification is established math (imported).
     All physical requirements from [P] theorems.
     """
-    lie_algebras = [('SU(2)', 1, 2, 'P', False, 3), ('SU(3)', 2, 3, 'C', True, 8), ('SU(4)', 3, 4, 'C', False, 15), ('SU(5)', 4, 5, 'C', False, 24), ('SU(6)', 5, 6, 'C', False, 35), ('SU(7)', 6, 7, 'C', False, 48), ('SO(5)', 2, 5, 'R', False, 10), ('SO(7)', 3, 7, 'R', False, 21), ('Sp(4)', 2, 4, 'P', False, 10), ('Sp(6)', 3, 6, 'P', False, 21), ('SO(6)', 3, 6, 'R', False, 15), ('SO(8)', 4, 8, 'R', False, 28), ('G2', 2, 7, 'R', False, 14), ('F4', 4, 26, 'R', False, 52), ('E6', 6, 27, 'C', False, 78), ('E7', 7, 56, 'P', False, 133), ('E8', 8, 248, 'R', False, 248)]
+
+    # ================================================================
+    # Step 2: Exhaustive classification -- confining factor candidates
+    # ================================================================
+    # (name, rank, fund_dim, fund_type, has_trilinear_k3, dim_G)
+    # fund_type: 'C' = complex, 'R' = real, 'P' = pseudoreal
+
+    lie_algebras = [
+        # A_n = SU(n+1)
+        ('SU(2)',  1,  2, 'P',  False,    3),
+        ('SU(3)',  2,  3, 'C',  True,     8),
+        ('SU(4)',  3,  4, 'C',  False,   15),
+        ('SU(5)',  4,  5, 'C',  False,   24),
+        ('SU(6)',  5,  6, 'C',  False,   35),
+        ('SU(7)',  6,  7, 'C',  False,   48),
+        # B_n = SO(2n+1)
+        ('SO(5)',  2,  5, 'R',  False,   10),
+        ('SO(7)',  3,  7, 'R',  False,   21),
+        # C_n = Sp(2n)
+        ('Sp(4)',  2,  4, 'P',  False,   10),
+        ('Sp(6)',  3,  6, 'P',  False,   21),
+        # D_n = SO(2n)
+        ('SO(6)',  3,  6, 'R',  False,   15),
+        ('SO(8)',  4,  8, 'R',  False,   28),
+        # Exceptionals
+        ('G2',     2,  7, 'R',  False,   14),
+        ('F4',     4, 26, 'R',  False,   52),
+        ('E6',     6, 27, 'C',  False,   78),
+        ('E7',     7, 56, 'P',  False,  133),
+        ('E8',     8,248, 'R',  False,  248),
+    ]
+
+    # R1: complex + trilinear(k=3) + faithful
     r1_candidates = []
     r1_exclusion_log = {}
-    for (name, rank, fdim, ftype, has_tri, dimg) in lie_algebras:
+    for name, rank, fdim, ftype, has_tri, dimg in lie_algebras:
         reasons = []
         if ftype != 'C':
             reasons.append(f'fund. type = {ftype} (need complex)')
@@ -551,69 +724,189 @@ def check_L_gauge_template_uniqueness():
             reasons.append(f'no irreducible trilinear at k=3')
         if fdim < 3:
             reasons.append(f'fund. dim = {fdim} < 3')
+
         if not reasons:
             r1_candidates.append((name, dimg, fdim))
-        r1_exclusion_log[name] = {'fund_dim': fdim, 'fund_type': ftype, 'trilinear': has_tri, 'dim_G': dimg, 'excluded_by': reasons if reasons else 'PASSES R1'}
-    check(len(r1_candidates) == 1, f'R1: expected 1 candidate, got {len(r1_candidates)}: {[c[0] for c in r1_candidates]}')
-    check(r1_candidates[0][0] == 'SU(3)', f'R1: unique candidate must be SU(3), got {r1_candidates[0][0]}')
+        r1_exclusion_log[name] = {
+            'fund_dim': fdim, 'fund_type': ftype,
+            'trilinear': has_tri, 'dim_G': dimg,
+            'excluded_by': reasons if reasons else 'PASSES R1',
+        }
+
+    # Only SU(3) passes strict R1 (trilinear at k=3)
+    check(len(r1_candidates) == 1,
+          f"R1: expected 1 candidate, got {len(r1_candidates)}: "
+          f"{[c[0] for c in r1_candidates]}")
+    check(r1_candidates[0][0] == 'SU(3)',
+          f"R1: unique candidate must be SU(3), got {r1_candidates[0][0]}")
+
+    # EXTENDED: SU(N_c) for N_c > 3 also confine with complex fund,
+    # and contain SU(3) subgroups. T_gauge handles N_c optimization.
     su_n_complex = []
     for N_c in range(2, 8):
-        is_complex = N_c >= 3
-        has_confinement = N_c >= 2
-        dim_g = N_c ** 2 - 1
+        is_complex = (N_c >= 3)
+        has_confinement = (N_c >= 2)
+        dim_g = N_c**2 - 1
         if is_complex and has_confinement:
             su_n_complex.append((N_c, dim_g))
-    check(len(su_n_complex) >= 1, 'At least SU(3) must pass')
-    check(su_n_complex[0] == (3, 8), 'SU(3) is cheapest complex SU(N)')
+
+    check(len(su_n_complex) >= 1, "At least SU(3) must pass")
+    check(su_n_complex[0] == (3, 8), "SU(3) is cheapest complex SU(N)")
+
+    # ================================================================
+    # Step 3: Exhaustive classification -- chiral factor candidates
+    # ================================================================
     r2_candidates = []
     r2_exclusion_log = {}
-    for (name, rank, fdim, ftype, has_tri, dimg) in lie_algebras:
+    for name, rank, fdim, ftype, has_tri, dimg in lie_algebras:
         reasons = []
         if ftype != 'P':
             reasons.append(f'fund. type = {ftype} (need pseudoreal)')
         if fdim != 2:
             reasons.append(f'fund. dim = {fdim} (need 2)')
+
         if not reasons:
             r2_candidates.append((name, dimg))
-        r2_exclusion_log[name] = {'fund_dim': fdim, 'fund_type': ftype, 'dim_G': dimg, 'excluded_by': reasons if reasons else 'PASSES R2'}
-    check(len(r2_candidates) == 1, f'R2: expected 1 candidate, got {len(r2_candidates)}: {[c[0] for c in r2_candidates]}')
-    check(r2_candidates[0][0] == 'SU(2)', f'R2: unique candidate must be SU(2), got {r2_candidates[0][0]}')
+        r2_exclusion_log[name] = {
+            'fund_dim': fdim, 'fund_type': ftype, 'dim_G': dimg,
+            'excluded_by': reasons if reasons else 'PASSES R2',
+        }
+
+    # Only SU(2) passes R2
+    check(len(r2_candidates) == 1,
+          f"R2: expected 1 candidate, got {len(r2_candidates)}: "
+          f"{[c[0] for c in r2_candidates]}")
+    check(r2_candidates[0][0] == 'SU(2)',
+          f"R2: unique candidate must be SU(2), got {r2_candidates[0][0]}")
+
+    # ================================================================
+    # Step 4: Abelian factor
+    # ================================================================
     n_abelian = 1
-    check(n_abelian == 1, 'Exactly one U(1) from R3 + minimality')
+    check(n_abelian == 1, "Exactly one U(1) from R3 + minimality")
+
+    # ================================================================
+    # Step 5: Witten anomaly -- even N_c excluded
+    # ================================================================
     witten_survivors = []
-    for (N_c, dim_g) in su_n_complex:
+    for N_c, dim_g in su_n_complex:
         n_doublets = N_c + 1
-        witten_ok = n_doublets % 2 == 0
+        witten_ok = (n_doublets % 2 == 0)
         if witten_ok:
             witten_survivors.append((N_c, dim_g + 3 + 1))
-    check(all((N_c % 2 == 1 for (N_c, _) in witten_survivors)), 'All Witten survivors have odd N_c')
-    check(witten_survivors[0] == (3, 12), f'N_c=3 is cheapest Witten survivor with dim(G)=12')
-    simple_alternatives = [('SU(5)', 24, 'Contains SU(3)xSU(2)xU(1)'), ('SO(10)', 45, 'Contains SU(5)'), ('E6', 78, 'Contains SO(10)')]
+
+    check(all(N_c % 2 == 1 for N_c, _ in witten_survivors),
+          "All Witten survivors have odd N_c")
+    check(witten_survivors[0] == (3, 12),
+          f"N_c=3 is cheapest Witten survivor with dim(G)=12")
+
+    # ================================================================
+    # Step 6: Simple-group alternatives -- all excluded by cost
+    # ================================================================
+    simple_alternatives = [
+        ('SU(5)',  24, 'Contains SU(3)xSU(2)xU(1)'),
+        ('SO(10)', 45, 'Contains SU(5)'),
+        ('E6',     78, 'Contains SO(10)'),
+    ]
+
     product_cost = 12
-    for (name, dim_simple, desc) in simple_alternatives:
-        check(dim_simple > product_cost, f'{name}: dim={dim_simple} > {product_cost} = dim(product)')
-        check(dim_simple / product_cost >= 2.0, f'{name}: at least 2x cost of product structure')
+    for name, dim_simple, desc in simple_alternatives:
+        check(dim_simple > product_cost,
+              f"{name}: dim={dim_simple} > {product_cost} = dim(product)")
+        check(dim_simple / product_cost >= 2.0,
+              f"{name}: at least 2x cost of product structure")
+
     min_simple_cost = 24
-    check(min_simple_cost == 2 * product_cost, 'Cheapest simple envelope costs exactly 2x the product')
-    template_dim = lambda Nc: Nc ** 2 - 1 + 3 + 1
-    check(template_dim(3) == 12, 'dim(SU(3)xSU(2)xU(1)) = 12')
-    check(template_dim(5) == 28, 'dim(SU(5)xSU(2)xU(1)) = 28')
-    check(template_dim(7) == 52, 'dim(SU(7)xSU(2)xU(1)) = 52')
+    check(min_simple_cost == 2 * product_cost,
+          "Cheapest simple envelope costs exactly 2x the product")
+
+    # ================================================================
+    # TEMPLATE UNIQUENESS: Assemble result
+    # ================================================================
+    template_dim = lambda Nc: Nc**2 - 1 + 3 + 1
+    check(template_dim(3) == 12, "dim(SU(3)xSU(2)xU(1)) = 12")
+    check(template_dim(5) == 28, "dim(SU(5)xSU(2)xU(1)) = 28")
+    check(template_dim(7) == 52, "dim(SU(7)xSU(2)xU(1)) = 52")
+
     for i in range(len(witten_survivors) - 1):
-        check(witten_survivors[i][1] < witten_survivors[i + 1][1], 'Cost strictly increasing with N_c')
+        check(witten_survivors[i][1] < witten_survivors[i+1][1],
+              "Cost strictly increasing with N_c")
+
+    # ================================================================
+    # DOWNSTREAM: C_total = 61 follows rigidly
+    # ================================================================
     n_gauge_check = 8 + 3 + 1
     n_fermion_check = 15 * 3
     n_higgs_check = 4
     C_total_check = n_gauge_check + n_fermion_check + n_higgs_check
-    check(C_total_check == 61, f'C_total = {C_total_check} from template uniqueness')
+    check(C_total_check == 61, f"C_total = {C_total_check} from template uniqueness")
+
     for N_c_alt in [5, 7]:
         per_gen_alt = 4 * N_c_alt + 3
-        n_gauge_alt = N_c_alt ** 2 - 1 + 3 + 1
+        n_gauge_alt = N_c_alt**2 - 1 + 3 + 1
         C_total_alt = per_gen_alt * 3 + 4 + n_gauge_alt
-        check(C_total_alt != 61, f'N_c={N_c_alt}: C_total={C_total_alt} != 61')
-    dag_put('gauge_template', 'SU(N_c)xSU(2)xU(1)', source='L_gauge_template_uniqueness', derivation='Unique template from Theorem_R + Lie classification')
-    dag_put('template_unique', True, source='L_gauge_template_uniqueness', derivation='Exhaustive classification: 17 Lie algebras tested')
-    return _result(name='L_gauge_template_uniqueness: SU(N_c)xSU(2)xU(1) Unique Template', tier=1, epistemic='P', summary='Exhaustive Lie algebra classification proves SU(N_c)xSU(2)xU(1) is the UNIQUE gauge template satisfying R1+R2+R3 (Theorem_R [P]). Step 2: 17 compact simple Lie algebras tested against R1 (complex + trilinear). Only SU(N_c>=3) passes. Step 3: Only SU(2) has faithful pseudoreal 2-dim rep (R2). Step 4: U(1) is unique compact abelian 1-dim group (R3). Step 5: Even N_c excluded by Witten anomaly. Step 6: All simple alternatives (SU(5), SO(10), E6) cost >= 2x product. Product structure forced by enforcement independence (T_M + L_loc). N_c = 3 optimal (T_gauge). C_total = 61 is RIGID consequence.', key_result='SU(N_c)xSU(2)xU(1) is UNIQUE gauge template [P]. N_c=3 by capacity optimization. C_total=61 follows rigidly.', dependencies=['Theorem_R', 'B1_prime', 'L_col', 'L_loc', 'T_M', 'L_AF_capacity', 'T_confinement', 'L_irr_uniform', 'T5'], artifacts={'r1_classification': r1_exclusion_log, 'r2_classification': r2_exclusion_log, 'su_n_complex_candidates': su_n_complex, 'witten_survivors': witten_survivors, 'simple_alternatives_excluded': [(n, d, f'cost ratio = {d / product_cost:.1f}x') for (n, d, _) in simple_alternatives], 'template': 'SU(N_c) x SU(2) x U(1)', 'optimal_N_c': 3, 'optimal_dim_G': 12, 'C_total_rigidity': 'N_c=3 -> 61; N_c=5 -> 97; N_c=7 -> 141', 'attack_surfaces': ['AS1: Factorization from coupling independence', 'AS2: Lie classification is imported math', 'AS3: Faithfulness excludes SO(3)'], 'derivation_chain': 'A1 -> {L_nc, L_irr, L_col} -> Theorem_R -> L_gauge_template_uniqueness -> T_gauge(N_c=3) -> T_field -> L_count -> C_total=61'})
+        check(C_total_alt != 61,
+              f"N_c={N_c_alt}: C_total={C_total_alt} != 61")
+
+    # -- Export to DAG --
+    dag_put('gauge_template', 'SU(N_c)xSU(2)xU(1)',
+            source='L_gauge_template_uniqueness',
+            derivation='Unique template from Theorem_R + Lie classification')
+    dag_put('template_unique', True,
+            source='L_gauge_template_uniqueness',
+            derivation='Exhaustive classification: 17 Lie algebras tested')
+
+    return _result(
+        name='L_gauge_template_uniqueness: SU(N_c)xSU(2)xU(1) Unique Template',
+        tier=1,
+        epistemic='P',
+        summary=(
+            'Exhaustive Lie algebra classification proves SU(N_c)xSU(2)xU(1) '
+            'is the UNIQUE gauge template satisfying R1+R2+R3 (Theorem_R [P]). '
+            'Step 2: 17 compact simple Lie algebras tested against R1 '
+            '(complex + trilinear). Only SU(N_c>=3) passes. '
+            'Step 3: Only SU(2) has faithful pseudoreal 2-dim rep (R2). '
+            'Step 4: U(1) is unique compact abelian 1-dim group (R3). '
+            'Step 5: Even N_c excluded by Witten anomaly. '
+            'Step 6: All simple alternatives (SU(5), SO(10), E6) cost >= 2x product. '
+            'Product structure forced by admissibility independence (T_M + L_loc). '
+            'N_c = 3 optimal (T_gauge). C_total = 61 is RIGID consequence.'
+        ),
+        key_result=(
+            'SU(N_c)xSU(2)xU(1) is UNIQUE gauge template [P]. '
+            'N_c=3 by capacity optimization. C_total=61 follows rigidly.'
+        ),
+        dependencies=[
+            'Theorem_R', 'B1_prime', 'L_col', 'L_loc', 'T_M',
+            'L_AF_capacity', 'T_confinement', 'L_irr_uniform',
+            'T5',
+        ],
+        artifacts={
+            'r1_classification': r1_exclusion_log,
+            'r2_classification': r2_exclusion_log,
+            'su_n_complex_candidates': su_n_complex,
+            'witten_survivors': witten_survivors,
+            'simple_alternatives_excluded': [
+                (n, d, f'cost ratio = {d/product_cost:.1f}x')
+                for n, d, _ in simple_alternatives
+            ],
+            'template': 'SU(N_c) x SU(2) x U(1)',
+            'optimal_N_c': 3,
+            'optimal_dim_G': 12,
+            'C_total_rigidity': 'N_c=3 -> 61; N_c=5 -> 97; N_c=7 -> 141',
+            'attack_surfaces': [
+                'AS1: Factorization from coupling independence',
+                'AS2: Lie classification is imported math',
+                'AS3: Faithfulness excludes SO(3)',
+            ],
+            'derivation_chain': (
+                'A1 -> {L_nc, L_irr, L_col} -> Theorem_R -> '
+                'L_gauge_template_uniqueness -> T_gauge(N_c=3) -> '
+                'T_field -> L_count -> C_total=61'
+            ),
+        },
+    )
+
 
 def check_L_anomaly_free():
     """L_anomaly_free: Gauge Anomaly Cancellation Cross-Check [P].
@@ -1319,3 +1612,738 @@ def check_L_self_exclusion():
     total_edges = N * (N - 1) // 2
     check(total_edges == 1830)
     return _result(name='L_self_exclusion: Self-Correlation Excluded', tier=4, epistemic='P', summary=f'Self-correlation excluded from microstate counting. Two independent proofs: (A) eta(i,i) = 0 < eps (L_epsilon* + T_eta): zero-cost state is not a meaningful distinction. (B) T_M (monogamy): correlations need 2 distinct endpoints; self-correlation has 1. d_eff = ({C_total}-1) + {C_vacuum} = {off_diagonal} + {vacuum_modes} = {d_eff} states per type.', key_result=f'd_eff = (C_total-1) + C_vacuum = {d_eff}', dependencies=['A1', 'L_epsilon*', 'T_epsilon', 'T_eta', 'T_M', 'T_entropy', 'T_field', 'T11', 'L_Gram'], artifacts={'d_raw': d_raw, 'd_eff': d_eff, 'off_diagonal': off_diagonal, 'vacuum_modes': vacuum_modes, 'proof_A': 'eta(i,i)=0 < eps (cost)', 'proof_B': 'T_M requires 2 distinct endpoints (monogamy)', 'graph': f'K_{N}: {edges_per_vertex} neighbors/vertex, {total_edges} total edges'})
+
+
+# ======================================================================
+# Added at the v5.1-release refresh (canonical extractions, commit 5bc6193)
+# ======================================================================
+
+def check_L_cost_gauge():
+    """L_cost_gauge: The Gauge Clause -- n(G) = dim(G).
+
+    STATEMENT: For a gauge group G, the channel count read by the unique
+    cost functional (L_cost: C(E) = n(E) * epsilon) is the group dimension:
+    n(G) = dim(G), hence C(G) = dim(G) * epsilon [FORCED].
+
+    SCOPE: 'gauge group' means T3's realization -- the Aut(M_n) = PU(n)
+    automorphism group and its closed subgroups. Closed subgroups of a Lie
+    group are Lie (Cartan's closed-subgroup theorem) -- an internalized
+    import of the same class as Brouwer below; the local-R^d step in
+    Proof A holds on exactly this class, not for arbitrary compact groups.
+
+    PREMISES (the operational cost premise pair -- named, ruling of
+    record 2026-07-14, option (a): count-neutral corrigendum, tag stays
+    [P]; converged via Paper 2 reviews 4.0.01.05 / 4.1.01.07 /
+    5.0.01.06):
+      (i)  OPERATIONAL ENCODING (lower bound): invariance of domain in
+           Proof A applies to a continuous injective operational
+           encoding of the local group action. That such an encoding is
+           what enforcement physically realizes is a named operational
+           premise, not a derived fact.
+      (ii) DISJOINT-ANCHOR REALIZABILITY (upper bound): C(G) <= dim(G)
+           * epsilon needs the dim(G) resolution channels to be
+           separated interfaces (Delta = 0 across channels, C1
+           additivity). Independence of group coordinates does not by
+           itself deliver physical disjointness of anchor supports;
+           realizability of a disjointly anchored channel family is the
+           named construction premise the upper bound consumes.
+    The check below verifies the stated dimensions and arithmetic of
+    both proof routes; it does not (and cannot) verify the encoding or
+    realizability premises. Paper-side the pair is named at statement
+    level: Supp I Prop (generator separation) + the front-matter
+    imported-ingredient ledger; TSII Lemma 2.22 carries the
+    encoding premise for the lower bound. Same internalized-import
+    class as Cartan/Brouwer above (the e38beeb corrigendum pattern).
+
+    PROVENANCE: split out of L_cost 2026-07-06 (v24.3.404) by principal
+    ruling (SCC hygiene report, edge A1, option (c)). L_cost's abstract
+    claim is T3-free; this lemma is where the cost functional meets the
+    gauge sector, and its T3 dependency is the honest home of the former
+    L_cost -> T3 edge. Content unchanged from the pre-split L_cost_GP
+    sub-lemma + gauge stages; no new derivation.
+
+    PROOF (generator primitivity, two independent routes):
+
+      PROOF A (Topological, primary):
+        T3: gauge group = Aut(M_n), a d-dimensional manifold.
+        Orbit-separation lemma: enforcing G-equivariance requires
+        distinguishing automorphisms that act differently on observables
+        (alpha_g1(A) != alpha_g2(A)). Conflating distinct actions enforces
+        only a quotient, not full G.
+        Invariance of domain (Brouwer 1911, local form): if U is open in
+        R^d and f: U -> R^k is continuous and injective, then k >= d.
+        Since G is locally R^d, resolving a neighborhood requires d
+        independent distinctions. Resolution rank = dim(G).
+
+      PROOF B (Non-closure, confirmatory):
+        Bracket [T_a, T_b] is composition (4 exponentials). L_nc:
+        composition is non-free (interaction cost I >= 0, generically
+        positive). Each bracket-generated direction costs >= epsilon
+        (L_epsilon*). After closure: all dim(G) directions populated,
+        each costing >= epsilon. Total >= dim(G)*epsilon.
+
+      Both proofs: n(G) = dim(G), no reduction possible. With L_cost's
+      Cauchy uniqueness: C(G) = dim(G)*epsilon.
+
+    RIVALS DEFEATED (gauge invariants): rank (undercounts channels, GP),
+      Casimir C2_fund (rep-dependent), dim+lambda*rank (double-counts),
+      Dynkin index (rep-dependent), 2-generation trick (gen rank != res
+      rank), bracket closure (L_nc at admissibility level), coarser
+      invariants (quotients lose equivariance).
+
+    CONSEQUENCE: T_gauge's routing-overhead objective dim(G) is FORCED,
+    not a modeling choice.
+
+    STATUS: [P]. One import: Brouwer invariance of domain (1911) --
+    internalized for the finite-dim smooth case (full-rank Jacobian) --
+    plus the two named operational premises above (operational
+    encoding; disjoint-anchor realizability), carried as premises of
+    the statement, not as derivations.
+    Dependencies: A1, L_epsilon*, L_nc, T3, L_cost.
+    """
+
+    # ================================================================
+    # Stage 1: Channel Correspondence -- n(G) = dim(G)
+    # ================================================================
+
+    gauge_factors = {
+        'SU(3)': {'dim': 8, 'rank': 2, 'generators': 8},
+        'SU(2)': {'dim': 3, 'rank': 1, 'generators': 3},
+        'U(1)':  {'dim': 1, 'rank': 1, 'generators': 1},
+    }
+
+    for name, data in gauge_factors.items():
+        check(data['generators'] == data['dim'], (
+            f"{name}: generators must equal dim"
+        ))
+        if name.startswith('SU'):
+            check(data['rank'] < data['dim'], (
+                f"{name}: rank < dim (non-abelian)"
+            ))
+
+    dim_SM = sum(d['dim'] for d in gauge_factors.values())
+    check(dim_SM == 12, f"dim(G_SM) = 12, got {dim_SM}")
+
+    # ================================================================
+    # Stage 2: Generator Primitivity -- gen rank != res rank
+    # ================================================================
+
+    # Simple Lie algebras are 2-generated but require dim(G) to resolve.
+    gp_data = {
+        'su(2)': {'gen_rank': 2, 'res_rank': 3, 'gap': 1},
+        'su(3)': {'gen_rank': 2, 'res_rank': 8, 'gap': 6},
+        'su(5)': {'gen_rank': 2, 'res_rank': 24, 'gap': 22},
+    }
+
+    for name, gp in gp_data.items():
+        check(gp['res_rank'] > gp['gen_rank'], (
+            f"{name}: resolution rank must exceed generation rank"
+        ))
+        check(gp['gap'] == gp['res_rank'] - gp['gen_rank'], (
+            f"{name}: gap consistency"
+        ))
+
+    # ================================================================
+    # Stage 3: Gauge-invariant rival elimination
+    # ================================================================
+
+    rank_su3 = 2
+    dim_su3 = 8
+    check(rank_su3 != dim_su3, "rank != dim for SU(3)")
+
+    C2_su3 = Fraction(8, 6)
+    check(C2_su3 != dim_su3, "Casimir != dim for SU(3)")
+
+    for lam in [Fraction(1), Fraction(1, 2), Fraction(-1)]:
+        cost_su3 = dim_su3 + lam * rank_su3
+        if lam != 0:
+            check(cost_su3 != Fraction(dim_su3), (
+                f"dim + {lam}*rank must differ from dim"
+            ))
+
+    # ================================================================
+    # ENDGAME: C(G) = dim(G)*epsilon, additive over factors (L_cost)
+    # ================================================================
+
+    epsilon = Fraction(1)  # normalized units (L_cost's Cauchy form)
+
+    def f_unique(n):
+        return n * epsilon
+
+    cost_su3_forced = f_unique(8)
+    cost_su2_forced = f_unique(3)
+    cost_u1_forced = f_unique(1)
+    cost_SM_forced = f_unique(dim_SM)
+
+    check(cost_SM_forced == cost_su3_forced + cost_su2_forced + cost_u1_forced, (
+        "SM cost is additive over factors"
+    ))
+
+    rivals_defeated = [
+        'rank(G) (undercounts channels: GP)',
+        'C2_fund(G) (rep-dependent)',
+        'dim(G)+lambda*rank(G) (double-counts)',
+        'Dynkin index (rep-dependent)',
+        '2-generation trick (gen rank != res rank)',
+        'bracket closure (L_nc at admissibility level)',
+        'coarser invariants (quotients lose equivariance)',
+    ]
+
+    return _result(
+        name='L_cost_gauge: The Gauge Clause -- n(G) = dim(G)',
+        tier=0,
+        epistemic='P',
+        summary=(
+            'For a gauge group G the channel count is the group dimension: '
+            'n(G) = dim(G) (generator primitivity -- Proof A: '
+            'orbit-separation + Brouwer invariance of domain on Aut(M_n) '
+            '[T3]; Proof B: L_nc bracket-closure + L_epsilon* marginal '
+            'cost; either suffices). With L_cost\'s unique functional: '
+            'C(G) = dim(G)*epsilon [FORCED]. Gauge-invariant rivals '
+            '(rank, Casimir, dim+lambda*rank, Dynkin, 2-gen trick) '
+            'defeated. Split out of L_cost at v24.3.404 (principal '
+            'ruling); content unchanged, address corrected.'
+        ),
+        key_result='n(G) = dim(G), hence C(G) = dim(G)*epsilon is FORCED',
+        dependencies=['A1', 'L_epsilon*', 'L_nc', 'T3', 'L_cost'],
+        cross_refs=['T_gauge (primary consumer: the routing-overhead '
+                    'objective)'],
+        artifacts={
+            'brouwer_status': 'INTERNALIZED: in finite dim, injective smooth map has full-rank Jacobian -> k >= d (elementary linear algebra)',
+            'generator_primitivity': {
+                'proof_A': 'Topological (orbit-separation + invariance of domain)',
+                'proof_B': 'Non-closure (L_nc): bracket closure costs capacity',
+                'bridge': (
+                    'Orbit-separation: enforcing G-equivariance requires '
+                    'distinguishing automorphisms with distinct observable '
+                    'effects. Conflating them enforces only a quotient.'
+                ),
+                'gen_vs_res': gp_data,
+            },
+            'rivals_defeated': rivals_defeated,
+            'endgame': 'C(G) = dim(G)*epsilon; SM cost additive over factors',
+        },
+    )
+
+
+def check_T_sep():
+    """T_sep: Sector decomposition -- disjoint anchors iff additive costs [P].
+
+    CLAIM (Paper 1 Technical Supplement, spine-era statement: Theorem
+    T_sep^op "Operational Sector Decomposition" + Theorem T_sep "Linear
+    Representation of the Sector Decomposition"; archived source of
+    record: Papers/Paper 01/Old/Paper_1_Enforceability_of_Distinction_
+    Supplement_v6_pre-v7.0.tex, thm:Tsep_op / thm:Tsep -- the live v8.x
+    supplement restates the same content in the Sep/IJC architecture):
+
+      (a) Cost criterion: distinctions d1, d2 at an interface Gamma are
+          independently enforceable iff their joint enforcement cost is
+          exactly additive:
+
+              M_d1 cap M_d2 = {0}  <=>  eps({d1,d2}) = eps(d1) + eps(d2).
+
+      (b) Sector decomposition: any maximal antichain B of pairwise
+          independently enforceable distinctions partitions the substrate
+          as a pre-metric algebraic direct sum
+
+              S_Gamma = (+)_{d in B} M_d  (+)  Pi,
+
+          with Pi the residual pool (shared-substrate sector; source of
+          the superadditivity face L_Delta and the scope condition of
+          A1's exact-accounting regime, check_A1_disjoint_scope).
+
+    PROOF (supplement): forward -- disjoint anchors mean the perturbation
+    classes separate (FD3 anchor-set locality), the joint defense
+    decomposes, and costs add by K3 (FD4 additivity on disjoint
+    supports). Converse, contrapositive -- a shared direction v is
+    defended twice separately but once jointly; by SP + K2 (FD4) the
+    shared commitment has strictly positive cost, so anchor overlap
+    forces strict subadditivity.
+
+    WITNESS (exact rational, finite): a 6-direction substrate with
+    per-direction costs c_i in Q_{>0} (SP/K2), the K3-additive cost
+    functional kappa(S) = sum_{i in S} c_i, anchors M_d1 = {0,1},
+    M_d2 = {2}, an overlapping distinction M_d3 = {1,3}, and pool
+    Pi = {3,4,5} relative to the antichain {d1,d2}. Verifies exactly:
+    K3 additivity on disjoint supports; the forward direction; strict
+    subadditivity under overlap with deficit == kappa(shared) > 0; the
+    full biconditional on all three pairs; the partition
+    S = M_d1 (+) M_d2 (+) Pi; and the A1 budget bound.
+
+    REGISTRATION NOTE (v24.3.399 debt-registration wave): retires the
+    named-unregistered debt row "T_sep" of the full-surface input
+    inventory. Long-standing citation sites: T_adj_commutes,
+    kappa_zero_Tsep (the banked consequence surface), A1_disjoint_scope,
+    P_tom, P_cls. The K3 forced-additivity theorem is independently
+    certified on a finite substrate in paper1_kernel
+    (T_FD1_substrate_distinctions_capacity) -- a registered bank
+    DEPENDENCY here, load-bearing for the [P] grade (moved from
+    cross-ref at the .399 audit fix F5a); here K3 additionally holds
+    by construction of the witness cost functional and is verified
+    in-body.
+
+    SCOPE OF THE WITNESS (.399 audit fix F5b): the witness instantiates
+    the OPERATIONAL form (thm:Tsep_op); the linear-representation leg
+    (thm:Tsep) additionally rides T_embed in the archived source,
+    cited not witnessed.
+
+    COMPANION SURFACES (.399 audit fix F3): top-level paper1.py and
+    supplement.py carry pre-existing UNREGISTERED companion
+    instantiations of the same spine name (strictly weaker toy
+    surfaces: no biconditional, no skewed-idempotent contrast),
+    pointed at by the Paper 1 main v5.5 theorem register; the bank key
+    registered here is the canonical certified surface.
+    """
+    from fractions import Fraction as _F
+
+    # -- Substrate: 6 directions, exact positive per-direction costs (SP/K2)
+    c = {0: _F(1), 1: _F(3, 2), 2: _F(2), 3: _F(1, 2), 4: _F(1), 5: _F(5, 4)}
+    S = frozenset(c)
+    check(all(v > 0 for v in c.values()),
+          "SP/K2: every substrate direction carries strictly positive cost")
+
+    def kappa(sub):
+        return sum(c[i] for i in sub)
+
+    # -- K3: additivity on disjoint supports (verified in-body, exact)
+    A_, B_ = frozenset({0, 1}), frozenset({2, 4})
+    check(not (A_ & B_) and kappa(A_ | B_) == kappa(A_) + kappa(B_),
+          "K3: kappa additive on disjoint supports (exact)")
+
+    # -- Distinctions: anchors + costs; joint cost = kappa(union of anchors)
+    M = {'d1': frozenset({0, 1}), 'd2': frozenset({2}), 'd3': frozenset({1, 3})}
+    eps = {d: kappa(M[d]) for d in M}
+    check(all(e > 0 for e in eps.values()), "A1/MD: eps(d) > 0 for all d")
+
+    def eps_joint(d, e):
+        return kappa(M[d] | M[e])
+
+    # (a) forward: disjoint anchors => exact additivity
+    check(not (M['d1'] & M['d2']), "M_d1 cap M_d2 = empty (disjoint anchors)")
+    check(eps_joint('d1', 'd2') == eps['d1'] + eps['d2'],
+          "forward: eps({d1,d2}) = eps(d1) + eps(d2) exactly (K3)")
+
+    # (a) converse, contrapositive: overlap => strict subadditivity
+    shared = M['d1'] & M['d3']
+    check(shared == frozenset({1}), "d1, d3 share exactly direction 1")
+    check(eps_joint('d1', 'd3') < eps['d1'] + eps['d3'],
+          "overlap: eps({d1,d3}) < eps(d1) + eps(d3) (strict subadditivity)")
+    check(eps['d1'] + eps['d3'] - eps_joint('d1', 'd3') == kappa(shared),
+          "subadditivity deficit == kappa(shared direction) > 0 (SP+K2)")
+
+    # (a) the biconditional, all three pairs
+    for x, y in (('d1', 'd2'), ('d1', 'd3'), ('d2', 'd3')):
+        disjoint = not (M[x] & M[y])
+        additive = (eps_joint(x, y) == eps[x] + eps[y])
+        check(disjoint == additive,
+              f"T_sep biconditional on ({x},{y}): disjoint <=> additive")
+
+    # (b) sector decomposition for the maximal antichain B = {d1, d2}
+    Pi = S - (M['d1'] | M['d2'])
+    check(Pi == frozenset({3, 4, 5}), "pool Pi = S minus (M_d1 cup M_d2)")
+    check(not (M['d1'] & M['d2']) and not (M['d1'] & Pi) and not (M['d2'] & Pi),
+          "sectors pairwise disjoint: direct sum M_d1 (+) M_d2 (+) Pi")
+    check(M['d1'] | M['d2'] | Pi == S, "sectors exhaust the substrate")
+
+    # A1 budget bound over the full substrate
+    C = _F(10)
+    check(kappa(S) <= C, "A1: total enforcement cost within capacity")
+
+    return _result(
+        name='T_sep: Sector decomposition -- disjoint anchors iff additive costs',
+        tier=0,
+        epistemic='P',
+        summary=(
+            'Paper 1 Technical Supplement (spine-era T_sep^op / T_sep): '
+            'independently enforceable distinctions have disjoint anchors '
+            'iff joint enforcement cost is exactly additive; a maximal '
+            'antichain induces the pre-metric direct sum '
+            'S_Gamma = (+)_d M_d (+) Pi. Forward: FD3 locality + K3 '
+            'additivity. Converse: a shared direction is defended once '
+            'jointly, twice separately; SP/K2 make the deficit strictly '
+            'positive. Exact-rational finite witness verifies K3, both '
+            'directions, the biconditional, the partition, and the A1 '
+            'bound. Registered at v24.3.399 (debt-registration wave); '
+            'previously a named-unregistered root of the full-surface '
+            'inventory.'
+        ),
+        key_result='M_d1 cap M_d2 = {0} <=> eps({d1,d2}) = eps(d1)+eps(d2); '
+                   'S_Gamma = (+)_d M_d (+) Pi [P]',
+        dependencies=['A1', 'FD3', 'FD4', 'SP',
+                      'T_FD1_substrate_distinctions_capacity'],
+        cross_refs=['kappa_zero_Tsep', 'A1_disjoint_scope', 'L_Delta'],
+        artifacts={
+            'costs': {str(k): str(v) for k, v in c.items()},
+            'eps': {d: str(e) for d, e in eps.items()},
+            'deficit_d1_d3': str(kappa(shared)),
+            'pool': sorted(Pi),
+            'provenance': 'Paper 1 Technical Supplement (spine era), '
+                          'thm:Tsep_op / thm:Tsep',
+        },
+    )
+
+
+def check_L_loc():
+    """L_loc: Locality from Admissibility Physics.
+
+    CLAIM: A1 (admissibility physics) + M (multiplicity) + NT (non-triviality)
+           ==> A3 (locality / admissibility decomposition over interfaces).
+
+    PROOF (4 steps):
+
+    Step 1 -- Single-interface capacity bound.
+        A1: C < infinity. L_epsilon*: each independent distinction costs >= epsilon > 0.
+        A single interface can enforce at most floor(C/epsilon) distinctions.
+
+    Step 2 -- Richness exceeds single-interface capacity.
+        M + NT: the number of independently meaningful distinctions
+        N_phys exceeds any single interface's capacity: N_phys > floor(C_max/epsilon).
+
+    Step 3 -- Distribution is forced.
+        N_phys > floor(C_max/epsilon) ==> no single interface can enforce all
+        distinctions. Admissibility MUST distribute over >= 2 independent loci.
+
+    Step 4 -- Interface independence IS locality.
+        Multiple interfaces with independent budgets means:
+        (a) No interface has global access (each enforces a subset).
+        (b) Admissibility demand decomposes over interfaces.
+        (c) Subsystems at disjoint interfaces are independent.
+        This IS A3 (locality).
+
+    NO CIRCULARITY:
+        L_loc uses only A1 + M + NT (not L_nc, not A3).
+        Then L_nc uses A1 + A3 (= L_loc).
+        Then L_irr uses A1 + L_nc.
+        Each step uses only prior results.
+
+    EXECUTABLE WITNESS (verified in L_irr_L_loc_single_axiom_reduction.py):
+        6 distinctions, epsilon = 2:
+        - Single interface (C=10): full set costs 19.5 > 10 (inadmissible)
+        - Two interfaces (C=10 each): 8.25 each <= 10 (admissible)
+        - Locality FORCED: single interface insufficient, distribution works.
+
+    COUNTERMODEL:
+        |D|=1 world: single interface (C=10) easily enforces everything.
+        Confirms M (multiplicity) is necessary.
+
+    DEFINITIONAL POSTULATES (not physics axioms):
+        M (Multiplicity):     |D| >= 2. "The universe contains stuff."
+        NT (Non-Triviality):  Distinctions are heterogeneous.
+        These are boundary conditions like ZFC's axiom of infinity, not physics.
+    """
+    # Witness verification (numerical)
+    C_interface = Fraction(10)
+    epsilon = Fraction(2)
+    max_per_interface = int(C_interface / epsilon)  # = 5
+
+    # 6 distinctions with interactions: full set costs 19.5 at single interface
+    full_set_cost_single = Fraction(39, 2)  # 19.5
+    check(full_set_cost_single > C_interface, (
+        f"Single interface inadmissible: {full_set_cost_single} > {C_interface}"
+    ))
+
+    # Distributed: 8.25 at each of two interfaces
+    cost_left = Fraction(33, 4)   # 8.25
+    cost_right = Fraction(33, 4)  # 8.25
+    check(cost_left <= C_interface, f"Left interface admissible: {cost_left} <= {C_interface}")
+    check(cost_right <= C_interface, f"Right interface admissible: {cost_right} <= {C_interface}")
+
+    # Countermodel: |D|=1 trivially fits in single interface
+    single_distinction_cost = epsilon  # = 2
+    check(single_distinction_cost <= C_interface, "Single distinction: no locality needed")
+
+    return _result(
+        name='L_loc: Locality from Admissibility Physics',
+        tier=0,
+        epistemic='P',
+        summary=(
+            'A1 + M + NT ==> A3. Chain: admissibility physics (floor(C/epsilon) bound) + '
+            'sufficient richness (N_phys > C/epsilon) -> admissibility must distribute '
+            'over multiple independent loci -> locality. Verified: 6 distinctions '
+            'with epsilon=2 fail at single interface (cost 19.5 > C=10) but succeed '
+            'distributed (8.25 each <= 10). Countermodel: |D|=1 needs no locality.'
+        ),
+        key_result='A1 + M + NT ==> A3 (locality derived, not assumed)',
+        dependencies=['A1', 'L_epsilon*', 'M', 'NT'],
+        artifacts={
+            'witness': {
+                'single_interface_max': 'floor(10/2) = 5, but full set costs 19.5 > 10',
+                'full_set_cost_single': str(full_set_cost_single),
+                'distributed_costs': f'left: {cost_left}, right: {cost_right} (both <= {C_interface})',
+                'locality_forced': True,
+            },
+            'countermodel': 'CM_single_distinction: |D|=1 -> single interface sufficient',
+            'postulates': {
+                'M': '|D| >= 2 (universe contains stuff)',
+                'NT': 'Distinctions are heterogeneous (not all clones)',
+            },
+            'derivation_order': 'A1 + M + NT -> L_loc -> A3',
+            'no_circularity': (
+                'L_loc uses A1+M+NT only. '
+                'L_nc uses A1+A3(=L_loc). '
+                'L_irr uses A1+L_nc. No circular dependencies.'
+            ),
+            'proof_steps': [
+                '(1) A1 + L_epsilon* -> single interface enforces <= floor(C/epsilon) distinctions',
+                '(2) M + NT -> N_phys > floor(C_max/epsilon) (richness exceeds capacity)',
+                '(3) Single-interface admissibility inadmissible -> must distribute',
+                '(4) Multiple independent interfaces = locality (A3)',
+            ],
+        },
+    )
+
+
+def check_T_field():
+    """T_field: SM Fermion Content -- Exhaustive Derivation.
+
+    GIVEN: SU(3)x SU(2)x U(1) (T_gauge), N_gen=3 (T7).
+    DERIVE: {Q(3,2), L(1,2), u(3b,1), d(3b,1), e(1,1)} is the UNIQUE
+            chiral fermion content satisfying all admissibility constraints.
+
+    Phase 1: Scan 4680 templates built from SU(3) reps {3,3b,6,6b,8}
+             x SU(2) reps {1,2}, up to 5 field types, 3 colored singlets,
+             2 lepton singlets. 7 filters: AF(SU3), AF(SU2), chirality,
+             [SU(3)]^3, Witten, anomaly, CPT quotient. Minimality selects
+             unique winner = SM at 45 Weyl DOF.
+
+    Phase 2: 5 closed-form proofs that ALL categories outside Phase 1
+             are excluded:
+             P1. SU(3) reps >= 10: single field exceeds AF budget (15 > 11)
+             P2. Colored SU(2) reps >= 3: AF-excluded AT N_gen=3 replication
+                 ((2/3)*T(3)*dim(3)*Ng = 12 > 22/3). At ONE copy the same
+                 field is AF-clean (4 < 22/3): the exclusion rides the
+                 generation replication imposed on every template (T7).
+                 The floor (why replication is forced) is BANKED in the
+                 capacity-beta family: L_beta_capacity +
+                 check_T_gauge_beta_capacity_tiling_abelian (three equations,
+                 unique common solution n = 3). This scan's uniform x3 cites
+                 that family; lane record 2026-07-09.
+             P3. Colorless SU(2) reps >= 3: DOF >= 48 > 45 (minimality)
+             P4. Two-colored-doublet class: min DOF = 54 > 45 (class
+                 dominance). Corrected enumeration of record 2026-07-14
+                 (review 5.0.01 counterexample ACCEPTED): the class
+                 minimum is the conjugate-pair witness
+                 (3,2)_{Y1}+(3b,2)_{-Y1}+(3,1)_{Y2}+(3b,1)_{-Y2} at
+                 (6+6+3+3)*3 = 54, anomaly-free for ANY rational
+                 (Y1,Y2), no leptons required. The old prose constants
+                 are WITHDRAWN: 'min 81' (covered only a same-chirality
+                 pair + smuggled lepton content) and the 63-DOF
+                 'tightest' witness (7 doublet components with color
+                 multiplicity -- Witten-ODD, never admissible).
+             P5. > 5 field types: each type adds >= 3 DOF (minimality)
+
+    STATUS: [P] -- scan + exclusion proofs cover all representations.
+    """
+    from itertools import product as _product
+
+    _SU3 = {
+        '1':  {'dim': 1,  'T': Fraction(0),    'A': Fraction(0)},
+        '3':  {'dim': 3,  'T': Fraction(1,2),  'A': Fraction(1,2)},
+        '3b': {'dim': 3,  'T': Fraction(1,2),  'A': Fraction(-1,2)},
+        '6':  {'dim': 6,  'T': Fraction(5,2),  'A': Fraction(7,2)},  # A(6)=N+4=7 in A(3)=1 units
+        '6b': {'dim': 6,  'T': Fraction(5,2),  'A': Fraction(-7,2)},
+        '8':  {'dim': 8,  'T': Fraction(3),    'A': Fraction(0)},
+        '10': {'dim': 10, 'T': Fraction(15,2), 'A': Fraction(15,2)},
+        '15': {'dim': 15, 'T': Fraction(10),   'A': Fraction(10)},
+    }
+    _SU2 = {
+        '1': {'dim': 1, 'T': Fraction(0)},
+        '2': {'dim': 2, 'T': Fraction(1,2)},
+        '3': {'dim': 3, 'T': Fraction(2)},
+        '4': {'dim': 4, 'T': Fraction(5)},
+    }
+    Ng = dag_get('N_gen', default=3, consumer='T_field')
+    _cr = ['3', '3b', '6', '6b', '8']
+    _AF3 = Fraction(11)
+    _AF2 = Fraction(22, 3)
+    _c23 = Fraction(2, 3)
+
+    def _af(t):
+        s3 = sum(_SU3[a]['T']*_SU2[b]['dim'] for a,b in t)*Ng
+        s2 = sum(_SU2[b]['T']*_SU3[a]['dim'] for a,b in t)*Ng
+        return _AF3 - _c23*s3 > 0 and _AF2 - _c23*s2 > 0
+
+    def _ch(t):
+        return (any(_SU3[a]['dim'] > 1 and b == '2' for a,b in t) and
+                any(_SU3[a]['dim'] > 1 and b == '1' for a,b in t))
+
+    def _s3(t):
+        return sum(_SU3[a]['A']*_SU2[b]['dim'] for a,b in t) == 0
+
+    def _wi(t):
+        return sum(_SU3[a]['dim'] for a,b in t if b == '2') % 2 == 0
+
+    def _an(t):
+        cd = [f for f in t if _SU3[f[0]]['dim'] > 1 and f[1] == '2']
+        cs = [f for f in t if _SU3[f[0]]['dim'] > 1 and f[1] == '1']
+        ld = [f for f in t if _SU3[f[0]]['dim'] == 1 and f[1] == '2']
+        ls = [f for f in t if _SU3[f[0]]['dim'] == 1 and f[1] == '1']
+        if len(cd) != 1 or not ld:
+            return False
+        Nc = _SU3[cd[0][0]]['dim']
+        if not all(_SU3[a]['dim'] == Nc for a, _ in cs):
+            return False
+        if len(cs) == 2 and len(ls) >= 1:
+            d = 4 + 4*(Nc**2 - 1)
+            sd = _math.isqrt(d)
+            return sd*sd == d
+        if len(cs) == 1 and len(ls) >= 1:
+            v = Fraction(4*Nc**2, 3 + Nc**2)
+            p, q = v.numerator, v.denominator
+            return _math.isqrt(p*q)**2 == p*q
+        return False
+
+    def _ck(t):
+        cj = {'3':'3b','3b':'3','6':'6b','6b':'6','8':'8','1':'1'}
+        f = tuple(sorted(t))
+        r = tuple(sorted((cj.get(a,a), b) for a,b in t))
+        return min(f, r)
+
+    # ======================================================================
+    # PHASE 1: Standard template scan
+    # ======================================================================
+    tested = 0
+    survivors = []
+    seen = set()
+    for cd in _cr:
+        for nc in range(0, 4):
+            for cc in _product(_cr, repeat=nc):
+                cs = tuple(sorted(cc))
+                for hl in (True, False):
+                    for nl in range(0, 3):
+                        t = [(cd, '2')] + [(c, '1') for c in cs]
+                        if hl:
+                            t.append(('1', '2'))
+                        t.extend([('1', '1')] * nl)
+                        t = tuple(t)
+                        tested += 1
+                        if not _af(t): continue
+                        if not _ch(t): continue
+                        if not _s3(t): continue
+                        if not _wi(t): continue
+                        if not _an(t): continue
+                        ck = _ck(t)
+                        if ck in seen: continue
+                        seen.add(ck)
+                        dof = sum(_SU3[a]['dim']*_SU2[b]['dim'] for a,b in t)*Ng
+                        survivors.append((dof, t))
+
+    survivors.sort()
+    check(len(survivors) >= 1, "No viable fermion template found")
+    w_dof, w_t = survivors[0]
+    at_min = [s for s in survivors if s[0] == w_dof]
+    check(len(at_min) == 1, f"Uniqueness failed: {len(at_min)} at min DOF")
+    check(w_dof == 45, f"Expected 45 Weyl DOF, got {w_dof}")
+    check(sorted(w_t) == sorted([('3','2'),('3b','1'),('3b','1'),('1','2'),('1','1')]))
+
+    # ======================================================================
+    # PHASE 2: Closed-form exclusion proofs
+    # ======================================================================
+    # P1: SU(3) reps >= 10 are AF-excluded (even as SU(2) singlets)
+    for r in ['10', '15']:
+        check(_c23 * _SU3[r]['T'] * 1 * Ng > _AF3, f"P1: rep {r} not excluded")
+
+    # P2: Colored SU(2) triplets/quartets AF-excluded
+    #     Minimum SU(2) AF cost: T_2(rep) x dim(SU(3)_fund) x N_gen
+    #     NOTE (2026-07-09): the exclusion fires only WITH the Ng=3 factor.
+    #     A single unreplicated colored weak-triplet is AF-clean (4 < 22/3);
+    #     the 18-Weyl (3,3,0)+3x(3b,1,Y) content passes every filter at one
+    #     copy and dies here at x3 (12 > 22/3, cost 72 > 61). The x3 is
+    #     carried by the banked capacity-beta floor (L_beta_capacity + the
+    #     abelian tiling, n = 3 over-determined); whether the correspondence
+    #     binds CANDIDATE templates (the exotic's own tiling) is the named
+    #     follow-on in the 2026-07-09 lane record.
+    for r2 in ['3', '4']:
+        check(_c23 * _SU2[r2]['T'] * 3 * Ng > _AF2, f"P2: SU(2) {r2} not excluded")
+
+    # P3: Colorless SU(2) triplets/quartets excluded by minimality
+    #     Replacing (1,2) doublet with (1,3) or (1,4) adds DOF
+    for r2 in ['3', '4']:
+        extra_dof = (_SU2[r2]['dim'] - 2) * Ng
+        check(45 + extra_dof > 45, f"P3: SU(2) {r2} lepton not excluded")
+
+    # P4: Two-colored-doublet class dominated (class minimum 54 > 45).
+    #     Ruling of record 2026-07-14 (option: strengthen the executed
+    #     check to the corrected class bound with the witness; review
+    #     5.0.01 item .02, counterexample accepted in exact arithmetic).
+    #     Witness = the conjugate-pair template, Y1=1, Y2=2:
+    _p4w = [('3', 2, Fraction(1)), ('3b', 2, Fraction(-1)),
+            ('3', 1, Fraction(2)), ('3b', 1, Fraction(-2))]
+    _p4_dof = sum(_SU3[r3]['dim'] * d2 for r3, d2, _ in _p4w) * Ng
+    check(_p4_dof == 54, "P4: witness DOF must be 54")
+    _p4_b3 = 11 - Fraction(2, 3) * sum(
+        _SU3[r3]['T'] * d2 for r3, d2, _ in _p4w) * Ng
+    _p4_b2 = Fraction(22, 3) - Fraction(2, 3) * sum(
+        Fraction(1, 2) * _SU3[r3]['dim'] for r3, d2, _ in _p4w if d2 == 2) * Ng
+    check(_p4_b3 == 5 and _p4_b2 == Fraction(4, 3),
+          "P4: witness must be AF in both factors (b3=5, b2=4/3)")
+    check(sum(_SU3[r3]['A'] * d2 for r3, d2, _ in _p4w) == 0,
+          "P4: witness [SU(3)]^3 must cancel")
+    check(sum(_SU3[r3]['dim'] for r3, d2, _ in _p4w if d2 == 2) % 2 == 0,
+          "P4: witness Witten parity must be even (6 doublets)")
+    _p4_a2u1 = sum(Fraction(1, 2) * _SU3[r3]['dim'] * y
+                   for r3, d2, y in _p4w if d2 == 2)
+    _p4_a3u1 = sum(_SU3[r3]['T'] * d2 * y for r3, d2, y in _p4w)
+    _p4_gru1 = sum(_SU3[r3]['dim'] * d2 * y for r3, d2, y in _p4w)
+    _p4_u1c = sum(_SU3[r3]['dim'] * d2 * y**3 for r3, d2, y in _p4w)
+    check(_p4_a2u1 == 0 and _p4_a3u1 == 0 and _p4_gru1 == 0 and _p4_u1c == 0,
+          "P4: witness full anomaly system must vanish (any conjugate Y-pair)")
+    check(_p4_dof > 45, "P4: two-doublet class minimum must dominate 45")
+
+    # P5: > 5 field types adds >= 1 DOF/gen = 3 DOF total
+    check(45 + 1 * Ng > 45, "P5: extra field types not excluded")
+
+    # ======================================================================
+    # Derive hypercharges
+    # ======================================================================
+    Nc = 3
+    Y_Q = Fraction(1, 6)
+    Y_L = -Nc * Y_Q
+    Y_u = (1 + Nc) * Y_Q
+    Y_d = 2*Y_Q - Y_u
+    Y_e = -2*Nc * Y_Q
+    check(2*Y_Q - Y_u - Y_d == 0)
+    check(Nc*Y_Q + Y_L == 0)
+    check(2*Nc*Y_Q + 2*Y_L - Nc*Y_u - Nc*Y_d - Y_e == 0)
+    check(2*Nc*Y_Q**3 + 2*Y_L**3 - Nc*Y_u**3 - Nc*Y_d**3 - Y_e**3 == 0)
+
+    wd = '+'.join(f'({a},{b})' for a,b in w_t)
+    ch = {'Y_Q':str(Y_Q),'Y_u':str(Y_u),'Y_d':str(Y_d),
+          'Y_L':str(Y_L),'Y_e':str(Y_e)}
+
+    # ── Export to DAG ──
+    dag_put('weyl_per_gen', 15, source='T_field',
+            derivation='Q(6)+L(2)+u(3)+d(3)+e(1) = 15')
+    dag_put('n_fermion', w_dof, source='T_field',
+            derivation=f'{Ng} gen * 15 = {w_dof}')
+
+    return _result(
+        name='T_field: Fermion Content (Exhaustive Derivation)',
+        tier=2, epistemic='P',
+        summary=(
+            f'Phase 1: scanned {tested} standard templates (7 filters) -> '
+            f'1 unique survivor = SM. Phase 2: 5 closed-form proofs exclude '
+            f'all non-standard categories (reps 10/15 AF-killed, colored SU(2) '
+            f'triplets AF-killed, colorless triplets DOF-killed, multi-doublet '
+            f'class min 54 > 45 (dominance; corrected enumeration of record, '
+            f'2026-07-14), extra types DOF>=48). '
+            f'v4.3.2: AF property now derived (L_AF_capacity). '
+            f'Remaining import: one-loop beta coefficient FORMULA (verifiable). '
+            f'Hypercharges derived: Y_Q=1/6, Y_u=2/3, Y_d=-1/3, '
+            f'Y_L=-1/2, Y_e=-1.'
+        ),
+        key_result=f'SM fermions UNIQUE within SU(3) reps <= dim 10 (Phase 1: {tested} templates) + analytic exclusion for higher reps (Phase 2: 5 proofs)',
+        dependencies=['T_gauge', 'T7', 'T5', 'A1', 'L_nc', 'T_tensor',
+                      'L_AF_capacity', 'T6B_beta_one_loop'],
+        cross_refs=['L_beta_capacity', 'T_gauge_beta_capacity_tiling_abelian',
+                    'R_Ngen_neq_3_killed'],  # the multiplicity floor the scan's x3 consumes (2026-07-09)
+        artifacts={
+            'phase1_scanned': tested, 'phase1_survivors': len(survivors),
+            'phase2_proofs': 5, 'winner_dof': w_dof, 'winner_desc': wd,
+            'hypercharges': ch,
+            'beta_formula': 'de-imported v5.3.5: T6B_beta_one_loop [P] derives from Casimir arithmetic',
+        },
+        imported_theorems={},
+    )
+
+

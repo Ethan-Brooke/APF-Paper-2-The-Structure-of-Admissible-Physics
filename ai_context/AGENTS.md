@@ -37,14 +37,15 @@ This is the **paper-companion release repo for Paper 2 of the Admissibility Phys
 
 The repo bundles:
 
-- The manuscript and Technical Supplement (`.tex` + `.pdf`)
-- A vendored subset of the APF codebase containing only the `check_*` functions that Paper 2 directly references (`apf/core.py`, `apf/apf_utils.py`, `apf/bank.py`)
-- A one-command verifier (`run_checks.py`)
+- The manuscript (v7.0) and BOTH Technical Supplements (`.tex` + `.pdf`): Supplement I — The Classification Core (v5.1) and Supplement II — The Foundational Gauge Program (v1.0)
+- A vendored subset of the APF codebase containing the `check_*` functions Paper 2 directly references (`apf/core.py`, `apf/ec_inventory_reading.py`, `apf/apf_utils.py`, `apf/bank.py`), version-locked at canonical commit 5bc6193 (v24.3.423)
+- One-command verifiers (`verify_all.py`, with `--paper2-core` as the fast path; `run_checks.py` as a kept alias)
+- THE CANONICAL SCAN EXECUTABLE (`fermion_scan_standalone.py`, v4) and the audit bundle it emits (`release_audit/`: scan_inputs.json, scan_outputs.csv, filter_waterfall.csv, near_misses.csv, kill_index.csv, chirality_audit.csv, certificate.sha256)
 - An interactive derivation DAG (`docs/index.html`, served via GitHub Pages)
 - A theorem-by-theorem Colab walkthrough (`APF_Reviewer_Walkthrough.ipynb`)
 - **This AI-onboarding pack** (`ai_context/`) — the authoritative context for agents
 
-The framework-wide canonical codebase (342 bank-registered theorems, 19 modules, 355 `verify_all` checks) is **not** bundled here. Only the Paper 2 subset is runnable locally. See `ai_context/THEOREMS.md` for the full bank listing with bundled-in-this-repo flags.
+The framework-wide canonical codebase (3,912 bank-registered entries at v24.3.423) is **not** bundled here. Only the Paper 2 subset is runnable locally. See `ai_context/THEOREMS.md` for the full bank listing with bundled-in-this-repo flags.
 
 ## 2. APF in 30 seconds
 
@@ -55,7 +56,7 @@ APF derives the Standard Model from a single axiom:
 From A1 plus three structural components (MD = minimum distinction cost, A2 = least-cost selection, BW = non-degeneracy), the framework derives:
 
 - The gauge group $SU(3) \times SU(2) \times U(1)$ — uniquely forced by non-closure + chirality + minimality.
-- The fermion content (45 chiral fermions; 1 of 4680 anomaly-free combinations survives).
+- The fermion content: the conditional 1,680-template classification — relative to the declared caps and filter inputs, the unique minimum-capacity survivor is the 45-Weyl-fermion SM template.
 - The three generations ($N_{\mathrm{gen}} = 3$ exactly, from capacity saturation).
 - The integer partition $C_{\mathrm{total}} = 61 = 42 + 3 + 16$ (vacuum : baryon : cold-dark).
 - Quantum structure (Hilbert space, Born rule, tensor products, unitarity).
@@ -76,7 +77,7 @@ If you're loading this repo cold and want to understand Paper 2 well enough to r
 4. **`README.md`** — paper-specific orientation and the verification recipe. Badges, theorem table, install.
 5. **`apf/core.py`** — the vendored code. Read at least one check function fully. This is ground truth.
 6. **`run_checks.py`** + run it — confirms the local state works.
-7. **`Paper_2_Structure_of_Admissible_Physics_v5.3-PLEC.tex`** or `.pdf` — the manuscript. Read §1 (intro) and the section you care about. Don't try to read the whole paper first.
+7. **`Paper_2_Structure_of_Admissible_Physics_v7.0.tex`** or `.pdf` — the manuscript (formal content: Supplement I v5.1, Supplement II v1.0). Read §1 (intro) and the section you care about. Don't try to read the whole paper first.
 8. **Technical Supplement** if present — canonical proofs. Dense; dip in only where you need depth.
 9. **`ai_context/wiki/`** — concept pages (Axiom A1, Derivation Chain, Born Rule, etc.) and per-paper pages. Navigate from `wiki/INDEX.md`.
 10. **`ai_context/AUDIT_DISCIPLINE.md`** — read before you propose any substantive change or critique. This is the posture the project expects from AI contributors.
@@ -158,7 +159,7 @@ If reviewer B raises the same concern as reviewer A, the convergent criticism is
 | `STARTING_PROMPTS.md` | High-value query templates known to work. |
 | `GLOSSARY.md` | APF-specific terminology and epistemic tag meanings. |
 | `HOW_TO_VERIFY.md` | Recipes for verifying any claim in this paper. |
-| `THEOREMS.md` | Full bank catalog (342 theorems) with bundled-in-this-repo flags. |
+| `THEOREMS.md` | Bank catalog snapshot (342 theorems at v6.9) with bundled flags; the canonical bank at this release is 3,912 entries — see `theorems.json` `catalog_note`. |
 | `theorems.json` | Same catalog in structured form — query/grep-friendly. |
 | `derivation_graph.json` | The DAG as structured data (nodes + edges). |
 | `OPEN_PROBLEMS.md` | Framework-level open questions (so you don't re-solve known-open ones naively). |

@@ -1,63 +1,76 @@
 # PAPER_LINEAGE.md — Version History for Paper 2
 
-This file tracks the version history of Paper 2 (The Structure of Admissible Physics: Non-Closure, Gauge Origin, Capacity Counting, and the 61-Type Partition) and explains the relationship between the version in this release, the version on Zenodo, and any intermediate versions.
+This file tracks the version history of Paper 2 (The Structure of Admissible
+Physics) and the relationship between the versions in this release, the
+Zenodo deposits, and the canonical codebase.
 
 ---
 
 ## Current release
 
-- **Version in this repo:** v5.3-PLEC
-- **File in this repo:** `Paper_2_Structure_of_Admissible_Physics_v5.3-PLEC.tex` + `.pdf`
-- **Page count:** 48 pp
-- **Release date:** 2026-04-19
-- **Codebase version at build:** v6.9 (2026-04-18)
+- **Main paper:** v7.0 — `Paper_2_Structure_of_Admissible_Physics_v7.0.tex` + `.pdf` (59 pp)
+- **Technical Supplement I — The Classification Core:** v5.1 —
+  `Paper_2_Structure_of_Admissible_Physics_Supplement_v5.1.tex` + `.pdf` (60 pp)
+- **Technical Supplement II — The Foundational Gauge Program:** v1.0 —
+  `Paper_2_Foundational_Gauge_Program_Supplement_v1.0.tex` + `.pdf`
+- **Release date:** 2026-07-14
+- **Codebase version at build:** v24.3.423 (commit 5bc6193; bank 3912,
+  native verify_all --bank-audit 3912/3912 gap 0)
+- **Canonical scan executable:** `fermion_scan_standalone.py` v4.0
+  (emits `release_audit/`)
 
-## Zenodo record
+## Zenodo records
 
-- **Concept DOI:** 10.5281/zenodo.18439274
-- **URL:** https://doi.org/10.5281/zenodo.18439274
-- **Latest Zenodo version as of release:** varies by paper — see the Zenodo record directly.
+- **Main paper concept DOI:** 10.5281/zenodo.18439274
+- **Supplement I concept DOI:** 10.5281/zenodo.19714959
+- **Companion-repo concept DOI:** 10.5281/zenodo.18604839
+- Concept DOIs resolve to the latest version; version DOIs pin specific
+  deposits. The v2 standalone scan is archived at 10.5281/zenodo.19154197.
 
-If the version in this repo is newer than the latest Zenodo version, a future GitHub release will trigger a new Zenodo deposit that supersedes the old one. The concept DOI points to the latest at any given time; the version DOI points to a specific deposit.
+## Version history (newest first)
 
-## Version history
-
-Versions are listed newest first. Each entry captures what substantively changed. Minor formatting / typo fixes are NOT listed individually; they roll into the next substantive version.
-
-- **v5.3-PLEC** (current): see the main paper's changelog section for details.
-
-*(No structured version history yet in `data/paper_metadata.json`. Add a `version_history: [...]` entry there to populate this section.)*
-
+- **v7.0 main + Supp I v5.1 + Supp II v1.0** (2026-07-14): the v5.1
+  acceptance pass after review 5.0.01 (MAJOR REVISION — first non-reject of
+  the cycle). Completeness proposition restated at its licensed relative
+  form; P4 tightness withdrawn (class dominance, minimum 54); F3 renamed to
+  its honest content-predicate role; beta primer rewritten on the Weyl form;
+  Theorem 4.7 split into carrier ranking + a-posteriori one-U(1) closure;
+  C(G) = dim G premise pair named; "all 17" phrasing scoped; hypercharge
+  claims at the licensed ratios+convention form; kinetic-mixing subsection
+  removed (false lemma); neutrino/cosmology residue exited to the Papers 8/41
+  landing fragment; computational notes corrected (canonical 10/5 waterfall
+  attributed to check_L_F6_not_from_EC).
+- **Supp I v5.0 + Supp II v1.0 + main v6.9** (2026-07-14): the
+  dual-supplement split — the classification core (conditional theorem,
+  C1–C10 ledger, canonical F6 = full-system 10/5) separated from the
+  foundational gauge program (chain at banked grades, open-lane register).
+- **v4.x** (2026-07-13): the core split + repairs arc across reviews
+  4.0.01 and 4.1.01; the EC lane banked at v24.3.423
+  (check_L_F6_not_from_EC, check_L_EC_inventory_reading).
+- **v5.3-PLEC** (2026-04-19): the pre-review-cycle release (single
+  supplement v2; codebase v6.9-era). Preserved in `archive/`.
 
 ## What supersedes what
 
-**vv5.3-PLEC supersedes all earlier versions** for current reference. If citing for strict reproducibility of work published before this version, cite the version DOI from the specific Zenodo deposit the earlier work used.
-
-## Relationship to the Technical Supplement
-
-This paper does not (yet) have a Technical Supplement. The main paper contains all formal content; compressed proofs reference code directly via `\coderef` anchors.
-
+**Main v7.0 + Supp I v5.1 + Supp II v1.0 supersede all earlier versions.**
+For strict reproducibility of earlier work, cite the version DOI of the
+specific deposit used.
 
 ## Relationship to the canonical codebase
 
-All `\coderef{check_X}{module.py}` anchors in this paper are valid against codebase v6.9. If you are reading this release against a newer canonical codebase, a handful of checks may have been renamed, merged, or relocated; consult the bank changelog in `apf/__init__.py` of the newer codebase version.
-
-The full codebase is at:
-- `__APF Library/Codebase/APF_Codebase_v6.9/` (this release built against this version)
-- Zenodo: https://doi.org/10.5281/zenodo.18529115 (concept DOI for the codebase)
+All `\coderef{check_X}{module.py}` anchors in the current papers are valid
+against canonical codebase v24.3.423 (commit 5bc6193). The bundled `apf/`
+package is vendored from that commit; `python verify_all.py` runs the
+20-check subset, and `python fermion_scan_standalone.py --emit-audit`
+regenerates the audit bundle byte-identically (see
+`release_audit/certificate.sha256`).
 
 ## Policy on retractions
 
-If a [P] theorem in this paper is demoted or retracted in a future framework version, the retraction will be logged in:
-1. The canonical paper workplan (`__APF Library/APF Reference Docs/Reference - APF Paper Update Work Plan v2.md`)
-2. The codebase `__init__.py` changelog
-3. A note in the successor version's `PAPER_LINEAGE.md`
-
-Retractions are not silent. They are made explicit with the specific [P] theorem named, the regime condition that fails, and the downstream papers affected.
-
----
-
-*Generated by `create-repo`. The `- **v5.3-PLEC** (current): see the main paper's changelog section for details.
-
-*(No structured version history yet in `data/paper_metadata.json`. Add a `version_history: [...]` entry there to populate this section.)*
-` section is populated from `data/paper_metadata.json` at build time. To add a version entry, update `paper_metadata.json` and rebuild.*
+If a [P] theorem in this paper is demoted or retracted in a future framework
+version, the retraction is logged in the canonical planning surface, the
+codebase changelog, and the successor version's PAPER_LINEAGE.md. Retractions
+are not silent: the specific theorem, the failing condition, and the
+downstream papers affected are named. (Worked examples in this very cycle:
+P4's tightness claim and the kinetic-mixing lemma, both withdrawn at v5.1
+with the counterexamples on record.)

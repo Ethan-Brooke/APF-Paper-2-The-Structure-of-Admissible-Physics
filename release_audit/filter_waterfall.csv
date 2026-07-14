@@ -1,0 +1,12 @@
+stage,survivors,eliminated,note
+Search space (declared caps),1680,,
+F1+F2: Asymptotic freedom,348,1332,
+F3: Doublet-singlet content,324,24,
+F4: [SU(3)]^3 anomaly,24,300,
+F5: Witten anomaly,12,12,
+F6: Full-system non-degeneracy (canonical),10,2,
+F7: CPT quotient,5,5,
+Minimality (DOF = 45),1,4,unique winner = SM
+F6 predicate: full_system_nondegeneracy (CANONICAL),10,,5 post-CPT; robustness statistic on the 12 F1-F5 survivors
+F6 predicate: spectator_reduction (robustness; v2 script predicate),8,,4 post-CPT; robustness statistic on the 12 F1-F5 survivors
+F6 predicate: uniform_dimension (robustness; gauge.py code path),4,,2 post-CPT; robustness statistic on the 12 F1-F5 survivors

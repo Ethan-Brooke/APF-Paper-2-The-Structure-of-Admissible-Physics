@@ -13,22 +13,25 @@ authors:
     affiliation: "Independent Researcher"
 
 abstract: >
-  Paper 2 of the Admissibility Physics Framework (APF). Starting from a single axiom (A1:
-  enforcement capacity is finite and positive), this paper derives the gauge group
-  SU(3) × SU(2) × U(1), the Standard Model fermion content (45 Weyl fermions, uniquely
-  selected from 4,680 candidates), the total capacity budget C_total = 61, and the
-  cosmological density fractions Ω_Λ = 42/61 and Ω_m = 19/61. The cost function is proved
-  unique via Cauchy's functional equation (1821). Zero free parameters are introduced;
-  zero physics is imported.
+  Paper 2 of the Admissibility Physics Framework (APF). From axiom A1 (finite enforcement)
+  the paper derives the nonabelian carrier ranking SU(3) × SU(2), with the one-U(1) closure
+  proved a-posteriori for the selected matter content, and proves the conditional
+  1,680-template classification theorem: relative to the declared representation list,
+  multiplicity caps, and filter inputs, the unique minimum-capacity survivor is the
+  45-Weyl-fermion Standard Model template. The capacity budget C_total = 61 = 45 + 4 + 12
+  follows arithmetically. Imported mathematics is named where used (the compact-simple Lie
+  classification, the Witten anomaly theorem, the anomaly equations); the caps'
+  completeness is an open obligation, declared. This release is version-locked to the
+  canonical codebase at v24.3.423 (commit 5bc6193).
 
-version: "v5.0"
-date-released: "2026-03-04"
+version: "v7.0"
+date-released: "2026-07-14"
 license: CC-BY-4.0
 
 repository-code: "https://github.com/Ethan-Brooke/APF-Paper-2-The-Structure-of-Admissible-Physics"
 url: "https://ethan-brooke.github.io/APF-Paper-2-The-Structure-of-Admissible-Physics/"
 
-doi: "10.5281/zenodo.XXXXXXX"
+doi: "10.5281/zenodo.18604839"
 
 keywords:
   - admissibility physics

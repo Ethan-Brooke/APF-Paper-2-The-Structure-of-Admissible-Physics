@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "apf-paper2"
-version = "5.3-PLEC"
+version = "7.0"
 description = "Structure of Admissible Physics — executable mathematical appendix"
 readme = "README.md"
 license = {text = "MIT"}
@@ -21,7 +21,7 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Physics",
   "Topic :: Scientific/Engineering :: Mathematics",
 ]
-dependencies = ["numpy>=1.20", "scipy>=1.7"]
+dependencies = []  # standard library only
 
 [project.urls]
 Homepage = "https://github.com/Ethan-Brooke/APF-Paper-2-The-Structure-of-Admissible-Physics"

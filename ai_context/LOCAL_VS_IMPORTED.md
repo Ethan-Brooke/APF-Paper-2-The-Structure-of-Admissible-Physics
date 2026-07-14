@@ -1,31 +1,51 @@
-# Local vs Imported — Paper 2
+# Local vs Imported — Paper 2 (main v7.0 · Supp I v5.1 · Supp II v1.0)
 
-## Locally proved in Paper 2
+## Locally proved in Paper 2's supplements
 
-- **Theorem R** — no admissibility framework closes on a single representation.
-- **$T_M$** monogamy — interface monogamy theorem.
-- Non-closure audit (Paper 2 Supp v2.1).
-- Gauge template derivation via Theorem R + $L_{\rm nc}$ + $L_{\rm irr}$ + $L_{\rm col}$.
-- Field-content counting (45 + 4 + 12 = 61).
-- I2 statement at the $L_{\rm count}$ seam (Paper 2 Supp v2.1 §I2).
+- **Theorem R** — R1–R2 derived; R3 under the admissibility-completeness
+  reading (Supp II).
+- **Nonabelian carrier ranking** — SU(3)×SU(2) at minimum capacity cost on
+  the tested classification; R3's at-least-one abelian grading (Supp I).
+- **One-U(1) closure theorems** — a-posteriori, for the selected matter
+  content (Supp I).
+- **The conditional classification theorem** — the 1,680-template scan with
+  the C1–C10 input ledger; five exclusion proofs, P4 at class dominance
+  (class minimum 54); the canonical F6 waterfall 10/5 (Supp I).
+- **EC/F6 logical independence** — computed, all four quadrants witnessed
+  (check_L_F6_not_from_EC).
+- **Field-content counting** — 61 = 45 + 4 + 12.
+- **I2 statement at the L_count seam** (integer-level only).
 
-## Imported from Paper 1
+## Imported from earlier APF papers
 
-- A1, PLEC, MD, A2, BW.
-- $L_{\rm nc}$, $L_{\rm irr}$, $L_{\rm col}$.
-- $L_{\rm gauge\_template\_uniqueness}$ (Paper 2 carries the template but proves its uniqueness in Paper 1).
+- A1, PLEC, MD, A2, BW; L_nc, L_irr, L_loc, T_sep (Papers 0–1).
+- L_cost_gauge premises adjudicated at the canonical bank (core.py).
+
+## Declared inputs (neither derived nor imported from other papers)
+
+- The representation list and multiplicity caps of the scan (completeness
+  outside them is an OPEN obligation, declared).
+- **Electromagnetic completeness** (F6's non-degeneracy, Y_Q != 0) —
+  independent assumption, declared at point of use.
+- N_gen = 3, consumed by F1–F2.
 
 ## Standard mathematical imports
 
-- Compact Lie group representation theory.
-- Anomaly cancellation arguments (standard SM derivations).
+- Compact simple Lie classification (Killing 1888, Cartan 1894).
+- Witten anomaly theorem (Witten 1982).
+- The anomaly-cancellation equations; the one-loop Weyl beta coefficient
+  b0 = (11/3)C_A − (2/3)Σ_Weyl T(r).
 
 ## Empirical comparisons only
 
-- Match of derived field content to observed SM (comparison, not derivation).
+- Match of the surviving template to the observed SM (comparison, not
+  derivation).
 
 ## Not claimed
 
-- **Paper 2 does not derive cosmological constants.** Paper 6 + 8.
-- **Paper 2 does not derive fermion masses.** Paper 4 (Constraints) does Schur chain, Gram matrix, CKM/PMNS.
-- **Paper 2 does not derive Hilbert space / Born rule.** Paper 5 (Quantum).
+- Universal scan completeness (conditional theorem only).
+- A forward derivation of the abelian factor (a-posteriori closure only).
+- P4 tightness (dominance only; 54 > 45).
+- Neutrino predictions in the core (the supported sentence: the minimum
+  template in the declared scan contains no light sterile singlet).
+- Ω_Λ, fermion masses, Hilbert space / Born rule — Papers 8, 4, 5.

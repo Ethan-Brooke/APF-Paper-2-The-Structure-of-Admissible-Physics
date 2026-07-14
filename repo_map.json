@@ -1,16 +1,16 @@
 {
   "schema": "apf.repo_map.v1",
-  "generated_at": "2026-04-19T15:42:08.678721+00:00",
+  "generated_at": "2026-07-14T00:00:00+00:00",
   "paper": {
     "number": 2,
     "title": "The Structure of Admissible Physics: Non-Closure, Gauge Origin, Capacity Counting, and the 61-Type Partition",
-    "current_version": "v5.3-PLEC",
+    "current_version": "v7.0 (main) / v5.1 (Supplement I - The Classification Core) / v1.0 (Supplement II - The Foundational Gauge Program)",
     "zenodo_doi": "10.5281/zenodo.18439274",
     "zenodo_url": "https://doi.org/10.5281/zenodo.18439274",
     "github_slug": "APF-Paper-2-The-Structure-of-Admissible-Physics",
     "github_url": "https://github.com/Ethan-Brooke/APF-Paper-2-The-Structure-of-Admissible-Physics"
   },
-  "codebase_version": "v6.9",
+  "codebase_version": "v24.3.423 (commit 5bc6193, bank 3912)",
   "corpus": [
     {
       "number": 0,
@@ -37,7 +37,7 @@
     {
       "number": 2,
       "title": "The Structure of Admissible Physics: Non-Closure, Gauge Origin, Capacity Counting, and the 61-Type Partition",
-      "current_version": "v5.3-PLEC",
+      "current_version": "v7.0 (main) / v5.1 (Supp I) / v1.0 (Supp II)",
       "zenodo_doi": "10.5281/zenodo.18439274",
       "zenodo_url": "https://doi.org/10.5281/zenodo.18439274",
       "github_slug": "APF-Paper-2-The-Structure-of-Admissible-Physics",
@@ -126,8 +126,9 @@
   "entry_points": {
     "ai": "START_HERE.md",
     "human": "README.md",
-    "verification": "run_checks.py",
-    "manuscript": "Paper_2_Structure_of_Admissible_Physics_v5.3-PLEC.pdf"
+    "verification": "verify_all.py",
+    "manuscript": "Paper_2_Structure_of_Admissible_Physics_v7.0.pdf",
+    "scan_audit": "fermion_scan_standalone.py"
   },
   "read_order_for_ai": [
     {
@@ -413,38 +414,6 @@
       "tier": "code",
       "references": []
     },
-    "Paper_2_Structure_of_Admissible_Physics_Supplement_v2.pdf": {
-      "purpose": "Technical Supplement compiled PDF (canonical truth for formal content)",
-      "audience": "human",
-      "read_order": null,
-      "tier": "manuscript",
-      "references": []
-    },
-    "Paper_2_Structure_of_Admissible_Physics_Supplement_v2.tex": {
-      "purpose": "Technical Supplement LaTeX source (canonical truth for formal content)",
-      "audience": "human",
-      "read_order": null,
-      "tier": "manuscript",
-      "references": [
-        "apf/core.py"
-      ]
-    },
-    "Paper_2_Structure_of_Admissible_Physics_v5.3-PLEC.pdf": {
-      "purpose": "Main paper compiled PDF (Paper 2)",
-      "audience": "human",
-      "read_order": null,
-      "tier": "manuscript",
-      "references": []
-    },
-    "Paper_2_Structure_of_Admissible_Physics_v5.3-PLEC.tex": {
-      "purpose": "Main paper LaTeX source (Paper 2 v5.3-PLEC)",
-      "audience": "human",
-      "read_order": null,
-      "tier": "manuscript",
-      "references": [
-        "apf/core.py"
-      ]
-    },
     "ai_context/wiki/Index.md": {
       "purpose": "Bundled wiki entry point: navigation map across concepts/papers/codebase pages",
       "audience": "AI",
@@ -656,7 +625,7 @@
       "references": []
     },
     "fermion_scan_standalone.py": {
-      "purpose": "(uncategorized; see file directly)",
+      "purpose": "THE CANONICAL SCAN EXECUTABLE (v4): the 1,680-template scan in exact arithmetic, canonical F6 (full-system non-degeneracy, 10/5), robustness predicate triple, exclusion proofs (P4 at class dominance, min 54), red-team challenges RT1-RT5; --emit-audit writes release_audit/",
       "audience": "unknown",
       "read_order": null,
       "tier": "other",
@@ -786,6 +755,161 @@
       "audience": "unknown",
       "read_order": null,
       "tier": "other",
+      "references": []
+    },
+    "Paper_2_Structure_of_Admissible_Physics_v7.0.pdf": {
+      "purpose": "Main paper compiled PDF (Paper 2)",
+      "audience": "human",
+      "read_order": null,
+      "tier": "manuscript",
+      "references": []
+    },
+    "Paper_2_Structure_of_Admissible_Physics_v7.0.tex": {
+      "purpose": "Main paper LaTeX source (Paper 2 v7.0)",
+      "audience": "human",
+      "read_order": null,
+      "tier": "manuscript",
+      "references": [
+        "apf/core.py"
+      ]
+    },
+    "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.1.pdf": {
+      "purpose": "Technical Supplement I - The Classification Core (v5.1): the conditional classification theorem with its full input ledger C1-C10",
+      "audience": "human",
+      "read_order": null,
+      "tier": "manuscript",
+      "references": []
+    },
+    "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.1.tex": {
+      "purpose": "Technical Supplement I - The Classification Core (v5.1), LaTeX source",
+      "audience": "human",
+      "read_order": null,
+      "tier": "manuscript",
+      "references": [
+        "apf/core.py"
+      ]
+    },
+    "Paper_2_Foundational_Gauge_Program_Supplement_v1.0.pdf": {
+      "purpose": "Technical Supplement II - The Foundational Gauge Program (v1.0): the chain at banked grades, grade ledger, open-lane register",
+      "audience": "human",
+      "read_order": null,
+      "tier": "manuscript",
+      "references": []
+    },
+    "Paper_2_Foundational_Gauge_Program_Supplement_v1.0.tex": {
+      "purpose": "Technical Supplement II - The Foundational Gauge Program (v1.0), LaTeX source",
+      "audience": "human",
+      "read_order": null,
+      "tier": "manuscript",
+      "references": []
+    },
+    "verify_all.py": {
+      "purpose": "Full-registry verifier (20 checks; the command printed in Supplement I). --paper2-core runs the 6 classification-core checks",
+      "audience": "code",
+      "read_order": null,
+      "tier": "code",
+      "references": [
+        "apf/bank.py"
+      ]
+    },
+    "apf/ec_inventory_reading.py": {
+      "purpose": "Vendored canonical module (commit 5bc6193): check_L_F6_not_from_EC (the canonical full-system F6 waterfall, 10/5, + EC/F6 logical independence) and check_L_EC_inventory_reading (the R-EC-inv reading)",
+      "audience": "code",
+      "read_order": null,
+      "tier": "code",
+      "references": [
+        "apf/core.py"
+      ]
+    },
+    "release_audit/scan_inputs.json": {
+      "purpose": "Audit bundle: representation tables, caps, filter definitions, equivalence relation, version lock",
+      "audience": "both",
+      "read_order": null,
+      "tier": "audit",
+      "references": [
+        "fermion_scan_standalone.py"
+      ]
+    },
+    "release_audit/scan_outputs.csv": {
+      "purpose": "Audit bundle: all 1,680 canonical templates (DOF, CPT class)",
+      "audience": "both",
+      "read_order": null,
+      "tier": "audit",
+      "references": [
+        "fermion_scan_standalone.py"
+      ]
+    },
+    "release_audit/filter_waterfall.csv": {
+      "purpose": "Audit bundle: F1-F7 survivor counts (canonical F6) + the predicate triple as robustness rows",
+      "audience": "both",
+      "read_order": null,
+      "tier": "audit",
+      "references": [
+        "fermion_scan_standalone.py"
+      ]
+    },
+    "release_audit/near_misses.csv": {
+      "purpose": "Audit bundle: the 42-DOF stripped generation (sharpest near-miss) + non-minimal survivors",
+      "audience": "both",
+      "read_order": null,
+      "tier": "audit",
+      "references": [
+        "fermion_scan_standalone.py"
+      ]
+    },
+    "release_audit/kill_index.csv": {
+      "purpose": "Audit bundle: per-candidate first-failing filter for every one of the 1,680 templates",
+      "audience": "both",
+      "read_order": null,
+      "tier": "audit",
+      "references": [
+        "fermion_scan_standalone.py"
+      ]
+    },
+    "release_audit/chirality_audit.csv": {
+      "purpose": "Audit bundle: true-chirality statistic per canonical survivor (the audit-layer report promised at F3)",
+      "audience": "both",
+      "read_order": null,
+      "tier": "audit",
+      "references": [
+        "fermion_scan_standalone.py"
+      ]
+    },
+    "release_audit/certificate.sha256": {
+      "purpose": "Audit bundle: SHA-256 of each data file and of the ordered bundle",
+      "audience": "both",
+      "read_order": null,
+      "tier": "audit",
+      "references": [
+        "fermion_scan_standalone.py"
+      ]
+    },
+    "archive/Paper_2_Structure_of_Admissible_Physics_v7.0.tex": {
+      "purpose": "Superseded release artifact (pre-v5.1-release state), archived",
+      "audience": "human",
+      "read_order": null,
+      "tier": "archive",
+      "references": []
+    },
+    "archive/Paper_2_Structure_of_Admissible_Physics_v7.0.pdf": {
+      "purpose": "Superseded release artifact (pre-v5.1-release state), archived",
+      "audience": "human",
+      "read_order": null,
+      "tier": "archive",
+      "references": []
+    },
+    "archive/Paper_2_Structure_of_Admissible_Physics_Supplement_v5.1.tex": {
+      "purpose": "Superseded release artifact (pre-v5.1-release state), archived",
+      "audience": "human",
+      "read_order": null,
+      "tier": "archive",
+      "references": []
+    },
+    "archive/Paper_2_Structure_of_Admissible_Physics_Supplement_v5.1.pdf": {
+      "purpose": "Superseded release artifact (pre-v5.1-release state), archived",
+      "audience": "human",
+      "read_order": null,
+      "tier": "archive",
       "references": []
     }
   },
@@ -946,20 +1070,20 @@
       "kind": "references"
     },
     {
-      "from": "Paper_2_Structure_of_Admissible_Physics_Supplement_v2.tex",
+      "from": "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.1.tex",
       "to": "apf/core.py",
       "kind": "references"
     },
     {
-      "from": "Paper_2_Structure_of_Admissible_Physics_v5.3-PLEC.tex",
+      "from": "Paper_2_Structure_of_Admissible_Physics_v7.0.tex",
       "to": "apf/core.py",
       "kind": "references"
     }
   ],
   "metadata": {
-    "total_files": 80,
+    "total_files": 95,
     "total_edges": 33,
-    "bundled_checks": 14,
+    "bundled_checks": 20,
     "corpus_size": 10
   }
 }

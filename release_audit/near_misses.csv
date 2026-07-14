@@ -1,0 +1,7 @@
+kind,template,dof,weakly_solvable,witness,note
+F6_failure (sharpest near-miss),"(1,2) + (3,2) + (3b,1) + (3b,1)",42,True,"(0, 0, -1, 1)","k=1: variety = one projective point; Y_Q = 0 FORCED; excluded by electromagnetic completeness (Y_Q != 0), the independent declared assumption of the scan"
+F6_failure (sharpest near-miss),"(1,2) + (3,1) + (3,1) + (3b,2)",42,True,"(0, -1, 1, 0)","k=1: variety = one projective point; Y_Q = 0 FORCED; excluded by electromagnetic completeness (Y_Q != 0), the independent declared assumption of the scan"
+nonminimal_survivor,"(1,1) + (1,1) + (1,2) + (3,2) + (3b,1) + (3b,1)",48,True,"(0, 6, -3, 1, -4, 2)",passes all seven filters; eliminated at the minimality cut
+nonminimal_survivor,"(1,2) + (3,2) + (3b,1) + (3b,1) + (8,1)",66,True,"(-15, 5, -5, 13, -3)",passes all seven filters; eliminated at the minimality cut
+nonminimal_survivor,"(1,1) + (1,2) + (3,2) + (3b,1) + (3b,1) + (8,1)",69,True,"(6, -3, 1, -4, 2, 0)",passes all seven filters; eliminated at the minimality cut
+nonminimal_survivor,"(1,1) + (1,1) + (1,2) + (3,2) + (3b,1) + (3b,1) + (8,1)",72,True,"(0, 6, -3, 1, -4, 2, 0)",passes all seven filters; eliminated at the minimality cut
