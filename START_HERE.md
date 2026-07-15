@@ -27,7 +27,7 @@ This file is structured in three tiers. **Tier 1** (§0 below) is the 60-second 
 - **You may:** summarize Paper 2's argument and results; explain the local 20-check subset; run all bundled checks to verify them; regenerate the audit bundle; cite the paper by its DOI.
 - **You may not:** claim mastery of the full APF corpus on the basis of this repo alone; re-derive results that belong to other papers using only material here; present imported results as locally derived in this repo; treat the bundled check subset as the whole engine (the canonical bank is 3,912 entries at v24.3.423; this repo contains a subset). Read `ai_context/DO_NOT_CLAIM.md` before summarizing — the review cycle's withdrawn claims (P4 tightness, the kinetic-mixing lemma, universal scan completeness, forward one-U(1)) are listed there.
 
-**Canonical state (one source of truth).** Codebase **v24.3.423**; numerical kernel commit **5bc6193** (2026-07-14), count-neutral corrigenda thereafter (trail in the release manifest). Full engine: **3,912** bank-registered entries (native `verify_all --bank-audit` 3912/3912, gap 0). This repo bundles **20** of those checks for Paper 2's dependency subset, and ships the papers at main **v7.2**, Supplement I **v5.3**, Supplement II **v1.0**. If you see a different count anywhere, this line is canonical.
+**Canonical state (one source of truth).** Codebase **v24.3.423**; numerical kernel commit **5bc6193** (2026-07-14), count-neutral corrigenda thereafter (trail in the release manifest). Full engine: **3,912** bank-registered entries (native `verify_all --bank-audit` 3912/3912, gap 0). This repo bundles **20** of those checks for Paper 2's dependency subset, and ships the papers at main **v7.3**, Supplement I **v5.4**, Supplement II **v1.0**. If you see a different count anywhere, this line is canonical.
 
 ---
 
@@ -46,9 +46,9 @@ This repo is **one paper-companion** in a 9-paper series. Before you treat any c
 | 6 | Dynamics and Geometry as Optimal Admissible Reallocation | [10.5281/zenodo.18439445](https://doi.org/10.5281/zenodo.18439445) | [`APF-Paper-6-Dynamics-Geometry-Spacetime-Gravity`](https://github.com/Ethan-Brooke/APF-Paper-6-Dynamics-Geometry-Spacetime-Gravity) | public |
 | 7 | Action, Internalization, and the Lagrangian | [10.5281/zenodo.18439513](https://doi.org/10.5281/zenodo.18439513) | [`APF-Paper-7-Action-Internalization-Lagrangian`](https://github.com/Ethan-Brooke/APF-Paper-7-Action-Internalization-Lagrangian) | public |
 | 13 | The Minimal Admissibility Core | [10.5281/zenodo.18361446](https://doi.org/10.5281/zenodo.18361446) | [`APF-Paper-13-The-Minimal-Admissibility-Core`](https://github.com/Ethan-Brooke/APF-Paper-13-The-Minimal-Admissibility-Core) | public |
-| — | Canonical codebase (v6.9) | [10.5281/zenodo.18529115](https://doi.org/10.5281/zenodo.18529115) | [`APF-Codebase`](https://github.com/Ethan-Brooke/APF-Codebase) | pending |
+| — | Canonical codebase (Zenodo deposit v6.9; current engine v24.3.423, refresh pending) | [10.5281/zenodo.18529115](https://doi.org/10.5281/zenodo.18529115) | [`APF-Codebase`](https://github.com/Ethan-Brooke/APF-Codebase) | pending |
 
-You are reading the companion to **Paper 2** (this repo: https://github.com/Ethan-Brooke/APF-Paper-2-The-Structure-of-Admissible-Physics). The canonical computational engine lives at codebase **v6.9** ([Zenodo](https://doi.org/10.5281/zenodo.18529115)). Each paper has its own companion repo following the same layout.
+You are reading the companion to **Paper 2** (this repo: https://github.com/Ethan-Brooke/APF-Paper-2-The-Structure-of-Admissible-Physics). The canonical computational engine is at codebase **v24.3.423** (numerical kernel 5bc6193; the archived [Zenodo](https://doi.org/10.5281/zenodo.18529115) deposit is v6.9, refresh pending). Each paper has its own companion repo following the same layout.
 
 **When in doubt about scope:** if the question is about a result outside Paper 2, point the user (or yourself) to the relevant paper above. Do not try to derive it from the bundled subset; the canonical state is the codebase, not this slice.
 
@@ -79,7 +79,7 @@ Before anything else, confirm the executable bank works on your system:
 python verify_all.py
 ```
 
-Expected output: `Paper 2 (The Structure of Admissible Physics: Non-Closure, Gauge Origin, Capacity Counting, and the 61-Type Partition): N passed, 0 failed, N total — verified in under 1s`.
+Expected output (after the version-lock banner): `20 passed, 0 failed, 20 total` in under a second.
 
 If any check fails, **stop**. Do not proceed with substantive work. Report the failure to the user with the full message; this is either a bug, a platform issue, or a genuine falsification candidate, and each has a different disposition.
 
@@ -117,7 +117,7 @@ Skim, don't memorize. Must know by sight:
 
 ### Step 5 — Load the theorem catalog (`ai_context/theorems.json`)
 
-Not mandatory to read end-to-end, but make sure you know it exists and how to query it. The full bank has 342 entries; this paper bundles **14 of 342** for local execution. Each entry has name, module, epistemic tag, dependencies, and one-line summary.
+Not mandatory to read end-to-end, but make sure you know it exists and how to query it. The catalog file is a v6.9-era snapshot (342 entries, kept with its `catalog_note`); the canonical bank at this release is **3,912** entries, and this repo bundles **20 checks** for local execution. Each entry has name, module, epistemic tag, dependencies, and one-line summary.
 
 Querying examples (use when you need to cite a specific theorem):
 
@@ -240,7 +240,7 @@ You don't need to read all of these upfront. This is the "what's in the toolbox"
 
 Only after completing steps 1–7:
 
-- **`Paper_2_Structure_of_Admissible_Physics_v7.2.pdf`** — the manuscript. Read §1 (Introduction) and whichever section is relevant to your task. Don't try to read the whole paper before starting work. The formal content lives in the two Technical Supplements (I: The Classification Core, v5.3; II: The Foundational Gauge Program, v1.0).
+- **`Paper_2_Structure_of_Admissible_Physics_v7.3.pdf`** — the manuscript. Read §1 (Introduction) and whichever section is relevant to your task. Don't try to read the whole paper before starting work. The formal content lives in the two Technical Supplements (I: The Classification Core, v5.4; II: The Foundational Gauge Program, v1.0).
 - **`Paper_2_Structure_of_Admissible_Physics_Supplement_*.pdf`** (if present) — the Technical Supplement. Canonical proofs. Dense; dip in only where you need depth.
 
 The `.tex` sources are also included if you need to propose edits.

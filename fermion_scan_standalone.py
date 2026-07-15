@@ -3,7 +3,7 @@
 APF Fermion Template Scan -- Canonical Standalone Verification Script
 
 THIS IS THE CANONICAL EXECUTABLE for the Paper 2 fermion-content scan.
-Every count in the waterfall table of Technical Supplement I (v5.3),
+Every count in the waterfall table of Technical Supplement I (v5.4),
 S "Fermion content: complete scan of the declared space", is generated
 by this script, and the release's audit files are emitted by it:
 
@@ -43,9 +43,12 @@ WHAT IT DOES:
      The winner (minimum DOF 45) is identical under all three.
   4. Lists all canonical post-F6 survivors (10) and post-CPT
      survivors (5), and the spectator-reduction lists (8 and 4).
-  5. Verifies the five closed-form exclusion proofs P1-P5, with P4 in
-     its corrected class-dominance form (class minimum 54 > 45; the
-     conjugate-pair witness; no tightness claim).
+  5. Verifies the five closed-form exclusion proofs P1-P5: P3 in its
+     full F2+F5 color-dimension case-split form (dims 3/6/8; ported
+     from the engine battery at ff97524, with the historical dominance
+     rider retained), and P4 in its corrected class-dominance form
+     (class minimum 54 > 45; the conjugate-pair witness; no tightness
+     claim).
   6. Derives hypercharge assignments from anomaly cancellation,
      including both solutions of the cubic and their physical
      equivalence.
@@ -55,7 +58,8 @@ WHAT IT DOES:
      two-colored-doublet class-dominance mini-enumeration (RT4),
      the true-chirality audit statistic (RT5, the release-audit-layer
      report promised at filter F3), and filter-order invariance
-     across all 5,040 orderings (RT6).
+     across all 5,040 orderings (RT6; total spectator-reduction F6
+     predicate -- the conjunction theorem is predicate-independent).
   9. Asserts the final verification conditions, including the
      three-predicate count triple (10/5 canonical | 8/4 spectator |
      4/2 uniform) and winner invariance.
@@ -79,7 +83,31 @@ OUTPUT: complete audit trail matching the waterfall table in
 Technical Supplement I, S "Fermion content".
 
 REFERENCE: E.S. Brooke, "Technical Supplement I to Paper 2: The
-           Classification Core," v5.3.
+           Classification Core," v5.4.
+
+REVISION NOTES (v4.3, 2026-07-15 -- the review 5.3.01 pass, ruling
+    'port'):
+  - P3 ported to the engine's F2+F5 color-dimension case split
+    (dims {3, 6, 8}; the dim-3 Witten parity repair; exact Fractions;
+    mirrors check_T_field at ff97524); the historical dominance
+    comparison is retained as a rider, no longer the proof.
+  - VERSION_LOCK corrigenda trail made self-contained: the third entry
+    now carries the literal engine SHA
+    ff97524e002dcbb4101f5934cde992b5721788f7 (was "this release's
+    engine commit").
+  - Paper references bumped: main v7.3, Supplement I v5.4.
+  - Numerically inert: enumeration, filters, waterfall, witnesses, and
+    the audit bundle's numerical content are unchanged (certificate
+    regenerated for the metadata strings).
+
+REVISION NOTES (v4.2, 2026-07-15 -- the review 5.2.01 pass):
+  - VERSION_LOCK split into the numerical-kernel commit (5bc6193) and
+    a count-neutral corrigenda trail (review 5.2.01 item .06, ruling
+    'split'); paper references bumped to main v7.2 / Supplement I v5.3;
+    banner and certificate lines re-keyed to the kernel commit.
+  - The trail's third entry was the placeholder "this release's engine
+    commit" (the P3-split commit hash did not exist pre-push); v4.3
+    replaces it with the literal SHA.
 
 REVISION NOTES (v4.1, 2026-07-14 -- the review 5.1.01 pass):
   - RT6 ADDED: filter-order invariance.  All 7! = 5,040 orderings of the
@@ -139,9 +167,9 @@ from itertools import combinations_with_replacement, combinations
 import math
 import sys
 
-SCRIPT_VERSION = "4.2"
+SCRIPT_VERSION = "4.3"
 VERSION_LOCK = {
-    "script": "fermion_scan_standalone.py v4.2 (2026-07-15)",
+    "script": "fermion_scan_standalone.py v4.3 (2026-07-15)",
     "codebase": "v24.3.423",
     "numerical_kernel_commit": "5bc6193",
     "numerical_kernel_note": (
@@ -153,13 +181,12 @@ VERSION_LOCK = {
     "corrigenda_trail": [
         "668daa5 (check_T_field summary: P4 class-min 54)",
         "e230757 (check_T_field declared-ansatz re-scope + P3 F2+F5 battery)",
-        "this release's engine commit (P3 color-dimension case split, "
-        "review 5.2.01 item .01; hash pinned in the git history of the "
-        "push that ships this manifest)",
+        "ff97524e002dcbb4101f5934cde992b5721788f7 (check_T_field P3 "
+        "color-dimension case split, review 5.2.01 item .01)",
     ],
     "bank": 3912,
-    "paper_main": "Paper_2_Structure_of_Admissible_Physics_v7.2",
-    "supplement_I": "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.3",
+    "paper_main": "Paper_2_Structure_of_Admissible_Physics_v7.3",
+    "supplement_I": "Paper_2_Structure_of_Admissible_Physics_Supplement_v5.4",
     "supplement_II": "Paper_2_Foundational_Gauge_Program_Supplement_v1.0",
 }
 
@@ -873,11 +900,34 @@ def run_scan(emit_audit=False, audit_dir='release_audit'):
               f"{float(AF2_BOUND):.1f} -> {'EXCLUDED' if excluded else 'FAIL'}")
         assert excluded, f"P2 failed for rep {rep2}"
 
-    # P3: Colorless SU(2) >= 3 adds DOF beyond minimum (dominance)
+    # P3: Colorless SU(2) >= 3 excluded A PRIORI by the F2+F5 joint
+    # budget, split over the declared colored-doublet dimensions
+    # {3, 6, 8} (review 5.2.01 item .01; PORTED from the engine battery
+    # at ff97524e002dcbb4101f5934cde992b5721788f7 per review 5.3.01's
+    # code item, ruling 'port' 2026-07-14).  Terms in units of
+    # (2/3)*T(r2)*dim(r3)*N_GEN against the SU(2) AF budget 22/3:
+    p3_tr = AF_COEFF * SU2_REPS['3']['T'] * 1 * N_GEN  # colorless triplet
+    p3_ld = AF_COEFF * SU2_REPS['2']['T'] * 1 * N_GEN  # parity-restoring doublet
+    assert p3_tr == 4 and p3_ld == 1, "P3 term normalization"
+    for p3_dim in (3, 6, 8):
+        p3_cd = AF_COEFF * SU2_REPS['2']['T'] * p3_dim * N_GEN
+        assert p3_cd == p3_dim, "P3 colored-doublet term = color dimension"
+        if p3_dim % 2 == 1:
+            assert AF2_BOUND - p3_cd - p3_tr == Fraction(1, 3)
+            assert p3_cd + p3_tr + p3_ld == 8 > AF2_BOUND
+            print(f"  P3[dim 3]: doublet(3) + triplet(4) = 7 leaves 1/3 of "
+                  f"22/3; one colored")
+            print(f"      doublet alone is Witten-ODD -> parity repair (+1) "
+                  f"-> 8 > 22/3 -> EXCLUDED")
+        else:
+            assert p3_cd + p3_tr > AF2_BOUND
+            print(f"  P3[dim {p3_dim}]: doublet({p3_dim}) + triplet(4) = "
+                  f"{p3_dim + 4} > 22/3 outright (Witten-even) -> EXCLUDED")
+    # Historical dominance comparison, retained as a rider (not the proof):
     for rep2 in ['3', '4']:
         extra = (SU2_REPS[rep2]['dim'] - 2) * N_GEN
-        print(f"  P3: SU(2) {rep2} lepton: +{extra} DOF -> "
-              f"{winner_dof + extra} > {winner_dof} -> EXCLUDED (dominance)")
+        print(f"  P3-rider: SU(2) {rep2} lepton: +{extra} DOF -> "
+              f"{winner_dof + extra} > {winner_dof} (dominance)")
         assert winner_dof + extra > winner_dof
 
     # P4: Two-colored-doublet CLASS DOMINANCE (corrected form, 2026-07-14).
@@ -909,7 +959,7 @@ def run_scan(emit_audit=False, audit_dir='release_audit'):
     Nc = 3
     Y_Q = Fraction(1, 6)
 
-    print(f"\n  Quadratic in z = Y_u / Y_Q :  z^2 - 2z - (1 + Nc^2) = 0")
+    print(f"\n  Quadratic in z = Y_u / Y_Q :  z^2 - 2z - (Nc^2 - 1) = 0")
     print(f"  Discriminant = 4 Nc^2 = {4 * Nc**2}  (perfect square)")
     z1 = 1 + Nc   # = 4
     z2 = 1 - Nc   # = -2
@@ -1178,8 +1228,8 @@ def run_scan(emit_audit=False, audit_dir='release_audit'):
           f"+ L(1,2) + e^c(1,1)")
     print(f"  [ok] Near miss: the 42-DOF stripped generation "
           f"(Y_Q = 0 forced; recorded)")
-    print(f"  [ok] All 5 exclusion proofs verified (P4 at class "
-          f"dominance, 54 > 45)")
+    print(f"  [ok] All 5 exclusion proofs verified (P3 at the F2+F5 "
+          f"color-dimension case split, P4 at class dominance, 54 > 45)")
     print(f"  [ok] Both hypercharge solutions verified (exact rational)")
     print(f"  [ok] Red-team challenges RT1-RT6 passed")
     print(f"\n  ALL CHECKS PASSED.")

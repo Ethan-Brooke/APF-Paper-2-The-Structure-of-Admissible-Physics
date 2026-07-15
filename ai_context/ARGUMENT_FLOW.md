@@ -1,8 +1,8 @@
 # Argument Flow — Paper 2 in One Page
 
-Paper 2 (main v7.2) states the argument; Technical Supplement I (v5.3, The
+Paper 2 (main v7.3) states the argument; Technical Supplement I (v5.4, The
 Classification Core) carries the conditional classification theorem with its
-full input ledger C1–C10; Technical Supplement II (v1.0, The Foundational
+full input ledger C1–C9; Technical Supplement II (v1.0, The Foundational
 Gauge Program) carries the foundational chain at its banked grades and the
 open-lane register.
 
@@ -32,8 +32,8 @@ not part of the forward statement.
 ## C. The conditional classification theorem (Supp I)
 
 Relative to the declared representation list, multiplicity caps, and filter
-inputs — with F6's electromagnetic-completeness assumption declared at its
-point of use — the 1,680-template scan has a unique minimum-capacity
+inputs — with F6's non-degeneracy assumption (nonzero quark-doublet
+hypercharge, Y_Q ≠ 0) declared at its point of use — the 1,680-template scan has a unique minimum-capacity
 survivor: the 45-Weyl-fermion SM template. Canonical waterfall
 1680 → 348 → 324 → 24 → 12 → 10 → 5 → 1; predicate triple 10/5 | 8/4 | 4/2
 with the winner invariant. The caps' completeness is an open obligation,

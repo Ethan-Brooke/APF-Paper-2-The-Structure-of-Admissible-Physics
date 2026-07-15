@@ -1,8 +1,8 @@
 """apf/core.py — Paper 2 subset.
 
 Vendored single-file extraction of the check functions cited in
-Paper 2: The Structure of Admissible Physics (main paper v7.2,
-Technical Supplement I v5.3, Technical Supplement II v1.0).
+Paper 2: The Structure of Admissible Physics (main paper v7.3,
+Technical Supplement I v5.4, Technical Supplement II v1.0).
 
 VERSION LOCK: canonical APF codebase v24.3.423.  NUMERICAL KERNEL at
 commit 5bc6193 (2026-07-14; bank 3912, verify_all --bank-audit
@@ -10,7 +10,7 @@ commit 5bc6193 (2026-07-14; bank 3912, verify_all --bank-audit
 was locked.  Later engine commits are count-neutral proof-scope and
 metadata corrigenda (the trail in the release manifest:
 668daa5 P4-summary; e230757 declared-ansatz re-scope + P3 F2+F5
-battery; this release's P3 color-dimension case split).
+battery; ff97524 P3 color-dimension case split).
 This file carries 18 of the repo's 20-check subset; the other two
 (check_L_F6_not_from_EC, check_L_EC_inventory_reading) live in
 apf/ec_inventory_reading.py, vendored whole from the kernel commit.

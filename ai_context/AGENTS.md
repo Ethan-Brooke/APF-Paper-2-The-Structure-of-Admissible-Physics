@@ -21,7 +21,7 @@ The Admissibility Physics Framework is a **9-paper spine** plus a canonical comp
 | 6 | Dynamics and Geometry as Optimal Admissible Reallocation | [10.5281/zenodo.18439445](https://doi.org/10.5281/zenodo.18439445) | [`APF-Paper-6-Dynamics-Geometry-Spacetime-Gravity`](https://github.com/Ethan-Brooke/APF-Paper-6-Dynamics-Geometry-Spacetime-Gravity) | public |
 | 7 | Action, Internalization, and the Lagrangian | [10.5281/zenodo.18439513](https://doi.org/10.5281/zenodo.18439513) | [`APF-Paper-7-Action-Internalization-Lagrangian`](https://github.com/Ethan-Brooke/APF-Paper-7-Action-Internalization-Lagrangian) | public |
 | 13 | The Minimal Admissibility Core | [10.5281/zenodo.18361446](https://doi.org/10.5281/zenodo.18361446) | [`APF-Paper-13-The-Minimal-Admissibility-Core`](https://github.com/Ethan-Brooke/APF-Paper-13-The-Minimal-Admissibility-Core) | public |
-| — | Canonical codebase (v6.9) | [10.5281/zenodo.18529115](https://doi.org/10.5281/zenodo.18529115) | [`APF-Codebase`](https://github.com/Ethan-Brooke/APF-Codebase) | pending |
+| — | Canonical codebase (Zenodo deposit v6.9; current engine v24.3.423, refresh pending) | [10.5281/zenodo.18529115](https://doi.org/10.5281/zenodo.18529115) | [`APF-Codebase`](https://github.com/Ethan-Brooke/APF-Codebase) | pending |
 
 **You are reading the companion to Paper 2** (this repo: https://github.com/Ethan-Brooke/APF-Paper-2-The-Structure-of-Admissible-Physics).
 
@@ -37,10 +37,10 @@ This is the **paper-companion release repo for Paper 2 of the Admissibility Phys
 
 The repo bundles:
 
-- The manuscript (v7.2) and BOTH Technical Supplements (`.tex` + `.pdf`): Supplement I — The Classification Core (v5.3) and Supplement II — The Foundational Gauge Program (v1.0)
+- The manuscript (v7.3) and BOTH Technical Supplements (`.tex` + `.pdf`): Supplement I — The Classification Core (v5.4) and Supplement II — The Foundational Gauge Program (v1.0)
 - A vendored subset of the APF codebase containing the `check_*` functions Paper 2 directly references (`apf/core.py`, `apf/ec_inventory_reading.py`, `apf/apf_utils.py`, `apf/bank.py`), numerical kernel commit 5bc6193 (v24.3.423); corrigenda-trail head per the release manifest
 - One-command verifiers (`verify_all.py`, with `--paper2-core` as the fast path; `run_checks.py` as a kept alias)
-- THE CANONICAL SCAN EXECUTABLE (`fermion_scan_standalone.py`, v4) and the audit bundle it emits (`release_audit/`: scan_inputs.json, scan_outputs.csv, filter_waterfall.csv, near_misses.csv, kill_index.csv, chirality_audit.csv, certificate.sha256)
+- THE CANONICAL SCAN EXECUTABLE (`fermion_scan_standalone.py`, v4.3) and the audit bundle it emits (`release_audit/`: scan_inputs.json, scan_outputs.csv, filter_waterfall.csv, near_misses.csv, kill_index.csv, chirality_audit.csv, certificate.sha256)
 - An interactive derivation DAG (`docs/index.html`, served via GitHub Pages)
 - A theorem-by-theorem Colab walkthrough (`APF_Reviewer_Walkthrough.ipynb`)
 - **This AI-onboarding pack** (`ai_context/`) — the authoritative context for agents
@@ -77,7 +77,7 @@ If you're loading this repo cold and want to understand Paper 2 well enough to r
 4. **`README.md`** — paper-specific orientation and the verification recipe. Badges, theorem table, install.
 5. **`apf/core.py`** — the vendored code. Read at least one check function fully. This is ground truth.
 6. **`run_checks.py`** + run it — confirms the local state works.
-7. **`Paper_2_Structure_of_Admissible_Physics_v7.2.tex`** or `.pdf` — the manuscript (formal content: Supplement I v5.3, Supplement II v1.0). Read §1 (intro) and the section you care about. Don't try to read the whole paper first.
+7. **`Paper_2_Structure_of_Admissible_Physics_v7.3.tex`** or `.pdf` — the manuscript (formal content: Supplement I v5.4, Supplement II v1.0). Read §1 (intro) and the section you care about. Don't try to read the whole paper first.
 8. **Technical Supplement** if present — canonical proofs. Dense; dip in only where you need depth.
 9. **`ai_context/wiki/`** — concept pages (Axiom A1, Derivation Chain, Born Rule, etc.) and per-paper pages. Navigate from `wiki/INDEX.md`.
 10. **`ai_context/AUDIT_DISCIPLINE.md`** — read before you propose any substantive change or critique. This is the posture the project expects from AI contributors.
@@ -113,9 +113,9 @@ The honest posture: $H_0$ is a real falsification candidate, not a bug to patch 
 
 ## 6. Current canonical state (at time of this release)
 
-- **Codebase:** v6.9 (2026-04-18)
-- **Bank-registered theorems:** 342 across 19 modules
-- **Total `verify_all` checks:** 355 (includes `apf/standalone/` + session modules)
+- **Codebase:** v24.3.423 (numerical kernel commit 5bc6193, 2026-07-14; count-neutral corrigenda trail in the release manifest)
+- **Bank-registered theorems:** 3,912 (native `verify_all --bank-audit` 3912/3912, gap 0)
+- **Bundled in this repo:** 20 checks (`verify_all.py`, registry-gated)
 - **Quantitative predictions:** 48 (39 tested; 32/39 within 3σ; mean error 3.83%; median 0.37%)
 - **Free parameters:** 0
 

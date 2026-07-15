@@ -30,7 +30,7 @@ Expected output: one line per check, then `20 passed, 0 failed, 20 total`. Elaps
 python fermion_scan_standalone.py --emit-audit
 ```
 
-This is the canonical executable: it reruns the full 1,680-template scan in exact arithmetic (canonical F6 = full-system non-degeneracy, 10/5; robustness variants 8/4 and 4/2), verifies the five exclusion proofs (P4 at class dominance, minimum 54), runs red-team challenges RT1–RT6 (RT6 = filter-order invariance across all 5,040 orderings), and rewrites `release_audit/` byte-identically — compare `release_audit/certificate.sha256` before and after.
+This is the canonical executable: it reruns the full 1,680-template scan in exact arithmetic (canonical F6 = full-system non-degeneracy, 10/5; robustness variants 8/4 and 4/2), verifies the five exclusion proofs (P4 at class dominance, minimum 54), runs red-team challenges RT1–RT6 (RT6 = filter-order invariance across all 5,040 orderings under the total spectator-reduction F6 predicate; the conjunction theorem is predicate-independent), and rewrites `release_audit/` byte-identically — compare `release_audit/certificate.sha256` before and after.
 
 ## Local — inspect a specific check
 
@@ -64,11 +64,11 @@ A check that passes means the witness survived every invariant. The witness is t
 
 ## Cross-check against the manuscript
 
-Every `\coderef{check_X}{module.py}` in the paper source (`Paper_2_Structure_of_Admissible_Physics_v7.2.tex`) points to a specific check function. To verify the paper's claim at a particular point:
+Every `\coderef{check_X}{module.py}` in the paper source (`Paper_2_Structure_of_Admissible_Physics_v7.3.tex`) points to a specific check function. To verify the paper's claim at a particular point:
 
 ```bash
 # find all coderefs in the paper
-grep -o '\\coderef{[^}]*}{[^}]*}' Paper_2_Structure_of_Admissible_Physics_v7.2.tex
+grep -o '\\coderef{[^}]*}{[^}]*}' Paper_2_Structure_of_Admissible_Physics_v7.3.tex
 
 # for each coderef, run it:
 python -c "from apf import core; print(core.check_T7B().get('key_result'))"

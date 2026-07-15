@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """verify_all.py — full check registry for the Paper 2 companion repo.
 
-This is the command printed in Technical Supplement I (v5.3),
+This is the command printed in Technical Supplement I (v5.4),
 "Computational verification": running
 
     python verify_all.py
@@ -43,8 +43,8 @@ VERSION_LOCK = {
     # later engine commits are count-neutral corrigenda (trail in
     # fermion_scan_standalone.VERSION_LOCK / release_audit/scan_inputs.json)
     'bank': 3912,
-    'paper_main': 'Paper_2_Structure_of_Admissible_Physics_v7.2',
-    'supplement_I': 'Paper_2_Structure_of_Admissible_Physics_Supplement_v5.3',
+    'paper_main': 'Paper_2_Structure_of_Admissible_Physics_v7.3',
+    'supplement_I': 'Paper_2_Structure_of_Admissible_Physics_Supplement_v5.4',
     'supplement_II': 'Paper_2_Foundational_Gauge_Program_Supplement_v1.0',
 }
 

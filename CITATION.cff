@@ -25,9 +25,9 @@ abstract: >
   canonical codebase at v24.3.423 (numerical kernel commit 5bc6193;
   count-neutral corrigenda thereafter, trail in the release manifest).
 
-version: "v7.2"
+version: "v7.3"
 date-released: "2026-07-14"
-license: CC-BY-4.0
+license: MIT
 
 repository-code: "https://github.com/Ethan-Brooke/APF-Paper-2-The-Structure-of-Admissible-Physics"
 url: "https://ethan-brooke.github.io/APF-Paper-2-The-Structure-of-Admissible-Physics/"

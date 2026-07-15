@@ -1,7 +1,7 @@
-# Do Not Claim — Paper 2 (main v7.2 · Supp I v5.3 · Supp II v1.0)
+# Do Not Claim — Paper 2 (main v7.3 · Supp I v5.4 · Supp II v1.0)
 
 Anti-hallucination guards, harvested from four external review rounds
-(2026-07-13/14, five reviews) and the internal audits. Consult before writing any summary,
+(2026-07-13/14, six reviews) and the internal audits. Consult before writing any summary,
 email, or reviewer response.
 
 1. **Do not claim the scan is universally complete.** The classification
@@ -119,3 +119,15 @@ email, or reviewer response.
     declared scan permits dim-6 and dim-8 colored doublets; the case
     split (3+4+1 = 8; 6+4 = 10; 8+4 = 12, all > 22/3) is the licensed
     form.
+
+23. **Do not claim a unique generic charge ray from separation
+    deficiency.** Theorem A (structural) fixes only the minimum
+    effective abelian RANK on T_phys; rows (0,0),(1,0),(0,1) are
+    separated by both q=(1,2) and q=(2,1) at equal cost — the two-ray
+    countermodel. Directional uniqueness is Theorem B's SM-specialized
+    anomaly result.
+
+24. **Do not cite the fermion argmin ledger as C1–C10.** It is C1–C9:
+    the equal-unit channel convention is not load-bearing in the
+    Weyl-count argmin and is consumed downstream, at L_count and the
+    61-channel capacity ledger.

@@ -8,18 +8,20 @@ Zenodo deposits, and the canonical codebase.
 
 ## Current release
 
-- **Main paper:** v7.2 — `Paper_2_Structure_of_Admissible_Physics_v7.2.tex` + `.pdf` (60 pp)
-- **Technical Supplement I — The Classification Core:** v5.3 —
-  `Paper_2_Structure_of_Admissible_Physics_Supplement_v5.3.tex` + `.pdf` (62 pp)
+- **Main paper:** v7.3 — `Paper_2_Structure_of_Admissible_Physics_v7.3.tex` + `.pdf` (60 pp)
+- **Technical Supplement I — The Classification Core:** v5.4 —
+  `Paper_2_Structure_of_Admissible_Physics_Supplement_v5.4.tex` + `.pdf` (61 pp)
 - **Technical Supplement II — The Foundational Gauge Program:** v1.0 —
   `Paper_2_Foundational_Gauge_Program_Supplement_v1.0.tex` + `.pdf`
 - **Release date:** 2026-07-14
 - **Codebase version at build:** v24.3.423 (numerical kernel 5bc6193;
   bank 3912, native verify_all --bank-audit 3912/3912 gap 0;
   count-neutral corrigenda trail in the release manifest)
-- **Canonical scan executable:** `fermion_scan_standalone.py` v4.2
-  (RT1–RT6; VERSION_LOCK split into numerical-kernel commit + corrigenda
-  trail; emits `release_audit/`)
+- **Canonical scan executable:** `fermion_scan_standalone.py` v4.3
+  (RT1–RT6; P3 at the F2+F5 color-dimension case split, ported from the
+  engine battery at ff97524; VERSION_LOCK split into numerical-kernel
+  commit + a self-contained literal-SHA corrigenda trail; emits
+  `release_audit/`)
 
 ## Zenodo records
 
@@ -31,6 +33,21 @@ Zenodo deposits, and the canonical codebase.
 
 ## Version history (newest first)
 
+- **v7.3 main + Supp I v5.4** (2026-07-15): the review 5.3.01 pass (ACCEPT
+  SUBJECT TO MINOR REVISION — the first accept-class verdict of the
+  lineage; rulings: manuscript items per the v5.4 draft, code item
+  'port'). Theorem A restated self-contained (rho_M, C, T_phys in its own
+  hypotheses; conclusion = minimum effective abelian RANK; the two-ray
+  countermodel owned; directional uniqueness withdrawn to Theorem B);
+  H3's character condition retyped (C in Z^{5x2}, Y_hyp in im(C_Q)); P1
+  completed over all SU(3) irreps by the (p,q) formulas; the
+  finite-ansatz clause moved into T_field's own statement; the sign
+  convention repeated at Theorem B's conclusion; C10 removed from the
+  argmin ledger (C1–C9; equal-unit re-homed at L_count); code-concordance
+  language tempered and the engine SHA pinned literally; RT6 scoped to
+  the total spectator predicate; the near-blank page repaired; standalone
+  v4.3 (P3 case split ported, literal-SHA corrigenda trail); audit bundle
+  regenerated (numerically inert).
 - **v7.2 main + Supp I v5.3** (2026-07-15): the review 5.2.01 pass (MINOR
   REVISION — acceptance named). P3 gains the color-dimension case split
   (dim 6/8 doublets bust the SU(2) budget outright); the one-U(1)
@@ -78,7 +95,7 @@ Zenodo deposits, and the canonical codebase.
 
 ## What supersedes what
 
-**Main v7.2 + Supp I v5.3 + Supp II v1.0 supersede all earlier versions.**
+**Main v7.3 + Supp I v5.4 + Supp II v1.0 supersede all earlier versions.**
 For strict reproducibility of earlier work, cite the version DOI of the
 specific deposit used.
 

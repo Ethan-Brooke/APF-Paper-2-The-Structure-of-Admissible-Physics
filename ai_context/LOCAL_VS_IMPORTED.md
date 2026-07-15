@@ -1,4 +1,4 @@
-# Local vs Imported — Paper 2 (main v7.2 · Supp I v5.3 · Supp II v1.0)
+# Local vs Imported — Paper 2 (main v7.3 · Supp I v5.4 · Supp II v1.0)
 
 ## Locally proved in Paper 2's supplements
 
@@ -9,7 +9,7 @@
 - **One-U(1) closure theorems** — a-posteriori, for the selected matter
   content (Supp I).
 - **The conditional classification theorem** — the 1,680-template scan with
-  the C1–C10 input ledger; five exclusion proofs, P4 at class dominance
+  the C1–C9 input ledger; five exclusion proofs, P4 at class dominance
   (class minimum 54); the canonical F6 waterfall 10/5 (Supp I).
 - **EC/F6 logical independence** — computed, all four quadrants witnessed
   (check_L_F6_not_from_EC).
